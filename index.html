@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cerro San Francisco</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    <title>Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="style.css" />
@@ -16,9 +16,31 @@
 
     <!-- HEADER -->
     <header class="header">
-        <div class="wrapper header-content">
-            <p class="header-title">Cerro San Francisco</p>
-            <span class="header-chip">En construcción</span>
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a class="btn-outline-small" href="entradas.html">Entradas</a>
+                    <a class="btn-icon" href="carro.html" aria-label="Carro de compras">
+                        <img src="icons/cart.svg" alt="">
+                    </a>
+                </div>
+            </nav>
         </div>
     </header>
     <!-- HEADER -->
@@ -27,78 +49,304 @@
     <!-- BANNER -->
     <section class="banner">
         <div class="wrapper banner-content">
-            <p class="banner-subtitle">Bienvenido a</p>
-            <h1 class="banner-title">Cerro San Francisco</h1>
-            <p class="banner-text">Estamos construyendo el nuevo sitio del cerro. Pronto podrás conocer sus senderos,
-                revisar la línea de tiempo, inscribirte en actividades y comprar tus entradas desde aquí.</p>
+            <div class="banner-text">
+                <p class="banner-subtitle">Bienvenido a</p>
+                <h1 class="banner-title">Cerro San Francisco</h1>
+                <a href="entradas.html" class="btn-primary-large">Reservar Entradas</a>
+            </div>
+            <div class="banner-image">
+                <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                <img src="img/banner-cerro.png" alt="Vista del Cerro San Francisco">
+            </div>
         </div>
-
-        <!-- Perfil del cerro (ilustrativo) -->
-        <svg class="banner-profile" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
-            <path class="profile-fill"
-                d="M0 220 L0 190 L120 178 L240 160 L360 150 L470 120 L560 96 L640 70 L720 44 L790 58 L860 80 L960 104 L1060 122 L1180 146 L1300 168 L1440 180 L1440 220 Z" />
-            <path class="profile-line"
-                d="M0 176 L120 164 L240 146 L360 136 L470 106 L560 82 L640 56 L720 30 L790 44 L860 66 L960 90 L1060 108 L1180 132 L1300 154 L1440 166" />
-            <circle class="profile-peak" cx="720" cy="30" r="6" />
-            <text class="profile-label" x="736" y="24">761 m</text>
-        </svg>
     </section>
     <!-- BANNER -->
 
 
-    <main class="wrapper">
+    <!-- NUMEROS Y COMO LLEGAR -->
+    <section class="numeros">
+        <div class="wrapper">
+            <div class="numeros-grid">
+                <div class="numero">
+                    <p class="numero-value">2</p>
+                    <p class="numero-label">horas de recorrido</p>
+                </div>
+                <div class="numero">
+                    <p class="numero-value">761 m</p>
+                    <p class="numero-label">Altitud máxima</p>
+                </div>
+                <div class="numero">
+                    <p class="numero-value">3,67 km</p>
+                    <p class="numero-label">Distancia</p>
+                </div>
+                <div class="numero">
+                    <p class="numero-value">Fácil</p>
+                    <p class="numero-label">Dificultad</p>
+                </div>
+            </div>
 
-        <!-- NUMEROS -->
-        <div class="numbers">
-            <div class="number">
-                <p class="number-value">2 h</p>
-                <p class="number-label">Horas de recorrido</p>
-            </div>
-            <div class="number">
-                <p class="number-value">761 m</p>
-                <p class="number-label">Altitud máxima</p>
-            </div>
-            <div class="number">
-                <p class="number-value">3,67 km</p>
-                <p class="number-label">Distancia</p>
-            </div>
-            <div class="number">
-                <p class="number-value">Fácil</p>
-                <p class="number-label">Dificultad</p>
+            <div class="como-llegar">
+                <div class="como-llegar-image">
+                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                    <img src="img/como-llegar.png" alt="Visitantes descansando en el cerro">
+                </div>
+
+                <div class="como-llegar-card">
+                    <div class="como-llegar-header">
+                        <h2 class="como-llegar-title">¿Cómo llegar?</h2>
+                        <p class="como-llegar-address">
+                            <img src="icons/location.svg" alt="" width="24" height="24">
+                            Coronel Santiago Bueras 826, Curimón, San Felipe, Valparaíso
+                        </p>
+                    </div>
+
+                    <div class="como-llegar-body">
+                        <div>
+                            <label for="origen" class="visually-hidden">Seleccionar origen</label>
+                            <div class="select-wrapper">
+                                <select id="origen" class="select-origen">
+                                    <option value="" selected>Seleccionar Origen</option>
+                                    <option value="santiago">Santiago</option>
+                                    <option value="valparaiso">Valparaíso</option>
+                                    <option value="los-andes">Los Andes</option>
+                                </select>
+                            </div>
+                            <p class="como-llegar-text" id="origenText">Conoce cómo llegar desde diferentes
+                                procedencias</p>
+                        </div>
+
+                        <div class="como-llegar-links">
+                            <a class="btn-underline btn-underline--claro"
+                                href="https://www.google.com/maps/search/?api=1&query=Coronel+Santiago+Bueras+826,+Curim%C3%B3n,+San+Felipe"
+                                target="_blank" rel="noopener noreferrer">Abrir Google Maps</a>
+                            <a class="btn-underline btn-underline--claro"
+                                href="https://waze.com/ul?q=Coronel%20Santiago%20Bueras%20826%20Curim%C3%B3n%20San%20Felipe"
+                                target="_blank" rel="noopener noreferrer">Abrir Waze</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- NUMEROS -->
+    </section>
+    <!-- NUMEROS Y COMO LLEGAR -->
 
 
-        <!-- NO RASTRO -->
-        <section class="no-rastro">
-            <div>
-                <p class="no-rastro-eyebrow">Recuerda</p>
-                <h2 class="no-rastro-title">Te invitamos a no dejar rastro en tu visita al cerro</h2>
+    <!-- NO RASTRO -->
+    <section class="wrapper no-rastro">
+        <div class="no-rastro-header">
+            <h2 class="no-rastro-title">Te invitamos a no dejar rastro en tu visita al cerro</h2>
+            <p class="no-rastro-subtitle">Recuerda:</p>
+        </div>
+
+        <div class="no-rastro-grid">
+            <div class="no-rastro-item">
+                <img src="icons/senderos.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Camina por los senderos delimitados.</p>
             </div>
-            <ul class="no-rastro-list">
-                <li class="no-rastro-item">Camina por los senderos delimitados.</li>
-                <li class="no-rastro-item">Llévate tu basura (desechos orgánicos e inorgánicos).</li>
-                <li class="no-rastro-item">Sé responsable con tus mascotas: utiliza correa y recoge sus fecas.</li>
-                <li class="no-rastro-item">Está prohibido el consumo de alcohol y drogas.</li>
-                <li class="no-rastro-item">Respeta a todos los seres que habitan este espacio.</li>
-                <li class="no-rastro-item">Está prohibido fumar y encender fuego. Si enciendes velas, que sea en los
-                    lugares dispuestos para ello.</li>
-            </ul>
-        </section>
-        <!-- NO RASTRO -->
+            <div class="no-rastro-item">
+                <img src="icons/basura.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Llévate tu basura (desechos orgánicos e inorgánicos).</p>
+            </div>
+            <div class="no-rastro-item">
+                <img src="icons/mascotas.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Sé responsable con tus mascotas: utiliza correa y recoge sus fecas.</p>
+            </div>
+            <div class="no-rastro-item">
+                <img src="icons/alcohol.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Está prohibido el consumo de alcohol y drogas.</p>
+            </div>
+            <div class="no-rastro-item">
+                <img src="icons/seres.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Respeta a todos los seres que habitan este espacio.</p>
+            </div>
+            <div class="no-rastro-item">
+                <img src="icons/fuego.svg" alt="" class="no-rastro-icon">
+                <p class="no-rastro-text">Está prohibido fumar y encender fuego. Si enciendes velas, que sea en los
+                    lugares dispuestos para ello.</p>
+            </div>
+        </div>
+    </section>
+    <!-- NO RASTRO -->
 
-    </main>
+
+    <!-- EVENTOS -->
+    <section class="eventos">
+        <div class="eventos-band">
+            <p class="eventos-subtitle">No te quedes fuera de nuestros</p>
+            <h2 class="eventos-title">Próximos eventos</h2>
+        </div>
+
+        <div class="wrapper eventos-list">
+            <!-- EVENTO 1 -->
+            <article class="evento">
+                <div class="evento-card">
+                    <span class="chip">Inscripciones abiertas</span>
+                    <h3 class="evento-title">Ruta de las Aves de San Felipe</h3>
+                    <div class="evento-info">
+                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 13
+                            junio</p>
+                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
+                        </p>
+                    </div>
+                    <a href="actividades.html" class="btn-primary-medium">Ver más</a>
+                </div>
+                <div class="evento-image">
+                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                    <img src="img/evento-aves.png" alt="Ruta de las Aves de San Felipe">
+                </div>
+            </article>
+
+            <!-- EVENTO 2 -->
+            <article class="evento evento--reverse">
+                <div class="evento-card">
+                    <span class="chip">Inscripciones abiertas</span>
+                    <h3 class="evento-title">Caminata y Taller de observación e interpretación de nubes</h3>
+                    <div class="evento-info">
+                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 25
+                            julio</p>
+                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
+                        </p>
+                    </div>
+                    <a href="actividades.html" class="btn-primary-medium">Ver más</a>
+                </div>
+                <div class="evento-image">
+                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                    <img src="img/evento-nubes.png" alt="Caminata y taller de observación de nubes">
+                </div>
+            </article>
+
+            <div class="eventos-more">
+                <a href="actividades.html" class="btn-underline">Ver más Eventos</a>
+            </div>
+        </div>
+    </section>
+    <!-- EVENTOS -->
+
+
+    <!-- PUBLICACIONES -->
+    <section class="publicaciones">
+        <div class="wrapper">
+            <div class="publicaciones-header">
+                <h2 class="publicaciones-title">Publicaciones</h2>
+                <a href="publicaciones.html" class="btn-underline">Ver más publicaciones</a>
+            </div>
+
+            <div class="publicacion">
+                <div class="publicacion-covers">
+                    <img src="img/guia-biodiversidad-1.png" alt="" class="cover cover-back">
+                    <span class="cover cover-middle"></span>
+                    <img src="img/guia-biodiversidad-2.png" alt="Portada Guía de Biodiversidad"
+                        class="cover cover-front">
+                </div>
+
+                <div class="publicacion-content">
+                    <p class="publicacion-eyebrow">Flora y Fauna</p>
+                    <h3 class="publicacion-title">Conoce nuestra Guía de Biodiversidad</h3>
+                    <p class="publicacion-text">Ésta es una guía en terreno desarrollada por el programa Vivo Curimón
+                        de Fundación Lepe. Para una óptima lectura y uso, te recomendamos descargarla en tu celular
+                        antes de visitar el Parque Natural Cerro San Francisco de Curimón, u otros ecosistemas
+                        similares. Toda la información de esta guía, te servirá para visitar otros entornos naturales
+                        similares.</p>
+                    <!-- Reemplazar # por el link al PDF de la guía -->
+                    <a href="#" class="btn-primary-medium btn-primary-medium--tall">Descargar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- PUBLICACIONES -->
 
 
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="wrapper footer-content">
-            <p class="footer-text">Cerro San Francisco</p>
-            <p class="footer-text">Sitio en construcción · Vuelve pronto</p>
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
         </div>
     </footer>
     <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Cómo llegar: cambia el texto según el origen
+        // Textos pendientes: reemplazar por las indicaciones reales de cada origen
+        const rutas = {
+            '': 'Conoce cómo llegar desde diferentes procedencias',
+            'santiago': 'Indicaciones desde Santiago (texto pendiente).',
+            'valparaiso': 'Indicaciones desde Valparaíso (texto pendiente).',
+            'los-andes': 'Indicaciones desde Los Andes (texto pendiente).'
+        };
+
+        const origen = document.querySelector('#origen');
+        const origenText = document.querySelector('#origenText');
+
+        origen.addEventListener('change', function () {
+            origenText.textContent = rutas[origen.value];
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
 
 </body>
 
