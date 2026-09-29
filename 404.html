@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- GitHub Pages muestra esta página en cualquier dirección que no exista (por ejemplo /cerro-san-francisco/a/b).
+         La etiqueta base hace que las imágenes, el CSS y los links funcionen desde cualquier ruta.
+         Si el sitio cambia de dirección, actualizar aquí. -->
+    <base href="/cerro-san-francisco/">
+    <meta name="robots" content="noindex">
+    <title>Página no encontrada | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=19" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- ERROR 404 -->
+    <main class="error-404">
+        <div class="wrapper error-404-content">
+            <p class="error-404-code" aria-hidden="true">404</p>
+            <h1 class="error-404-title">Te saliste del sendero</h1>
+            <p class="error-404-text">La página que buscas no existe o cambió de lugar. Vuelve al camino principal
+                para seguir recorriendo el cerro.</p>
+            <div class="error-404-acciones">
+                <a href="index.html" class="btn-primary-medium btn-primary-medium--tall">Volver al inicio</a>
+                <a href="actividades.html" class="btn-outline-medium">Ver actividades</a>
+            </div>
+        </div>
+
+        <!-- Silueta del cerro, igual que en el home -->
+        <div class="error-404-montanas" aria-hidden="true"></div>
+    </main>
+    <!-- ERROR 404 -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+
+</body>
+
+</html>

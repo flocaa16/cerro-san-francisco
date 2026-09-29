@@ -2917,3 +2917,83 @@ button.cover:hover {
 }
 
 /*-----------------------INSCRIPCION-----------------------*/
+
+
+/*-----------------------ERROR 404-----------------------*/
+
+.error-404 {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 90px);
+}
+
+.error-404-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding-top: clamp(48px, 8vh, 96px);
+    padding-bottom: 24px;
+    text-align: center;
+}
+
+.error-404-code {
+    font-size: clamp(96px, 18vw, 200px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: #F2F7F2;
+    /* Borde verde para que el número se lea sobre el fondo blanco */
+    -webkit-text-stroke: 2px #557458;
+}
+
+.error-404-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.error-404-text {
+    max-width: 560px;
+    font-size: 20px;
+    line-height: 1.4;
+    letter-spacing: 0.15px;
+}
+
+.error-404-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* Montañas del home: silueta + verde abajo */
+.error-404-montanas {
+    height: clamp(120px, 23.5vw, 340px);
+    /* Silueta arriba y verde abajo, para que se una con el footer */
+    background-image: url('icons/montanas.svg'), linear-gradient(#557458, #557458);
+    background-repeat: no-repeat, no-repeat;
+    background-position: center top, center bottom;
+    background-size: 100% auto, 100% calc(100% - 23.5vw + 2px);
+}
+
+@media (max-width: 767.98px) {
+    .error-404-title {
+        font-size: 32px;
+    }
+
+    .error-404-text {
+        font-size: 17px;
+    }
+
+    .error-404-acciones {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+}
+
+/*-----------------------ERROR 404-----------------------*/

@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=18" />
+    <link rel="stylesheet" href="style.css?v=19" />
 
 </head>
 
@@ -44,7 +44,7 @@
     <!-- INSCRIPCION -->
     <main class="inscripcion">
         <nav class="breadcrumb breadcrumb--claro" aria-label="Estás en">
-            <a href="index.html" class="breadcrumb-link">Inicio</a>
+            <a href="index.html" class="breadcrumb-link" id="migaOrigen">Inicio</a>
             <span class="breadcrumb-sep" aria-hidden="true">|</span>
             <span class="breadcrumb-actual" aria-current="page" id="eventoMigas">Ruta de las Aves de San Felipe</span>
         </nav>
@@ -185,7 +185,26 @@
             }
         };
 
-        const id = new URLSearchParams(window.location.search).get('evento');
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('evento');
+
+        // Ruta de navegación: muestra la página desde la que se llegó (Inicio o Actividades)
+        const origenes = {
+            'inicio': { texto: 'Inicio', href: 'index.html' },
+            'actividades': { texto: 'Actividades', href: 'actividades.html' }
+        };
+
+        let desde = params.get('desde');
+
+        // Si el link no trae "desde", se usa la página anterior del navegador
+        if (!origenes[desde] && document.referrer.includes('actividades.html')) {
+            desde = 'actividades';
+        }
+
+        const origen = origenes[desde] || origenes['inicio'];
+        const migaOrigen = document.querySelector('#migaOrigen');
+        migaOrigen.textContent = origen.texto;
+        migaOrigen.href = origen.href;
         const evento = eventos[id];
 
         // Si el evento existe, se muestran sus datos (si no, queda la Ruta de las Aves)
