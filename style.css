@@ -2500,7 +2500,9 @@ button.cover:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: clamp(32px, 6vh, 60px) 20px clamp(32px, 6vh, 60px) 46px;
+    /* Abajo se reserva el espacio por donde sube la silueta del cerro (206px + 11px de aire, como en Figma),
+       así la montaña nunca tapa el texto ni el botón */
+    padding: clamp(32px, 6vh, 60px) 20px 217px 46px;
     max-width: 673px;
 }
 
@@ -2601,7 +2603,7 @@ button.cover:hover {
 
 @media (max-width: 991.98px) {
     .visita-content {
-        padding: 40px 20px;
+        padding: 40px 20px 48px 20px;
         max-width: none;
     }
 
@@ -2795,3 +2797,123 @@ button.cover:hover {
 /*EDUCACION*/
 
 /*-----------------------SUBPAGINAS DE ACTIVIDADES-----------------------*/
+
+
+/*-----------------------INSCRIPCION-----------------------*/
+
+.inscripcion {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 36px 20px 100px 20px;
+}
+
+/* Ruta de navegación sobre fondo blanco (verde) */
+.breadcrumb--claro {
+    position: static;
+    color: #557458;
+    margin-bottom: 36px;
+}
+
+.breadcrumb--claro .breadcrumb-link {
+    color: #557458;
+}
+
+.breadcrumb--claro .breadcrumb-link:hover {
+    border-color: #557458;
+}
+
+.breadcrumb--claro .breadcrumb-actual {
+    border-color: #557458;
+}
+
+.evento-detalle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+.evento-detalle-img {
+    display: block;
+    width: 100%;
+    height: clamp(320px, 55vh, 480px);
+    object-fit: cover;
+}
+
+.evento-detalle-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 40px;
+    padding: 20px 0;
+}
+
+.evento-detalle-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.evento-detalle-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+}
+
+.evento-detalle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    text-align: justify;
+}
+
+.btn-inscribirme {
+    width: 282px;
+    max-width: 100%;
+}
+
+@media (max-width: 991.98px) {
+    .evento-detalle {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .evento-detalle-img {
+        height: 360px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .inscripcion {
+        padding-bottom: 60px;
+    }
+
+    .breadcrumb--claro {
+        font-size: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .evento-detalle-img {
+        height: 240px;
+    }
+
+    .evento-detalle-title {
+        font-size: 26px;
+    }
+
+    .evento-detalle-content {
+        align-items: stretch;
+    }
+
+    .btn-inscribirme {
+        width: 100%;
+    }
+}
+
+/*-----------------------INSCRIPCION-----------------------*/

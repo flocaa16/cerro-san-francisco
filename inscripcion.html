@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruta de las Aves de San Felipe | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=18" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- INSCRIPCION -->
+    <main class="inscripcion">
+        <nav class="breadcrumb breadcrumb--claro" aria-label="Estás en">
+            <a href="index.html" class="breadcrumb-link">Inicio</a>
+            <span class="breadcrumb-sep" aria-hidden="true">|</span>
+            <span class="breadcrumb-actual" aria-current="page" id="eventoMigas">Ruta de las Aves de San Felipe</span>
+        </nav>
+
+        <article class="evento-detalle">
+            <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+            <img src="img/evento-aves.png" alt="Ruta de las Aves de San Felipe" class="evento-detalle-img" id="eventoImg">
+
+            <div class="evento-detalle-content">
+                <div class="evento-detalle-info">
+                    <span class="chip" id="eventoEstado">Inscripciones abiertas</span>
+                    <h1 class="evento-detalle-title" id="eventoTitulo">Ruta de las Aves de San Felipe</h1>
+                    <div class="evento-info">
+                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24"><span
+                                id="eventoFecha">Sábado 13 junio</span></p>
+                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24"><span
+                                id="eventoHora">10 a 13 horas</span></p>
+                    </div>
+                    <div class="evento-detalle-text" id="eventoTexto">
+                        <p>¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?</p>
+                        <p>Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San
+                            Francisco de Curimón, donde recorreremos senderos, observaremos aves y descubriremos más sobre
+                            la biodiversidad del Valle del Aconcagua.</p>
+                        <p>Además, podrás obtener tu Minipasaporte de la Ruta de las Aves e ir reuniendo timbres para
+                            acceder a premios y beneficios en distintos espacios del Valle.</p>
+                    </div>
+                </div>
+
+                <!-- Reemplazar # por el link del formulario de inscripción de cada evento (en los datos de abajo) -->
+                <a href="#" class="btn-primary-medium btn-primary-medium--tall btn-inscribirme" id="eventoLink"
+                    target="_blank" rel="noopener noreferrer">Inscribirme</a>
+            </div>
+        </article>
+    </main>
+    <!-- INSCRIPCION -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
+        // La página se abre con inscripcion.html?evento=aves (o nubes, etc.)
+        const eventos = {
+            'aves': {
+                titulo: 'Ruta de las Aves de San Felipe',
+                estado: 'Inscripciones abiertas',
+                fecha: 'Sábado 13 junio',
+                hora: '10 a 13 horas',
+                img: 'img/evento-aves.png',
+                texto: [
+                    '¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?',
+                    'Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San Francisco de Curimón, donde recorreremos senderos, observaremos aves y descubriremos más sobre la biodiversidad del Valle del Aconcagua.',
+                    'Además, podrás obtener tu Minipasaporte de la Ruta de las Aves e ir reuniendo timbres para acceder a premios y beneficios en distintos espacios del Valle.'
+                ],
+                link: '#'
+            },
+            'nubes': {
+                titulo: 'Caminata y Taller de observación e interpretación de nubes',
+                estado: 'Inscripciones abiertas',
+                fecha: 'Sábado 25 julio',
+                hora: '10 a 13 horas',
+                img: 'img/evento-nubes.png',
+                // Texto pendiente: en el Figma solo está la descripción de la Ruta de las Aves
+                texto: [],
+                link: '#'
+            }
+        };
+
+        const id = new URLSearchParams(window.location.search).get('evento');
+        const evento = eventos[id];
+
+        // Si el evento existe, se muestran sus datos (si no, queda la Ruta de las Aves)
+        if (evento) {
+            document.title = evento.titulo + ' | Cerro San Francisco de Curimón';
+            document.querySelector('#eventoMigas').textContent = evento.titulo;
+            document.querySelector('#eventoTitulo').textContent = evento.titulo;
+            document.querySelector('#eventoEstado').textContent = evento.estado;
+            document.querySelector('#eventoFecha').textContent = evento.fecha;
+            document.querySelector('#eventoHora').textContent = evento.hora;
+            document.querySelector('#eventoImg').src = evento.img;
+            document.querySelector('#eventoImg').alt = evento.titulo;
+            document.querySelector('#eventoLink').href = evento.link;
+
+            const texto = document.querySelector('#eventoTexto');
+            texto.innerHTML = '';
+            evento.texto.forEach(parrafo => {
+                const p = document.createElement('p');
+                p.textContent = parrafo;
+                texto.appendChild(p);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
