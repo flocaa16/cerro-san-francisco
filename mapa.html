@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mapa | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=26" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button nav-button--active" href="mapa.html" aria-current="page">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+
+                <!-- Redes sociales (como en fundacionlepe.cl) -->
+                <div class="header-acciones">
+                    <ul class="redes">
+                        <li><a class="red" href="https://wa.me/56942053471" target="_blank" rel="noopener"
+                                aria-label="WhatsApp de Fundación Lepe"><span class="red-icono red-icono--whatsapp"></span></a></li>
+                        <li><a class="red" href="https://www.linkedin.com/company/fundacion-lepe/" target="_blank"
+                                rel="noopener" aria-label="LinkedIn de Fundación Lepe"><span class="red-icono red-icono--linkedin"></span></a></li>
+                        <li><a class="red" href="https://www.instagram.com/fundacionlepe/" target="_blank" rel="noopener"
+                                aria-label="Instagram de Fundación Lepe"><span class="red-icono red-icono--instagram"></span></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- MAPA -->
+    <main class="mapa">
+        <div class="mapa-intro">
+            <h1 class="mapa-title">Mapa del cerro</h1>
+            <p class="mapa-text">Explora el recorrido y sus puntos de interés. Elige un número en el cerro o en la parte
+                de abajo para acercarte.</p>
+        </div>
+
+        <!-- Vista del cerro (Figma: "Perfil del cerro - Senderos") -->
+        <div class="mapa-vista" id="mapaVista">
+            <div class="mapa-escena" id="mapaEscena">
+                <!-- Exportar del Figma el grupo 707:6659 (silueta + sendero) como img/mapa-cerro.svg -->
+                <img src="img/mapa-cerro.svg" alt="Perfil del Cerro San Francisco con el sendero hasta la cima"
+                    class="mapa-silueta">
+                <div id="mapaMarcadores"></div>
+            </div>
+
+            <!-- Información del punto elegido -->
+            <section class="mapa-popup" id="mapaPopup" aria-live="polite" hidden>
+                <button type="button" class="mapa-popup-close" id="mapaCerrar" aria-label="Volver a la vista general">
+                    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor"
+                            d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                    </svg>
+                </button>
+                <p class="mapa-popup-tipo" id="popupTipo"></p>
+                <h2 class="mapa-popup-title"><span class="mapa-numero mapa-numero--chico" id="popupNumero"></span><span
+                        id="popupTitulo"></span></h2>
+                <p class="mapa-popup-text" id="popupTexto"></p>
+                <a href="visita-autoguiada.html" class="btn-underline" id="popupLink">Ver visita autoguiada</a>
+            </section>
+        </div>
+
+        <!-- Puntos del recorrido -->
+        <div class="mapa-suelo">
+            <button type="button" class="arrow-button arrow-button--left mapa-flecha" id="mapaAnterior" aria-label="Punto anterior">
+                <img src="icons/arrow-forward.svg" alt="">
+            </button>
+
+            <ol class="mapa-puntos" id="mapaPuntos"></ol>
+
+            <button type="button" class="arrow-button mapa-flecha" id="mapaSiguiente" aria-label="Punto siguiente">
+                <img src="icons/arrow-forward.svg" alt="">
+            </button>
+        </div>
+    </main>
+    <!-- MAPA -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                    <ul class="redes redes--footer">
+                    <li><a class="red" href="https://wa.me/56942053471" target="_blank" rel="noopener"
+                            aria-label="WhatsApp de Fundación Lepe"><span class="red-icono red-icono--whatsapp"></span></a></li>
+                    <li><a class="red" href="https://www.linkedin.com/company/fundacion-lepe/" target="_blank"
+                            rel="noopener" aria-label="LinkedIn de Fundación Lepe"><span class="red-icono red-icono--linkedin"></span></a></li>
+                    <li><a class="red" href="https://www.instagram.com/fundacionlepe/" target="_blank" rel="noopener"
+                            aria-label="Instagram de Fundación Lepe"><span class="red-icono red-icono--instagram"></span></a></li>
+                </ul>
+                    <address class="footer-direccion">
+                        Parque Natural Cerro San Francisco<br>Curimón, San Felipe
+                    </address>
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-bottom">
+                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+                <a href="https://www.fundacionlepe.cl/" class="footer-lepe" target="_blank" rel="noopener">
+                    <span>Una iniciativa de</span>
+                    <img src="icons/logo-fundacion-lepe.svg" alt="Fundación Lepe" width="136" height="43">
+                </a>
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        // Mapa del cerro (referencia: ciudadquequeremos.cl/coyhaique/imagen-objetivo)
+        // Para agregar un punto, copia un bloque. x e y son el % dentro de img/mapa-cerro.svg
+        // OJO: los datos repiten "3,67 km / fácil" como en el Figma (revisar)
+        const puntos = [
+            {
+                id: 'sendero-principal',
+                tipo: 'Sendero',
+                nombre: 'Sendero Principal',
+                x: 7.9, y: 64.8,
+                tiempo: '2 horas', longitud: '3,67 km', dificultad: 'fácil',
+                texto: 'Comienza en la base del cerro y sube por la ladera poniente hasta la cima, con paneles informativos a lo largo del camino.',
+                silueta: 'img/silueta-sendero.svg',
+                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' }
+            },
+            {
+                id: 'catedral-verde',
+                tipo: 'Punto de interés',
+                nombre: 'Catedral Verde',
+                x: 61.7, y: 10.4,
+                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'fácil',
+                texto: 'Un bosque de árboles altos en la parte alta del cerro, ideal para descansar a la sombra.',
+                silueta: 'img/silueta-catedral.svg',
+                link: { texto: 'Ver atractivos del cerro', href: 'cerro.html' }
+            },
+            {
+                id: 'mirador',
+                tipo: 'Punto de interés',
+                nombre: 'Mirador',
+                x: 34.9, y: 26.2,
+                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'fácil',
+                texto: 'Junto a la cruz, con vista a todo el Valle del Aconcagua.',
+                silueta: 'img/silueta-mirador.svg',
+                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' }
+            }
+        ];
+
+        const ZOOM = window.matchMedia('(max-width: 767.98px)').matches ? 2.6 : 1.8;
+        const vista = document.querySelector('#mapaVista');
+        const escena = document.querySelector('#mapaEscena');
+        const marcadores = document.querySelector('#mapaMarcadores');
+        const listaPuntos = document.querySelector('#mapaPuntos');
+        const popup = document.querySelector('#mapaPopup');
+        let actual = -1;
+
+        // Crear los números sobre el cerro y los puntos de abajo
+        puntos.forEach((punto, i) => {
+            const marcador = document.createElement('button');
+            marcador.type = 'button';
+            marcador.className = 'mapa-marcador';
+            marcador.style.left = punto.x + '%';
+            marcador.style.top = punto.y + '%';
+            marcador.textContent = i + 1;
+            marcador.setAttribute('aria-label', (i + 1) + '. ' + punto.nombre);
+            marcador.addEventListener('click', () => elegir(i));
+            marcadores.appendChild(marcador);
+
+            const li = document.createElement('li');
+            li.innerHTML =
+                '<button type="button" class="mapa-punto">' +
+                '<img class="mapa-punto-silueta" alt="">' +
+                '<span class="mapa-punto-nombre"></span>' +
+                '<span class="mapa-punto-datos">' +
+                '<span>Tiempo estimado: <strong></strong></span>' +
+                '<span>Longitud recorrido: <strong></strong></span>' +
+                '<span>Dificultad: <strong></strong></span>' +
+                '</span>' +
+                '<span class="mapa-numero"></span>' +
+                '</button>';
+            const silueta = li.querySelector('.mapa-punto-silueta');
+            silueta.addEventListener('error', () => silueta.remove());
+            silueta.src = punto.silueta;
+            li.querySelector('.mapa-punto-nombre').textContent = punto.nombre;
+            const datos = li.querySelectorAll('strong');
+            datos[0].textContent = punto.tiempo;
+            datos[1].textContent = punto.longitud;
+            datos[2].textContent = punto.dificultad;
+            li.querySelector('.mapa-numero').textContent = i + 1;
+            li.querySelector('.mapa-punto').addEventListener('click', () => elegir(i === actual ? -1 : i));
+            listaPuntos.appendChild(li);
+        });
+
+        // Acercar la vista al punto (como una cámara)
+        function moverCamara() {
+            if (actual < 0) {
+                escena.style.transform = '';
+                escena.style.setProperty('--zoom', 1);
+                return;
+            }
+            const punto = puntos[actual];
+            const px = escena.offsetWidth * punto.x / 100;
+            const py = escena.offsetHeight * punto.y / 100;
+            // El punto queda a la derecha del centro para dejar espacio a la información
+            const celular = window.innerWidth < 768;
+            const destinoX = vista.clientWidth * (celular ? 0.5 : 0.62);
+            const destinoY = celular ? escena.offsetTop + escena.offsetHeight / 2 : vista.clientHeight * 0.45;
+            const tx = destinoX - escena.offsetLeft - px * ZOOM;
+            const ty = destinoY - escena.offsetTop - py * ZOOM;
+            escena.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) scale(' + ZOOM + ')';
+            escena.style.setProperty('--zoom', ZOOM);
+        }
+
+        function elegir(indice, sinHistorial) {
+            actual = indice;
+            vista.classList.toggle('mapa-vista--zoom', actual >= 0);
+
+            document.querySelectorAll('.mapa-marcador').forEach((marcador, i) => {
+                marcador.classList.toggle('mapa-marcador--activo', i === actual);
+            });
+            document.querySelectorAll('.mapa-punto').forEach((boton, i) => {
+                boton.classList.toggle('mapa-punto--activo', i === actual);
+                boton.setAttribute('aria-pressed', i === actual);
+            });
+
+            if (actual >= 0) {
+                const punto = puntos[actual];
+                document.querySelector('#popupTipo').textContent = punto.tipo;
+                document.querySelector('#popupNumero').textContent = actual + 1;
+                document.querySelector('#popupTitulo').textContent = punto.nombre;
+                document.querySelector('#popupTexto').textContent = punto.texto;
+                const link = document.querySelector('#popupLink');
+                link.textContent = punto.link.texto;
+                link.href = punto.link.href;
+                popup.hidden = false;
+
+                // En celular, el punto elegido se muestra en la lista de abajo (sin mover la página)
+                listaPuntos.scrollTo({ left: listaPuntos.children[actual].offsetLeft - listaPuntos.offsetLeft, behavior: 'smooth' });
+            } else {
+                popup.hidden = true;
+            }
+
+            if (!sinHistorial) {
+                history.replaceState(null, '', actual >= 0 ? '#' + puntos[actual].id : 'mapa.html');
+            }
+            moverCamara();
+        }
+
+        document.querySelector('#mapaCerrar').addEventListener('click', () => elegir(-1));
+        document.querySelector('#mapaAnterior').addEventListener('click', () => {
+            elegir(actual <= 0 ? puntos.length - 1 : actual - 1);
+        });
+        document.querySelector('#mapaSiguiente').addEventListener('click', () => {
+            elegir(actual >= puntos.length - 1 ? 0 : actual + 1);
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && actual >= 0) elegir(-1);
+        });
+        window.addEventListener('resize', moverCamara);
+
+        // Si se llega con un punto en la dirección (por ejemplo mapa.html#mirador), se abre ese punto
+        function abrirDesdeDireccion() {
+            const indice = puntos.findIndex(punto => '#' + punto.id === window.location.hash);
+            elegir(indice, true);
+        }
+
+        window.addEventListener('hashchange', abrirDesdeDireccion);
+        if (window.location.hash) abrirDesdeDireccion();
+    </script>
+
+</body>
+
+</html>

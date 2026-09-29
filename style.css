@@ -3130,6 +3130,397 @@ button.cover:hover {
 /*-----------------------ERROR 404-----------------------*/
 
 
+/*-----------------------MAPA-----------------------*/
+/* Figma: "03 Mapa" (Perfil del cerro - Senderos). Interacción inspirada en el mapa de ciudadquequeremos.cl */
+
+.mapa {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
+    background-color: #F2F7F2;
+}
+
+/*INTRO*/
+.mapa-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 40px 120px 0 120px;
+}
+
+.mapa-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.mapa-text {
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #303132;
+}
+
+/*INTRO*/
+
+/*VISTA DEL CERRO*/
+.mapa-vista {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    min-height: 280px;
+    padding: 32px 0 64px 0;
+    overflow: hidden;
+}
+
+.mapa-escena {
+    position: relative;
+    /* El cerro se achica en pantallas bajas para que toda la página quepa en la pantalla */
+    width: min(100%, 1440px, max(720px, calc((100vh - 600px) * 3.845)));
+    margin: 0 auto;
+    aspect-ratio: 1438 / 374;
+    transform-origin: 0 0;
+    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mapa-silueta {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Números sobre el cerro (no crecen con el zoom) */
+.mapa-marcador {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background-color: #5C8F61;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transform: translate(-50%, -50%) scale(calc(1 / var(--zoom, 1)));
+    transition: background-color 0.3s ease, opacity 0.5s ease, box-shadow 0.3s ease;
+}
+
+.mapa-marcador:hover {
+    background-color: #314533;
+}
+
+.mapa-vista--zoom .mapa-marcador {
+    opacity: 0.5;
+}
+
+.mapa-vista--zoom .mapa-marcador--activo {
+    opacity: 1;
+    background-color: #314533;
+    animation: mapa-pulso 1.6s ease-out infinite;
+}
+
+@keyframes mapa-pulso {
+    from {
+        box-shadow: 0 0 0 0 rgba(92, 143, 97, 0.6);
+    }
+
+    to {
+        box-shadow: 0 0 0 16px rgba(92, 143, 97, 0);
+    }
+}
+
+/* Información del punto elegido */
+.mapa-popup {
+    position: absolute;
+    top: 24px;
+    left: 120px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 360px;
+    padding: 24px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+    animation: modal-disolver 0.4s ease;
+}
+
+.mapa-popup[hidden] {
+    display: none;
+}
+
+.mapa-popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #557458;
+    cursor: pointer;
+}
+
+.mapa-popup-tipo {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #727376;
+}
+
+.mapa-popup-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 32px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #557458;
+}
+
+.mapa-popup-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #303132;
+}
+
+/*VISTA DEL CERRO*/
+
+/*PUNTOS (suelo verde con los datos)*/
+.mapa-suelo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 16px 120px 24px 120px;
+    background-color: #557458;
+}
+
+.mapa-flecha {
+    flex-shrink: 0;
+}
+
+.mapa-puntos {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 282px));
+    justify-content: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mapa-punto {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #FFFFFF;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* Silueta decorativa sobre el suelo (árboles, bosque, cruz) */
+.mapa-punto-silueta {
+    position: absolute;
+    bottom: calc(100% + 16px - 1px);
+    left: 50%;
+    height: 96px;
+    width: auto;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.mapa-punto-nombre {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.mapa-punto-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    font-size: 16px;
+    letter-spacing: 0.024px;
+    text-align: left;
+}
+
+.mapa-punto-datos strong {
+    font-weight: 500;
+}
+
+.mapa-numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    height: 56px;
+    padding: 0 20px;
+    border-radius: 65px;
+    background-color: #5C8F61;
+    color: #FFFFFF;
+    font-size: 34px;
+    font-weight: 700;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mapa-numero--chico {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 18px;
+}
+
+.mapa-punto:hover .mapa-numero {
+    background-color: #7FB084;
+}
+
+.mapa-punto--activo .mapa-numero,
+.mapa-punto--activo:hover .mapa-numero {
+    background-color: #FFFFFF;
+    color: #557458;
+}
+
+/*PUNTOS*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    .mapa-escena,
+    .mapa-popup {
+        transition: none;
+        animation: none;
+    }
+
+    .mapa-vista--zoom .mapa-marcador--activo {
+        animation: none;
+    }
+}
+
+@media (max-width: 1199.98px) {
+
+    .mapa-intro,
+    .mapa-suelo {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .mapa-popup {
+        left: 40px;
+    }
+
+    .mapa-punto-nombre {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .mapa-title {
+        font-size: 40px;
+    }
+
+    .mapa-punto-datos {
+        font-size: 14px;
+    }
+
+    .mapa-punto-silueta {
+        height: 72px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mapa-intro {
+        gap: 12px;
+        padding: 32px 16px 0 16px;
+    }
+
+    .mapa-title {
+        font-size: 32px;
+    }
+
+    .mapa-text {
+        font-size: 16px;
+    }
+
+    .mapa-vista {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        min-height: 0;
+        padding: 24px 0 80px 0;
+    }
+
+    .mapa-escena {
+        width: 100%;
+    }
+
+    /* En celular la información va debajo del cerro */
+    .mapa-popup {
+        position: relative;
+        top: auto;
+        left: auto;
+        order: 2;
+        width: auto;
+        margin: 24px 16px 0 16px;
+    }
+
+    .mapa-suelo {
+        gap: 8px;
+        padding: 16px 8px 24px 8px;
+    }
+
+    .mapa-flecha {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Los puntos se deslizan de a uno */
+    .mapa-puntos {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: 100%;
+        justify-content: start;
+        gap: 0;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .mapa-puntos li {
+        scroll-snap-align: center;
+    }
+
+    .mapa-punto {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .mapa-punto-silueta {
+        display: none;
+    }
+
+    .mapa-punto-datos {
+        align-items: center;
+    }
+}
+
+/*-----------------------MAPA-----------------------*/
+
+
 /*-----------------------AMIGOS DEL CERRO-----------------------*/
 /* Figma: "10 Amigos del Cerro" y "Flujo - Amigos del Cerro" */
 
