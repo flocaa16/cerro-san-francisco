@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=26" />
+    <link rel="stylesheet" href="style.css?v=28" />
 
 </head>
 
@@ -100,14 +100,100 @@
                 <div class="card-educacion-contacto">
                     <p class="card-educacion-pregunta">¿Tienes preguntas sobre las actividades?</p>
                     <p class="card-educacion-ayuda">Nuestro equipo está disponible para ayudarte a planificar tu visita.</p>
-                    <!-- Lleva al formulario de contacto del footer -->
-                    <a href="#footerForm" class="btn-primary-medium btn-primary-medium--tall btn-contactar">Contactar</a>
+                    <!-- Abre el modal "Formulario de Contacto" -->
+                    <button type="button" class="btn-primary-medium btn-primary-medium--tall btn-contactar"
+                        id="btnContactar" aria-haspopup="dialog">Contactar</button>
                 </div>
             </div>
         </div>
         <!-- CARD EDUCACION -->
     </section>
     <!-- HERO -->
+
+    <!-- MODAL CONTACTO (Figma: "Modal Formulario de Contacto") -->
+    <dialog class="modal" id="modalContacto" aria-labelledby="contactoTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+        </button>
+
+        <!-- Formulario -->
+        <form class="modal-form modal-paso" id="formContacto" novalidate>
+            <h2 class="modal-title" id="contactoTitulo">Formulario de Contacto</h2>
+            <p class="modal-subtitle">Completa tus datos y te responderemos a la brevedad.</p>
+
+            <div class="modal-row">
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="conNombre" name="nombre" type="text" placeholder=" "
+                            autocomplete="given-name" required>
+                        <label class="campo-label" for="conNombre">Nombre</label>
+                    </div>
+                    <p class="campo-error" id="conNombreError"></p>
+                </div>
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="conApellido" name="apellido" type="text" placeholder=" "
+                            autocomplete="family-name" required>
+                        <label class="campo-label" for="conApellido">Apellido</label>
+                    </div>
+                    <p class="campo-error" id="conApellidoError"></p>
+                </div>
+            </div>
+            <div class="modal-row">
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="conCorreo" name="correo" type="email" placeholder=" "
+                            autocomplete="email" required>
+                        <label class="campo-label" for="conCorreo">Correo electrónico</label>
+                    </div>
+                    <p class="campo-error" id="conCorreoError"></p>
+                </div>
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="conInstitucion" name="institucion" type="text" placeholder=" "
+                            autocomplete="organization">
+                        <label class="campo-label" for="conInstitucion">Institución</label>
+                    </div>
+                </div>
+            </div>
+            <div class="campo">
+                <div class="campo-box">
+                    <input class="campo-input" id="conComuna" name="comuna" type="text" placeholder=" "
+                        autocomplete="address-level2">
+                    <label class="campo-label" for="conComuna">Comuna</label>
+                </div>
+            </div>
+            <div class="campo">
+                <div class="campo-box campo-box--area">
+                    <textarea class="campo-input campo-area" id="conMensaje" name="mensaje" placeholder=" "
+                        required></textarea>
+                    <label class="campo-label" for="conMensaje">Escribe tu mensaje</label>
+                </div>
+                <p class="campo-error" id="conMensajeError"></p>
+            </div>
+
+            <input type="hidden" name="asunto" value="Educación en la Naturaleza">
+            <p class="modal-error" role="alert"></p>
+            <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn modal-btn--centro">Enviar
+                mensaje</button>
+        </form>
+        <!-- Formulario -->
+
+        <!-- Mensaje enviado -->
+        <div class="modal-paso modal-paso--enviado" id="contactoEnviado" hidden>
+            <h2 class="modal-title" id="enviadoTitulo">Mensaje Enviado</h2>
+            <p class="modal-mensaje">Gracias por contactarnos. Nuestro equipo revisará tu mensaje y te responderá dentro de
+                las próximas 48 horas hábiles.</p>
+            <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-btn modal-btn--centro"
+                data-cerrar>Aceptar</button>
+        </div>
+        <!-- Mensaje enviado -->
+    </dialog>
+    <!-- MODAL CONTACTO -->
+
 
 
     <!-- FOOTER -->
@@ -230,9 +316,99 @@
             });
         });
 
-        // Al apretar "Contactar", el cursor queda listo en el formulario
-        document.querySelector('.btn-contactar').addEventListener('click', () => {
-            setTimeout(() => document.querySelector('#footerNombre').focus({ preventScroll: true }), 600);
+    </script>
+    <script>
+        // Modal "Formulario de Contacto"
+        // Para recibir los mensajes, crear un formulario en https://formspree.io (gratis)
+        // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
+        const FORM_ENDPOINT = '';
+
+        const modalContacto = document.querySelector('#modalContacto');
+        const formContacto = document.querySelector('#formContacto');
+        const contactoEnviado = document.querySelector('#contactoEnviado');
+
+        // Abrir
+        document.querySelector('#btnContactar').addEventListener('click', () => {
+            formContacto.hidden = false;
+            contactoEnviado.hidden = true;
+            modalContacto.setAttribute('aria-labelledby', 'contactoTitulo');
+            modalContacto.showModal();
+            document.querySelector('#conNombre').focus();
+        });
+
+        // Cerrar con la X, con "Aceptar" o haciendo clic fuera del modal
+        modalContacto.querySelectorAll('[data-cerrar]').forEach(boton => {
+            boton.addEventListener('click', () => modalContacto.close());
+        });
+        modalContacto.addEventListener('click', (event) => {
+            if (event.target === modalContacto) modalContacto.close();
+        });
+
+        // Validación de los campos obligatorios
+        function validarCampo(input) {
+            const error = document.querySelector('#' + input.id + 'Error');
+            let mensaje = '';
+
+            if (input.validity.valueMissing) mensaje = 'Este campo es obligatorio.';
+            else if (input.validity.typeMismatch) mensaje = 'Escribe un correo válido, por ejemplo nombre@email.com.';
+
+            if (error) error.textContent = mensaje;
+            input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+            if (error && mensaje) input.setAttribute('aria-describedby', error.id);
+            else input.removeAttribute('aria-describedby');
+            return !mensaje;
+        }
+
+        formContacto.querySelectorAll('[required]').forEach(input => {
+            input.addEventListener('blur', () => {
+                if (input.value) validarCampo(input);
+            });
+            input.addEventListener('input', () => {
+                if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
+            });
+        });
+
+        // Enviar
+        formContacto.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const error = formContacto.querySelector('.modal-error');
+            error.textContent = '';
+
+            const campos = [...formContacto.querySelectorAll('[required]')];
+            const validos = campos.map(validarCampo);
+            if (validos.includes(false)) {
+                campos[validos.indexOf(false)].focus();
+                return;
+            }
+
+            const boton = formContacto.querySelector('button[type="submit"]');
+            boton.disabled = true;
+            boton.textContent = 'Enviando...';
+
+            try {
+                if (FORM_ENDPOINT) {
+                    const respuesta = await fetch(FORM_ENDPOINT, {
+                        method: 'POST',
+                        body: new FormData(formContacto),
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (!respuesta.ok) throw new Error('No se pudo enviar');
+                } else {
+                    // Todavía sin conexión: solo se muestra la confirmación (modo prueba)
+                    console.warn('Mensaje de prueba: falta configurar FORM_ENDPOINT.');
+                }
+
+                formContacto.reset();
+                formContacto.hidden = true;
+                contactoEnviado.hidden = false;
+                modalContacto.setAttribute('aria-labelledby', 'enviadoTitulo');
+                contactoEnviado.querySelector('button').focus();
+            } catch (e) {
+                error.textContent = 'No pudimos enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
+            } finally {
+                boton.disabled = false;
+                boton.textContent = 'Enviar mensaje';
+            }
         });
     </script>
     <script>

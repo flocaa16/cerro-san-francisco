@@ -2891,6 +2891,9 @@ button.cover:hover {
 .btn-contactar {
     width: 282px;
     max-width: 100%;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 /* Espacio antes del footer (como en Figma) */
@@ -3235,60 +3238,90 @@ button.cover:hover {
     }
 }
 
-/* Información del punto elegido */
-.mapa-popup {
+/* Volver a la vista general */
+.mapa-volver {
     position: absolute;
-    top: 24px;
+    top: 16px;
     left: 120px;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    width: 360px;
-    padding: 24px;
-    background-color: #FFFFFF;
-    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
-    animation: modal-disolver 0.4s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: none;
+    background-color: rgba(49, 69, 51, 0.85);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.mapa-popup[hidden] {
+.mapa-volver img {
+    transform: rotate(180deg);
+}
+
+.mapa-volver:hover {
+    background-color: #314533;
+}
+
+.mapa-volver[hidden] {
     display: none;
 }
 
-.mapa-popup-close {
+/* Galería de fotos (Figma: "Galeria de fotos", 268 x 401) */
+.mapa-galeria {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 0;
+    right: max(55px, calc((100% - 1440px) / 2 + 55px));
+    bottom: 0;
+    z-index: 2;
+    aspect-ratio: 268 / 401;
+    max-height: 401px;
+    animation: modal-disolver 0.6s ease;
+}
+
+.mapa-galeria[hidden] {
+    display: none;
+}
+
+.mapa-galeria-fotos {
+    display: grid;
+    width: 100%;
+    height: 100%;
+}
+
+.mapa-galeria-foto {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.mapa-galeria-foto.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mapa-galeria-flechas {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
     display: flex;
-    padding: 8px;
-    border: none;
-    background: transparent;
-    color: #557458;
-    cursor: pointer;
+    justify-content: space-between;
+    transform: translateY(-50%);
 }
 
-.mapa-popup-tipo {
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #727376;
+.mapa-galeria-flechas[hidden] {
+    display: none;
 }
 
-.mapa-popup-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-right: 32px;
-    font-size: 24px;
-    font-weight: 500;
-    color: #557458;
-}
-
-.mapa-popup-text {
-    font-size: 16px;
-    line-height: 1.5;
-    color: #303132;
+.mapa-galeria .arrow-button img {
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
 }
 
 /*VISTA DEL CERRO*/
@@ -3396,12 +3429,59 @@ button.cover:hover {
     color: #557458;
 }
 
+/* Detalle del punto elegido (Figma: Variant2) */
+.mapa-suelo--detalle {
+    min-height: 300px;
+}
+
+.mapa-puntos[hidden],
+.mapa-detalle[hidden] {
+    display: none;
+}
+
+.mapa-detalle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    color: #FFFFFF;
+    animation: modal-disolver 0.5s ease;
+}
+
+.mapa-detalle-info {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 282px;
+    padding: 20px;
+}
+
+.mapa-detalle-info .mapa-punto-nombre {
+    text-align: center;
+}
+
+.mapa-detalle-info .mapa-punto-silueta {
+    bottom: calc(100% + 40px - 1px);
+}
+
+.mapa-detalle-text {
+    flex: 1;
+    max-width: 590px;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.08px;
+}
+
 /*PUNTOS*/
 
 @media (prefers-reduced-motion: reduce) {
 
     .mapa-escena,
-    .mapa-popup {
+    .mapa-galeria,
+    .mapa-galeria-foto,
+    .mapa-detalle {
         transition: none;
         animation: none;
     }
@@ -3419,8 +3499,12 @@ button.cover:hover {
         padding-right: 40px;
     }
 
-    .mapa-popup {
+    .mapa-volver {
         left: 40px;
+    }
+
+    .mapa-detalle {
+        gap: 32px;
     }
 
     .mapa-punto-nombre {
@@ -3468,14 +3552,47 @@ button.cover:hover {
         width: 100%;
     }
 
-    /* En celular la información va debajo del cerro */
-    .mapa-popup {
+    .mapa-volver {
+        left: 16px;
+        top: 8px;
+    }
+
+    /* En celular la galería va debajo del cerro */
+    .mapa-galeria {
         position: relative;
         top: auto;
-        left: auto;
+        right: auto;
+        bottom: auto;
         order: 2;
         width: auto;
+        max-height: none;
+        aspect-ratio: 4 / 3;
         margin: 24px 16px 0 16px;
+    }
+
+    .mapa-suelo--detalle {
+        min-height: 0;
+    }
+
+    .mapa-detalle {
+        flex-direction: column;
+        gap: 16px;
+        padding: 8px 0;
+        text-align: center;
+    }
+
+    .mapa-detalle-info {
+        width: auto;
+        padding: 0;
+        gap: 12px;
+    }
+
+    .mapa-detalle .mapa-numero {
+        order: -1;
+    }
+
+    .mapa-detalle-text {
+        font-size: 15px;
     }
 
     .mapa-suelo {
@@ -4259,6 +4376,25 @@ button.cover:hover {
     background-color: #557458;
 }
 
+/* Botón centrado de 282px (Formulario de Contacto) */
+.modal-btn--centro {
+    align-self: center;
+    width: 282px;
+    max-width: 100%;
+}
+
+.modal-paso--enviado {
+    gap: 24px;
+}
+
+.modal-mensaje {
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.024px;
+    color: #557458;
+    text-align: center;
+}
+
 .modal-btn:disabled {
     opacity: 0.7;
     cursor: wait;
@@ -4327,6 +4463,17 @@ button.cover:hover {
     font-size: 16px;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Área de mensaje: el label arriba, como en el Figma */
+.campo-area {
+    display: block;
+    height: 107px;
+    resize: vertical;
+}
+
+.campo-box--area .campo-label {
+    top: 26px;
 }
 
 .campo-input--icono {
