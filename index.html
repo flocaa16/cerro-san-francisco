@@ -47,7 +47,6 @@
             <div class="banner-text">
                 <p class="banner-subtitle">Bienvenido a</p>
                 <h1 class="banner-title">Cerro San Francisco</h1>
-                <a href="entradas.html" class="btn-primary-large">Reservar Entradas</a>
             </div>
             <div class="banner-image">
                 <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
@@ -395,14 +394,14 @@
         });
     </script>
     <script>
-        // Cómo llegar: datos de cada origen (textos del Figma)
-        // OJO: en el Figma San Felipe, Valparaíso, Los Andes y Mendoza repiten "90 km / 1h 20 min" (revisar)
+        // Cómo llegar: datos de cada origen
+        // Distancias y tiempos aproximados hasta el parque, en auto y sin tráfico (verificados en septiembre 2026)
         const rutas = {
             'santiago': {
                 nombre: 'Santiago',
-                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                datos: [['Distancia', '95 km'], ['Tiempo en auto', '1 h 25 min']],
                 subtitulo: 'En bus',
-                texto: 'Toma un bus interurbano desde Santiago hacia San Felipe (aprox. 1 h 30 min). Desde San Felipe, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+                texto: 'Toma un bus interurbano desde el Terminal Los Héroes o el Terminal Alameda hacia San Felipe (aprox. 1 h 30 min a 2 h). Desde San Felipe, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
             },
             'curimon': {
                 nombre: 'Curimón',
@@ -412,27 +411,27 @@
             },
             'san-felipe': {
                 nombre: 'San Felipe',
-                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                datos: [['Distancia', '6 km'], ['Tiempo en auto', '10 min']],
                 subtitulo: 'En bus',
-                texto: 'Desde San Felipe, toma un colectivo o bus local con destino a Curimón (aprox. 15 min). Bájate en el centro del pueblo y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+                texto: 'Desde San Felipe, toma un colectivo o bus local con destino a Curimón por la Ruta 60 (aprox. 15 min). Bájate en el centro del pueblo y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
             },
             'valparaiso': {
                 nombre: 'Valparaíso',
-                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                datos: [['Distancia', '135 km'], ['Tiempo en auto', '1 h 45 min']],
                 subtitulo: 'En bus',
-                texto: 'Toma un bus interurbano desde Valparaíso hacia San Felipe (aprox. 2 h). Desde el terminal, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque.'
+                texto: 'Toma un bus interurbano desde el Terminal Rodoviario de Valparaíso hacia San Felipe (aprox. 2 h a 2 h 30 min). Desde el terminal, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque.'
             },
             'los-andes': {
                 nombre: 'Los Andes',
-                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                datos: [['Distancia', '12 km'], ['Tiempo en auto', '15 min']],
                 subtitulo: 'En bus',
-                texto: 'Desde Los Andes, toma un bus o colectivo con dirección a San Felipe y pide bajarte en Curimón (aprox. 20 min). Desde ahí, camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+                texto: 'Desde Los Andes, toma un bus o colectivo con dirección a San Felipe por la Ruta 60 y pide bajarte en Curimón (aprox. 20 min). Desde ahí, camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
             },
             'mendoza': {
                 nombre: 'Mendoza',
-                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                datos: [['Distancia', '275 km'], ['Tiempo en auto', '4 h *']],
                 subtitulo: 'En bus',
-                texto: 'Cruza la cordillera en bus internacional por el Paso Los Libertadores hasta Los Andes. Desde ahí, continúa en bus o colectivo hacia San Felipe y bájate en Curimón.'
+                texto: 'Cruza la cordillera en bus internacional por el Paso Los Libertadores hasta Los Andes (aprox. 5 h). Desde ahí, continúa en bus o colectivo hacia San Felipe y bájate en Curimón. * Sin contar la espera en la frontera. Revisa el estado del paso antes de viajar: en invierno puede cerrar por nieve.'
             }
         };
 
