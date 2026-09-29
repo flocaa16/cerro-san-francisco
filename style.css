@@ -164,6 +164,25 @@ h3 {
     font-size: 16px;
 }
 
+.btn-outline-medium {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 0 24px;
+    border: 2px solid #557458;
+    color: #557458;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-medium:hover {
+    background-color: #557458;
+    color: #FFFFFF;
+}
+
 /* Flechas de los carruseles (la misma flecha, girada para la izquierda) */
 .arrow-button {
     flex-shrink: 0;
@@ -2113,3 +2132,169 @@ button.cover:hover {
 /*ACCIONES DE REGENERACION*/
 
 /*-----------------------CERRO-----------------------*/
+
+
+/*-----------------------ACTIVIDADES-----------------------*/
+
+/*ACTIVIDADES*/
+.actividades {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.actividad-card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: clamp(320px, 50vh, 450px);
+    overflow: hidden;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.actividad-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+/* Capa de color: 10% como en Figma */
+.actividad-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.actividad-card:hover .actividad-card-img {
+    transform: scale(1.05);
+}
+
+.actividad-card-title {
+    position: relative;
+    z-index: 1;
+    font-size: 48px;
+    font-weight: 700;
+    padding-bottom: 60px;
+}
+
+/* El título de la izquierda se alinea con el contenido de la página */
+.actividad-card--izquierda .actividad-card-title {
+    padding-left: max(20px, calc((100vw - 1160px) / 2));
+    padding-right: 24px;
+}
+
+.actividad-card--derecha .actividad-card-title {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+@media (max-width: 991.98px) {
+    .actividad-card-title {
+        font-size: 34px;
+        padding-bottom: 32px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .actividades {
+        grid-template-columns: 1fr;
+    }
+
+    .actividad-card {
+        height: 260px;
+    }
+
+    .actividad-card-title,
+    .actividad-card--izquierda .actividad-card-title,
+    .actividad-card--derecha .actividad-card-title {
+        font-size: 28px;
+        padding: 0 20px 24px 20px;
+    }
+}
+
+/*ACTIVIDADES*/
+
+/*EVENTOS PASADOS*/
+.eventos-pasados {
+    display: grid;
+    grid-template-columns: 696fr 744fr;
+    min-height: clamp(320px, 50vh, 400px);
+    margin-top: clamp(40px, 8vh, 78px);
+    margin-bottom: clamp(60px, 12vh, 130px);
+}
+
+.eventos-pasados-media {
+    position: relative;
+    overflow: hidden;
+    background-color: #314533;
+}
+
+.eventos-pasados-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.eventos-pasados-content {
+    display: flex;
+    align-items: center;
+    padding: 40px max(20px, calc((100vw - 1160px) / 2)) 40px 48px;
+    background-color: #F2F7F2;
+}
+
+.eventos-pasados-texto {
+    max-width: 556px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+    color: #557458;
+}
+
+.eventos-pasados-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+}
+
+.eventos-pasados-text {
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.15px;
+}
+
+@media (max-width: 991.98px) {
+    .eventos-pasados {
+        grid-template-columns: 1fr;
+    }
+
+    .eventos-pasados-media {
+        height: 300px;
+    }
+
+    .eventos-pasados-content {
+        padding: 48px 20px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .eventos-pasados-title {
+        font-size: 26px;
+    }
+
+    .eventos-pasados-media {
+        height: 220px;
+    }
+}
+
+/*EVENTOS PASADOS*/
+
+/*-----------------------ACTIVIDADES-----------------------*/

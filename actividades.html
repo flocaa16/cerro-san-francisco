@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Actividades | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=14" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button nav-button--active" href="actividades.html" aria-current="page">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- ACTIVIDADES -->
+    <section class="actividades" aria-label="Actividades">
+        <a href="visita-autoguiada.html" class="actividad-card actividad-card--izquierda">
+            <img src="img/visita-autoguiada.png" alt="" class="actividad-card-img">
+            <h1 class="actividad-card-title">Visita Autoguiada</h1>
+        </a>
+        <a href="educacion.html" class="actividad-card actividad-card--derecha">
+            <img src="img/como-llegar.png" alt="" class="actividad-card-img">
+            <h2 class="actividad-card-title">Educación en la naturaleza</h2>
+        </a>
+    </section>
+    <!-- ACTIVIDADES -->
+
+
+    <!-- EVENTOS -->
+    <section class="eventos">
+        <div class="eventos-band">
+            <p class="eventos-subtitle">No te quedes fuera de nuestros</p>
+            <h2 class="eventos-title">Próximos eventos</h2>
+        </div>
+
+        <div class="wrapper eventos-list">
+            <!-- EVENTO 1 -->
+            <article class="evento">
+                <div class="evento-card">
+                    <span class="chip">Inscripciones abiertas</span>
+                    <h3 class="evento-title">Ruta de las Aves de San Felipe</h3>
+                    <div class="evento-info">
+                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 13
+                            junio</p>
+                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
+                        </p>
+                    </div>
+                    <a href="actividades.html" class="btn-primary-medium">Ver más</a>
+                </div>
+                <div class="evento-image">
+                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                    <img src="img/evento-aves.png" alt="Ruta de las Aves de San Felipe">
+                </div>
+            </article>
+
+            <!-- EVENTO 2 -->
+            <article class="evento evento--reverse">
+                <div class="evento-card">
+                    <span class="chip">Inscripciones abiertas</span>
+                    <h3 class="evento-title">Caminata y Taller de observación e interpretación de nubes</h3>
+                    <div class="evento-info">
+                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 25
+                            julio</p>
+                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
+                        </p>
+                    </div>
+                    <a href="actividades.html" class="btn-primary-medium">Ver más</a>
+                </div>
+                <div class="evento-image">
+                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
+                    <img src="img/evento-nubes.png" alt="Caminata y taller de observación de nubes">
+                </div>
+            </article>
+        </div>
+    </section>
+    <!-- EVENTOS -->
+
+
+    <!-- EVENTOS PASADOS -->
+    <section class="eventos-pasados">
+        <div class="eventos-pasados-media">
+            <video class="eventos-pasados-video" autoplay muted loop playsinline aria-hidden="true">
+                <source src="video/acciones-regeneracion.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="eventos-pasados-content">
+            <div class="eventos-pasados-texto">
+                <h2 class="eventos-pasados-title">Visita nuestros Eventos Pasados</h2>
+                <p class="eventos-pasados-text">Te invitamos a descubrir los eventos pasados que hemos realizado,
+                    relacionados con la conservación, la regeneración ecológica y la educación para todas las edades.
+                    Para conocer nuestras iniciativas, visita la página de la Fundación Lepe, donde encontrarás toda la
+                    información.</p>
+                <a href="https://www.fundacionlepe.cl" class="btn-outline-medium" target="_blank"
+                    rel="noopener noreferrer">Visitar Fundación Lepe</a>
+            </div>
+        </div>
+    </section>
+    <!-- EVENTOS PASADOS -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        // Si la persona prefiere menos movimiento, el video queda detenido
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const video = document.querySelector('.eventos-pasados-video');
+            video.removeAttribute('autoplay');
+            video.pause();
+        }
+    </script>
+
+</body>
+
+</html>
