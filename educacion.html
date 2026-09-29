@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Educación en la naturaleza | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=16" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- HERO -->
+    <section class="subpagina-hero">
+        <div class="subpagina-hero-media">
+            <img src="img/educacion-hero.png" alt="Estudiantes reforestando el cerro" class="subpagina-hero-img">
+            <nav class="breadcrumb breadcrumb--alineado" aria-label="Estás en">
+                <a href="actividades.html" class="breadcrumb-link">Actividades</a>
+                <span class="breadcrumb-sep" aria-hidden="true">|</span>
+                <span class="breadcrumb-actual" aria-current="page">Educación en la naturaleza</span>
+            </nav>
+        </div>
+
+        <!-- CARD EDUCACION -->
+        <div class="card-educacion">
+            <div class="tabs" role="tablist" aria-label="Programas educativos">
+                <button type="button" class="tab is-active" role="tab" id="tab-aula" aria-selected="true"
+                    aria-controls="panel-aula">Aula al Aire Libre</button>
+                <button type="button" class="tab" role="tab" id="tab-inmersivas" aria-selected="false"
+                    aria-controls="panel-inmersivas" tabindex="-1">Visitas Inmersivas</button>
+            </div>
+
+            <div class="card-educacion-body">
+                <div class="tab-panels">
+                <!-- AULA AL AIRE LIBRE -->
+                <div class="tab-panel is-active" role="tabpanel" id="panel-aula" aria-labelledby="tab-aula">
+                    <div class="tab-panel-texto">
+                        <h2 class="tab-panel-title">Conoce Aula al Aire Libre</h2>
+                        <p class="tab-panel-text">El Aula al Aire Libre del programa Vivo Curimón convierte al cerro en una sala de clases. Jardines, escuelas y liceos pueden visitarlo con una ruta autónoma, una ruta guiada con kit didáctico alineado al Currículum Nacional, o una ruta colaborativa creada junto a sus docentes.</p>
+                    </div>
+                    <img src="img/aula-aire-libre.png" alt="Grupo de docentes recorriendo el cerro" class="tab-panel-img">
+                </div>
+
+                <!-- VISITAS INMERSIVAS -->
+                <div class="tab-panel" role="tabpanel" id="panel-inmersivas" aria-labelledby="tab-inmersivas">
+                    <div class="tab-panel-texto">
+                        <h2 class="tab-panel-title">Conoce Visitas inmersivas</h2>
+                        <p class="tab-panel-text">Recorridos guiados para grupos y agrupaciones que quieran conocer en profundidad el cerro: su biodiversidad, su historia y las acciones de regeneración que se realizan junto a la comunidad de Curimón.</p>
+                    </div>
+                    <img src="img/bosque-esclerofilo.png" alt="Panel informativo en el bosque del cerro" class="tab-panel-img">
+                </div>
+                </div>
+
+                <div class="card-educacion-contacto">
+                    <p class="card-educacion-pregunta">¿Tienes preguntas sobre las actividades?</p>
+                    <p class="card-educacion-ayuda">Nuestro equipo está disponible para ayudarte a planificar tu visita.</p>
+                    <!-- Lleva al formulario de contacto del footer -->
+                    <a href="#footerForm" class="btn-primary-medium btn-primary-medium--tall btn-contactar">Contactar</a>
+                </div>
+            </div>
+        </div>
+        <!-- CARD EDUCACION -->
+    </section>
+    <!-- HERO -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        // Pestañas de la card Educación (Variant2 / Variant3 del componente)
+        const tabs = document.querySelectorAll('.tab');
+        const panels = document.querySelectorAll('.tab-panel');
+
+        function activarTab(tab) {
+            tabs.forEach(t => {
+                const activa = t === tab;
+                t.classList.toggle('is-active', activa);
+                t.setAttribute('aria-selected', activa);
+                t.tabIndex = activa ? 0 : -1;
+            });
+            panels.forEach(panel => {
+                panel.classList.toggle('is-active', panel.id === tab.getAttribute('aria-controls'));
+            });
+        }
+
+        tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => activarTab(tab));
+
+            // Flechas del teclado para moverse entre pestañas
+            tab.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                    const siguiente = tabs[(i + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+                    siguiente.focus();
+                    activarTab(siguiente);
+                }
+            });
+        });
+
+        // Al apretar "Contactar", el cursor queda listo en el formulario
+        document.querySelector('.btn-contactar').addEventListener('click', () => {
+            setTimeout(() => document.querySelector('#footerNombre').focus({ preventScroll: true }), 600);
+        });
+    </script>
+
+</body>
+
+</html>

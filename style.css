@@ -2373,3 +2373,425 @@ button.cover:hover {
 /*EVENTOS PASADOS*/
 
 /*-----------------------ACTIVIDADES-----------------------*/
+
+
+/*-----------------------SUBPAGINAS DE ACTIVIDADES-----------------------*/
+
+/*HERO SUBPAGINA*/
+.subpagina-hero {
+    display: grid;
+    grid-template-columns: 708fr 732fr;
+    min-height: clamp(560px, calc(100vh - 90px), 710px);
+}
+
+.subpagina-hero-media {
+    position: relative;
+    overflow: hidden;
+    background-color: #314533;
+}
+
+.subpagina-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ruta de navegación sobre la foto */
+.breadcrumb {
+    position: absolute;
+    top: 42px;
+    left: 60px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+    color: #FFFFFF;
+}
+
+.breadcrumb--alineado {
+    left: max(20px, calc((100vw - 1160px) / 2));
+}
+
+.breadcrumb-link {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+    border-color: #FFFFFF;
+}
+
+.breadcrumb-sep {
+    padding-bottom: 4px;
+}
+
+.breadcrumb-actual {
+    font-weight: 700;
+    padding: 0 2px 4px 2px;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+@media (max-width: 991.98px) {
+    .subpagina-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .subpagina-hero-media {
+        height: 360px;
+    }
+
+    .breadcrumb,
+    .breadcrumb--alineado {
+        top: 24px;
+        left: 20px;
+        font-size: 17px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .subpagina-hero-media {
+        height: 260px;
+    }
+}
+
+/*HERO SUBPAGINA*/
+
+/*LISTA CON FLOR*/
+.lista-flor {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.lista-flor-item {
+    position: relative;
+    padding-left: 31px;
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+}
+
+.lista-flor-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 19px;
+    height: 24px;
+    background: url('icons/bullet-flor.svg') no-repeat center / contain;
+}
+
+/*LISTA CON FLOR*/
+
+/*VISITA AUTOGUIADA*/
+.visita-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(32px, 6vh, 60px) 20px clamp(32px, 6vh, 60px) 46px;
+    max-width: 673px;
+}
+
+.visita-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.visita-subtitle {
+    margin-top: 12px;
+    font-size: 24px;
+    color: #557458;
+}
+
+.visita-text {
+    margin-top: 24px;
+    max-width: 566px;
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+}
+
+.visita-incluye {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.visita-incluye-title {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+    color: #557458;
+}
+
+/* Recomendaciones + ficha técnica */
+.visita-detalle {
+    display: grid;
+    grid-template-columns: 708fr 732fr;
+    align-items: start;
+}
+
+.recomendaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 40px 40px max(20px, calc((100vw - 1160px) / 2 + 3px));
+}
+
+.recomendaciones-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    color: #557458;
+}
+
+/* La silueta del cerro sube por encima de la ficha, como en Figma */
+.ficha-tecnica {
+    position: relative;
+    margin-top: -206px;
+    padding-top: 139px;
+    background-image: url('icons/montanas.svg');
+    background-repeat: no-repeat;
+    background-position: -52px 0;
+    background-size: 1440px auto;
+}
+
+.ficha-tecnica-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+    padding: 40px 60px 60px 60px;
+    background-color: #557458;
+    color: #FFFFFF;
+}
+
+.ficha-tecnica-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ficha-tecnica-item dt {
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.15px;
+}
+
+.ficha-tecnica-item dd {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+@media (max-width: 991.98px) {
+    .visita-content {
+        padding: 40px 20px;
+        max-width: none;
+    }
+
+    .visita-title {
+        font-size: 36px;
+    }
+
+    .visita-detalle {
+        grid-template-columns: 1fr;
+    }
+
+    .ficha-tecnica {
+        order: -1;
+        margin-top: 0;
+        padding-top: 100px;
+        background-position: center top;
+        background-size: 960px auto;
+    }
+
+    .ficha-tecnica-box {
+        padding: 32px 20px 40px 20px;
+    }
+
+    .recomendaciones {
+        padding: 48px 20px;
+    }
+
+    .recomendaciones-title {
+        font-size: 28px;
+    }
+}
+
+/*VISITA AUTOGUIADA*/
+
+/*EDUCACION*/
+.card-educacion {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 612px;
+    background-color: #FFFFFF;
+}
+
+.tabs {
+    display: flex;
+    padding: 12px 24px 0 24px;
+    border-bottom: 0.5px solid rgba(60, 71, 73, 0.3);
+}
+
+.tab {
+    flex: 1;
+    padding: 18px 12px 10px 12px;
+    border: none;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    color: #314533;
+    font-family: inherit;
+    font-size: 20px;
+    letter-spacing: 0.15px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.tab.is-active {
+    font-weight: 700;
+    border-bottom-color: #314533;
+}
+
+.tab:hover {
+    border-bottom-color: rgba(49, 69, 51, 0.4);
+}
+
+.tab.is-active:hover {
+    border-bottom-color: #314533;
+}
+
+.card-educacion-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px 24px 40px 40px;
+}
+
+/* Los dos contenidos quedan uno encima de otro y se funden */
+.tab-panels {
+    flex: 1;
+    display: grid;
+}
+
+.tab-panel {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+.tab-panel.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tab-panel-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tab-panel-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.tab-panel-text {
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 0.15px;
+    text-align: justify;
+}
+
+.tab-panel-img {
+    flex: 1;
+    width: 100%;
+    min-height: 160px;
+    max-height: 240px;
+    object-fit: cover;
+}
+
+.card-educacion-contacto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.card-educacion-pregunta {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+}
+
+.card-educacion-ayuda {
+    font-size: 16px;
+    letter-spacing: 0.15px;
+    margin-bottom: 12px;
+}
+
+.btn-contactar {
+    width: 282px;
+    max-width: 100%;
+}
+
+/* Espacio antes del footer (como en Figma) */
+.subpagina-hero:has(.card-educacion) {
+    margin-bottom: 72px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tab-panel {
+        transition: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .card-educacion {
+        max-width: none;
+    }
+
+    .card-educacion-body {
+        padding: 32px 20px 48px 20px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .tabs {
+        padding: 0 8px;
+    }
+
+    .tab {
+        font-size: 16px;
+        padding: 16px 8px 10px 8px;
+    }
+}
+
+/*EDUCACION*/
+
+/*-----------------------SUBPAGINAS DE ACTIVIDADES-----------------------*/
