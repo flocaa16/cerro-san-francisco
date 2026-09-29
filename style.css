@@ -598,6 +598,7 @@ h3 {
 .numeros-grid {
     display: flex;
     justify-content: space-between;
+    margin: 0 -20px;
     padding-bottom: 100px;
 }
 
@@ -740,6 +741,7 @@ h3 {
 
 @media (max-width: 991.98px) {
     .numeros-grid {
+        margin: 0;
         flex-wrap: wrap;
         row-gap: 40px;
         padding-bottom: 60px;
@@ -1040,6 +1042,7 @@ h3 {
 .publicaciones {
     background-color: #F2F7F2;
     padding: 60px 0;
+    margin-bottom: 187px;
 }
 
 .publicaciones-header {
@@ -1121,6 +1124,10 @@ h3 {
 }
 
 @media (max-width: 991.98px) {
+    .publicaciones {
+        margin-bottom: 80px;
+    }
+
     .publicacion {
         flex-direction: column;
         align-items: flex-start;
