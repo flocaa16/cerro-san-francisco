@@ -2158,44 +2158,115 @@ button.cover:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
 }
 
-/* Capa de color: 10% como en Figma */
+/* Capa de color: 10% (Default) → 40% al pasar el mouse (Variant2) */
 .actividad-card::after {
     content: "";
     position: absolute;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.1);
+    transition: background-color 0.4s ease;
 }
 
-.actividad-card:hover .actividad-card-img {
-    transform: scale(1.05);
-}
-
-.actividad-card-title {
+.actividad-card-content {
     position: relative;
     z-index: 1;
-    font-size: 48px;
-    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 60px;
     padding-bottom: 60px;
+    transition: padding 0.4s ease;
 }
 
-/* El título de la izquierda se alinea con el contenido de la página */
-.actividad-card--izquierda .actividad-card-title {
+/* La card de la izquierda se alinea con el contenido de la página */
+.actividad-card--izquierda .actividad-card-content {
     padding-left: max(20px, calc((100vw - 1160px) / 2));
     padding-right: 24px;
 }
 
-.actividad-card--derecha .actividad-card-title {
+.actividad-card--derecha .actividad-card-content {
     padding-left: 24px;
     padding-right: 24px;
+}
+
+.actividad-card-title {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+/* Descripción + botón: escondidos hasta el hover */
+.actividad-card-extra {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+
+.actividad-card-text {
+    font-size: 20px;
+    letter-spacing: 0.15px;
+    line-height: 1.3;
+}
+
+/* Hover y foco con teclado (Variant2) */
+.actividad-card:hover::after,
+.actividad-card:focus-visible::after {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.actividad-card:hover .actividad-card-extra,
+.actividad-card:focus-visible .actividad-card-extra {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.actividad-card--izquierda:hover .actividad-card-content,
+.actividad-card--izquierda:focus-visible .actividad-card-content {
+    padding-left: max(20px, calc((100vw - 1160px) / 2 - 20px));
+}
+
+/* En pantallas táctiles no hay hover: se muestra todo desde el inicio */
+@media (hover: none) {
+    .actividad-card::after {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .actividad-card-extra {
+        max-height: none;
+        opacity: 1;
+        margin-top: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .actividad-card::after,
+    .actividad-card-content,
+    .actividad-card-extra {
+        transition: none;
+    }
 }
 
 @media (max-width: 991.98px) {
     .actividad-card-title {
         font-size: 34px;
+    }
+
+    .actividad-card-content {
+        padding-top: 32px;
         padding-bottom: 32px;
+    }
+
+    .actividad-card-text {
+        font-size: 17px;
     }
 }
 
@@ -2205,14 +2276,18 @@ button.cover:hover {
     }
 
     .actividad-card {
-        height: 260px;
+        height: auto;
+        min-height: 300px;
     }
 
-    .actividad-card-title,
-    .actividad-card--izquierda .actividad-card-title,
-    .actividad-card--derecha .actividad-card-title {
+    .actividad-card-title {
         font-size: 28px;
-        padding: 0 20px 24px 20px;
+    }
+
+    .actividad-card--izquierda .actividad-card-content,
+    .actividad-card--derecha .actividad-card-content,
+    .actividad-card--izquierda:hover .actividad-card-content {
+        padding: 24px 20px;
     }
 }
 

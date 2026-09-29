@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=14" />
+    <link rel="stylesheet" href="style.css?v=15" />
 
 </head>
 
@@ -45,11 +45,27 @@
     <section class="actividades" aria-label="Actividades">
         <a href="visita-autoguiada.html" class="actividad-card actividad-card--izquierda">
             <img src="img/visita-autoguiada.png" alt="" class="actividad-card-img">
-            <h1 class="actividad-card-title">Visita Autoguiada</h1>
+            <div class="actividad-card-content">
+                <h1 class="actividad-card-title">Visita Autoguiada</h1>
+                <!-- Aparece al pasar el mouse (Variant2 del componente) -->
+                <div class="actividad-card-extra">
+                    <p class="actividad-card-text">Recorre el cerro a tu ritmo con nuestra guía de senderos y
+                        señalética en terreno.</p>
+                    <span class="btn-primary-medium btn-primary-medium--tall">Descubre más</span>
+                </div>
+            </div>
         </a>
         <a href="educacion.html" class="actividad-card actividad-card--derecha">
             <img src="img/como-llegar.png" alt="" class="actividad-card-img">
-            <h2 class="actividad-card-title">Educación en la naturaleza</h2>
+            <div class="actividad-card-content">
+                <h2 class="actividad-card-title">Educación en la naturaleza</h2>
+                <!-- Aparece al pasar el mouse (Variant2 del componente) -->
+                <div class="actividad-card-extra">
+                    <p class="actividad-card-text">Programas educativos con talleres de ecología, flora y fauna
+                        nativa.</p>
+                    <span class="btn-primary-medium btn-primary-medium--tall">Descubre más</span>
+                </div>
+            </div>
         </a>
     </section>
     <!-- ACTIVIDADES -->
