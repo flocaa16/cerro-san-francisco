@@ -44,7 +44,10 @@
     <!-- HERO -->
     <section class="subpagina-hero">
         <div class="subpagina-hero-media">
-            <img src="img/educacion-hero.png" alt="Estudiantes reforestando el cerro" class="subpagina-hero-img">
+            <!-- Video de fondo (sin sonido, en loop) -->
+            <video class="subpagina-hero-img" autoplay muted loop playsinline aria-hidden="true">
+                <source src="video/educacion-hero.mp4" type="video/mp4">
+            </video>
             <nav class="breadcrumb breadcrumb--alineado" aria-label="Estás en">
                 <a href="actividades.html" class="breadcrumb-link">Actividades</a>
                 <span class="breadcrumb-sep" aria-hidden="true">|</span>
@@ -203,6 +206,14 @@
         document.querySelector('.btn-contactar').addEventListener('click', () => {
             setTimeout(() => document.querySelector('#footerNombre').focus({ preventScroll: true }), 600);
         });
+    </script>
+    <script>
+        // Si la persona prefiere menos movimiento, el video queda detenido
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const video = document.querySelector('.subpagina-hero-img');
+            video.removeAttribute('autoplay');
+            video.pause();
+        }
     </script>
 
 </body>

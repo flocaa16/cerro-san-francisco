@@ -44,7 +44,10 @@
     <!-- HERO -->
     <section class="subpagina-hero">
         <div class="subpagina-hero-media">
-            <img src="img/visita-hero.png" alt="Vista del valle desde el cerro" class="subpagina-hero-img">
+            <!-- Video de fondo (sin sonido, en loop) -->
+            <video class="subpagina-hero-img" autoplay muted loop playsinline aria-hidden="true">
+                <source src="video/visita-hero.mp4" type="video/mp4">
+            </video>
             <nav class="breadcrumb" aria-label="Estás en">
                 <a href="actividades.html" class="breadcrumb-link">Actividades</a>
                 <span class="breadcrumb-sep" aria-hidden="true">|</span>
@@ -222,6 +225,14 @@
         document.querySelector('#footerForm').addEventListener('submit', function (event) {
             event.preventDefault();
         });
+    </script>
+    <script>
+        // Si la persona prefiere menos movimiento, el video queda detenido
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const video = document.querySelector('.subpagina-hero-img');
+            video.removeAttribute('autoplay');
+            video.pause();
+        }
     </script>
 
 </body>
