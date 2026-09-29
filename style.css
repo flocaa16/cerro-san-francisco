@@ -3158,99 +3158,101 @@ button.cover:hover {
 
 
 /*-----------------------MAPA-----------------------*/
-/* Figma: "03 Mapa" (Perfil del cerro - Senderos). Interacción inspirada en el mapa de ciudadquequeremos.cl */
+/* Mapa interactivo: foto satelital + sendero de OpenStreetMap + panel lateral.
+   Los números, colores y el perfil del cerro vienen del Figma ("03 Mapa"). */
 
 .mapa {
-    position: relative;
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 420px;
     height: calc(100vh - 80px);
-    min-height: 620px;
-    max-height: 980px;
-    overflow: hidden;
-    background: linear-gradient(180deg, #F2F7F2 0%, #E6F0E7 100%);
+    min-height: 600px;
+    background-color: #F2F7F2;
 }
 
-/*VISTA DEL CERRO*/
-.mapa-vista {
+/*MAPA*/
+.mapa-area {
     position: relative;
-    display: flex;
-    align-items: center;
     min-height: 0;
-    /* Arriba queda el título y abajo las siluetas del suelo */
-    padding: 180px 0 64px 0;
 }
 
-.mapa-intro {
-    position: absolute;
-    top: clamp(24px, 5vh, 56px);
-    left: 120px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 480px;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.mapa-title {
-    font-size: 48px;
-    font-weight: 700;
-    color: #557458;
-}
-
-.mapa-text {
-    font-size: 18px;
-    line-height: 1.5;
-    color: #303132;
-}
-
-/* Al elegir un punto, el título se aparta para dar espacio al cerro */
-.mapa--detalle .mapa-intro {
-    opacity: 0;
-    transform: translateY(-12px);
-    pointer-events: none;
-}
-
-.mapa-marco {
-    width: 100%;
-    padding: 0 120px;
-}
-
-.mapa-escena {
-    position: relative;
-    /* El cerro usa todo el ancho posible sin pasar el alto disponible */
-    width: min(100%, calc((100vh - 440px) * 3.85));
-    min-width: 640px;
-    margin: 0 auto;
-    aspect-ratio: 1441 / 374;
-    transform-origin: 0 0;
-    transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.mapa-silueta {
-    display: block;
+.mapa-leaflet {
     width: 100%;
     height: 100%;
+    background-color: #314533;
+    font-family: inherit;
 }
 
-/* Números sobre el cerro (no crecen con el zoom) */
-.mapa-marcador {
+/* Satélite / Relieve */
+.mapa-capas {
     position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 500;
+    display: flex;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mapa-capa {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 2px;
+    background: transparent;
+    color: #557458;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mapa-capa:hover {
+    background-color: #F2F7F2;
+}
+
+.mapa-capa.is-active {
+    background-color: #557458;
+    color: #FFFFFF;
+}
+
+/* Botones de zoom con el estilo del sitio */
+.mapa .leaflet-bar {
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mapa .leaflet-bar a {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    color: #557458;
+    font-size: 20px;
+}
+
+.mapa .leaflet-bar a:hover {
+    background-color: #F2F7F2;
+    color: #314533;
+}
+
+.mapa .leaflet-control-attribution {
+    font-size: 11px;
+}
+
+/* Números en el mapa */
+.mapa-pin {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0;
+    background: none;
     border: none;
-    background: transparent;
-    font-family: inherit;
-    cursor: pointer;
-    transform: translate(-18px, -50%) scale(calc(1 / var(--zoom, 1)));
-    transform-origin: 18px 50%;
 }
 
-.mapa-marcador-numero {
+.mapa-pin-numero {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     width: 36px;
@@ -3261,12 +3263,11 @@ button.cover:hover {
     color: #FFFFFF;
     font-size: 16px;
     font-weight: 700;
-    /* Elevation 1 */
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.mapa-marcador-nombre {
+.mapa-pin-nombre {
     padding: 6px 12px;
     border-radius: 4px;
     background-color: #FFFFFF;
@@ -3278,78 +3279,172 @@ button.cover:hover {
     transition: opacity 0.3s ease;
 }
 
-.mapa-marcador:hover .mapa-marcador-numero,
-.mapa-marcador:focus-visible .mapa-marcador-numero {
+.mapa-pin:hover .mapa-pin-numero,
+.mapa-pin--hover .mapa-pin-numero {
     background-color: #314533;
+    transform: scale(1.1);
 }
 
-/* Con un punto elegido, solo se destaca ese */
-.mapa--detalle .mapa-marcador {
-    opacity: 0.6;
+.mapa-pin--atenuado {
+    opacity: 0.7;
 }
 
-.mapa--detalle .mapa-marcador-nombre {
+.mapa-pin--atenuado .mapa-pin-nombre {
     opacity: 0;
 }
 
-.mapa--detalle .mapa-marcador--activo {
-    opacity: 1;
-}
-
-.mapa--detalle .mapa-marcador--activo .mapa-marcador-numero {
+.mapa-pin--activo .mapa-pin-numero {
     background-color: #314533;
     animation: mapa-pulso 1.6s ease-out infinite;
 }
 
 @keyframes mapa-pulso {
     from {
-        box-shadow: 0 0 0 0 rgba(92, 143, 97, 0.6);
+        box-shadow: 0 0 0 0 rgba(244, 227, 173, 0.9);
     }
 
     to {
-        box-shadow: 0 0 0 16px rgba(92, 143, 97, 0);
+        box-shadow: 0 0 0 18px rgba(244, 227, 173, 0);
     }
 }
 
-/*VISTA DEL CERRO*/
+/*MAPA*/
 
-/*SUELO CON LOS PUNTOS*/
-.mapa-suelo {
+/*PANEL LATERAL*/
+.mapa-lateral {
+    overflow-y: auto;
+    background-color: #FFFFFF;
+    box-shadow: -1px 0 0 #E0E0E2;
+}
+
+.mapa-vista-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+}
+
+.mapa-vista-lista[hidden],
+.mapa-vista-detalle[hidden] {
+    display: none;
+}
+
+.mapa-encabezado {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mapa-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.mapa-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #303132;
+}
+
+/* Perfil del cerro (Figma) */
+.mapa-perfil {
     position: relative;
-    z-index: 3;
-    padding: 20px 120px 28px 120px;
-    background-color: #557458;
-    transition: margin-right 0.4s ease;
+    padding: 20px 8px 8px 8px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #F2F7F2 0%, #E3EEE4 100%);
+}
+
+.mapa-perfil-img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#perfilMarcadores {
+    position: absolute;
+    top: 20px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+}
+
+.mapa-perfil-marcador {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background-color: #5C8F61;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease;
+}
+
+.mapa-perfil-marcador:hover {
+    background-color: #314533;
+}
+
+/* Datos en fila, como los números del inicio */
+.mapa-datos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    margin: 0;
+    padding: 16px 0;
+    border-top: 1px solid #E0E0E2;
+    border-bottom: 1px solid #E0E0E2;
+}
+
+.mapa-dato {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 12px;
+}
+
+.mapa-dato+.mapa-dato {
+    border-left: 1px solid #E0E0E2;
+}
+
+.mapa-dato:first-child {
+    padding-left: 0;
+}
+
+.mapa-dato dt {
+    font-size: 12px;
+    color: #727376;
+}
+
+.mapa-dato dd {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #314533;
+}
+
+.mapa-subtitle {
+    margin-bottom: -8px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #303132;
 }
 
 .mapa-puntos {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     list-style: none;
+    margin: 0;
     padding: 0;
-}
-
-.mapa-punto-item {
-    position: relative;
-}
-
-/* Silueta sobre el suelo (bosque, cipreses, cruz) */
-.mapa-punto-silueta {
-    position: absolute;
-    bottom: calc(100% + 20px - 1px);
-    left: 50%;
-    width: auto;
-    height: 88px;
-    transform: translateX(-50%);
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-}
-
-.mapa--detalle .mapa-punto-silueta {
-    opacity: 0;
 }
 
 .mapa-punto {
@@ -3357,48 +3452,45 @@ button.cover:hover {
     align-items: center;
     gap: 16px;
     width: 100%;
-    padding: 14px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 14px 16px;
+    border: 1px solid #E0E0E2;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.04);
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    color: #303132;
     font-family: inherit;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .mapa-punto:hover {
-    border-color: rgba(255, 255, 255, 0.6);
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.mapa-punto--activo,
-.mapa-punto--activo:hover {
-    border-color: #FFFFFF;
-    background-color: #FFFFFF;
-    color: #314533;
-}
-
-.mapa-punto--activo .mapa-numero {
-    background-color: #557458;
+    border-color: #557458;
+    background-color: #F2F7F2;
 }
 
 .mapa-punto-texto {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     min-width: 0;
 }
 
 .mapa-punto-nombre {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 500;
+    color: #000000;
 }
 
-.mapa-punto-datos {
+.mapa-punto-resumen {
     font-size: 14px;
-    opacity: 0.85;
+    color: #727376;
+}
+
+/* La flecha blanca del sitio, en verde */
+.mapa-punto-flecha,
+.mapa-volver img {
+    filter: brightness(0) saturate(100%) invert(42%) sepia(12%) saturate(1000%) hue-rotate(76deg) brightness(92%);
 }
 
 /* Número de cada punto (Primary 600 del Figma) */
@@ -3414,103 +3506,52 @@ button.cover:hover {
     color: #FFFFFF;
     font-size: 18px;
     font-weight: 700;
-    transition: background-color 0.3s ease;
 }
 
-/*SUELO*/
-
-/*PANEL DEL PUNTO ELEGIDO*/
-.mapa-panel {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 5;
+.mapa-acciones {
     display: flex;
     flex-direction: column;
-    width: 440px;
-    overflow-y: auto;
-    background-color: #FFFFFF;
-    /* Elevation 3 */
-    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
-    animation: mapa-panel-entrar 0.4s ease;
-}
-
-.mapa-panel[hidden] {
-    display: none;
-}
-
-@keyframes mapa-panel-entrar {
-    from {
-        opacity: 0;
-        transform: translateX(32px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* El suelo deja espacio al panel */
-.mapa--detalle .mapa-suelo {
-    margin-right: 440px;
-}
-
-.mapa--detalle .mapa-puntos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
 }
 
-.mapa--detalle .mapa-punto {
-    padding: 12px 14px;
-    gap: 12px;
+/* Detalle del punto */
+.mapa-vista-detalle {
+    animation: modal-disolver 0.4s ease;
 }
 
-.mapa--detalle .mapa-punto-nombre {
-    font-size: 16px;
-}
-
-.mapa--detalle .mapa-punto-datos {
-    display: none;
-}
-
-.mapa-panel-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 2;
-    display: flex;
+.mapa-volver {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
+    gap: 8px;
+    padding: 16px 32px;
     border: none;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background: none;
     color: #557458;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease;
 }
 
-.mapa-panel-close:hover {
-    background-color: #F2F7F2;
+.mapa-volver img {
+    transform: rotate(180deg);
 }
 
-/* Galería de fotos */
+.mapa-volver:hover {
+    color: #314533;
+}
+
 .mapa-galeria {
     position: relative;
-    flex-shrink: 0;
     aspect-ratio: 4 / 3;
+    overflow: hidden;
     background-color: #314533;
 }
 
 .mapa-galeria-fotos {
+    position: absolute;
+    inset: 0;
     display: grid;
-    width: 100%;
-    height: 100%;
 }
 
 .mapa-galeria-foto {
@@ -3575,12 +3616,12 @@ button.cover:hover {
     transform: scale(1.25);
 }
 
-.mapa-panel--una-foto .mapa-galeria-flecha,
-.mapa-panel--una-foto .mapa-galeria-puntos {
+.mapa-vista-detalle--una-foto .mapa-galeria-flecha,
+.mapa-vista-detalle--una-foto .mapa-galeria-puntos {
     display: none;
 }
 
-.mapa-panel-content {
+.mapa-detalle-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -3588,7 +3629,7 @@ button.cover:hover {
     padding: 28px 32px 32px 32px;
 }
 
-.mapa-panel-title {
+.mapa-detalle-title {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -3598,56 +3639,17 @@ button.cover:hover {
     color: #557458;
 }
 
-/* Datos en fila, como los números del inicio */
-.mapa-datos {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    width: 100%;
-    margin: 0;
-    padding: 16px 0;
-    border-top: 1px solid #E0E0E2;
-    border-bottom: 1px solid #E0E0E2;
-}
-
-.mapa-dato {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 0 12px;
-}
-
-.mapa-dato+.mapa-dato {
-    border-left: 1px solid #E0E0E2;
-}
-
-.mapa-dato:first-child {
-    padding-left: 0;
-}
-
-.mapa-dato dt {
-    font-size: 12px;
-    letter-spacing: 0.3px;
-    color: #727376;
-}
-
-.mapa-dato dd {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: #314533;
-}
-
-.mapa-panel-text {
+.mapa-detalle-text {
     font-size: 16px;
     line-height: 1.5;
     color: #303132;
 }
 
-.mapa-panel-link {
+.mapa-detalle-link {
     width: 100%;
 }
 
-.mapa-panel-nav {
+.mapa-detalle-nav {
     display: flex;
     justify-content: space-between;
     gap: 16px;
@@ -3656,7 +3658,7 @@ button.cover:hover {
     border-top: 1px solid #E0E0E2;
 }
 
-.mapa-panel-nav-btn {
+.mapa-detalle-nav-btn {
     background: none;
     border-top: none;
     border-left: none;
@@ -3666,178 +3668,97 @@ button.cover:hover {
     cursor: pointer;
 }
 
-/*PANEL*/
+/*PANEL LATERAL*/
 
 @media (prefers-reduced-motion: reduce) {
 
-    .mapa-escena,
-    .mapa-intro,
-    .mapa-suelo,
-    .mapa-panel,
+    .mapa-vista-detalle,
     .mapa-galeria-foto {
         transition: none;
         animation: none;
     }
 
-    .mapa--detalle .mapa-marcador--activo .mapa-marcador-numero {
+    .mapa-pin--activo .mapa-pin-numero {
         animation: none;
     }
 }
 
 @media (max-width: 1199.98px) {
-    .mapa-intro {
-        left: 40px;
+    .mapa {
+        grid-template-columns: minmax(0, 1fr) 380px;
     }
 
-    .mapa-marco,
-    .mapa-suelo {
-        padding-left: 40px;
-        padding-right: 40px;
+    .mapa-vista-lista,
+    .mapa-detalle-content {
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
-    .mapa-panel {
-        width: 400px;
-    }
-
-    .mapa--detalle .mapa-suelo {
-        margin-right: 400px;
-    }
-
-    .mapa-punto-nombre {
-        font-size: 18px;
+    .mapa-volver {
+        padding-left: 24px;
     }
 }
 
-/* Tablet y celular: el panel va debajo del cerro */
+/* Tablet y celular: el mapa arriba y el panel debajo */
 @media (max-width: 991.98px) {
     .mapa {
-        display: flex;
-        flex-direction: column;
+        display: block;
         height: auto;
         min-height: 0;
-        max-height: none;
     }
 
-    .mapa-vista {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 0;
+    .mapa-area {
+        height: 55vh;
+        min-height: 340px;
     }
 
-    .mapa-intro {
-        position: static;
-        padding: 40px 40px 0 40px;
-        max-width: none;
-    }
-
-    .mapa-title {
-        font-size: 40px;
-    }
-
-    .mapa--detalle .mapa-intro {
-        opacity: 1;
-        transform: none;
-        pointer-events: auto;
-    }
-
-    /* El cerro acercado no se sale de su espacio */
-    .mapa-marco {
-        display: flex;
-        align-items: center;
-        height: 320px;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .mapa-escena {
-        width: 110%;
-        min-width: 0;
-        margin: 0 0 0 16px;
-    }
-
-    .mapa-punto-silueta {
-        display: none;
-    }
-
-    .mapa--detalle .mapa-suelo {
-        margin-right: 0;
-    }
-
-    .mapa--detalle .mapa-punto-datos {
-        display: block;
-    }
-
-    .mapa-panel {
-        position: relative;
-        scroll-margin-top: 80px;
-        width: auto;
+    .mapa-lateral {
         overflow: visible;
         box-shadow: none;
-        animation: modal-disolver 0.4s ease;
+    }
+
+    .mapa-vista-detalle {
+        scroll-margin-top: 80px;
     }
 
     .mapa-galeria {
         aspect-ratio: 16 / 9;
     }
 
-    .mapa-panel-content {
+    .mapa-vista-lista,
+    .mapa-detalle-content {
         padding: 32px 40px 48px 40px;
+    }
+
+    .mapa-volver {
+        padding-left: 40px;
     }
 }
 
 @media (max-width: 767.98px) {
-    .mapa-intro {
-        padding: 32px 16px 0 16px;
-    }
-
-    .mapa-title,
-    .mapa-panel-title {
-        font-size: 32px;
-    }
-
-    .mapa-text {
-        font-size: 16px;
-    }
-
-    .mapa-marco {
-        height: 240px;
-    }
-
-    /* El cerro se ve más grande y se recorta la cola de la derecha */
-    .mapa-escena {
-        width: 150%;
-        margin-left: 8px;
-    }
-
-    .mapa-marcador-nombre {
+    .mapa-pin-nombre {
         display: none;
     }
 
-    .mapa-suelo {
-        padding: 16px;
+    .mapa-pin--activo .mapa-pin-nombre {
+        display: block;
     }
 
-    /* Los puntos se deslizan */
-    .mapa-puntos,
-    .mapa--detalle .mapa-puntos {
-        display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none;
+    .mapa-vista-lista,
+    .mapa-detalle-content {
+        padding: 24px 16px 40px 16px;
     }
 
-    .mapa-punto-item {
-        flex: 0 0 82%;
-        scroll-snap-align: start;
+    .mapa-volver {
+        padding-left: 16px;
     }
 
     .mapa-galeria {
         aspect-ratio: 4 / 3;
     }
 
-    .mapa-panel-content {
-        padding: 24px 16px 40px 16px;
+    .mapa-detalle-title {
+        font-size: 28px;
     }
 
     .mapa-dato dd {

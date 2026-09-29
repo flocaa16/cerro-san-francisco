@@ -8,8 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- Mapa interactivo (Leaflet) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=31" />
+    <link rel="stylesheet" href="style.css?v=32" />
 
 </head>
 
@@ -56,80 +59,108 @@
     <!-- MAPA -->
     <main class="mapa" id="mapa">
 
-        <!-- Vista del cerro (Figma: "Perfil del cerro - Senderos") -->
-        <div class="mapa-vista" id="mapaVista">
-            <div class="mapa-intro">
-                <h1 class="mapa-title">Mapa del cerro</h1>
-                <p class="mapa-text">Recorre el sendero y descubre sus puntos de interés. Elige un número para
-                    acercarte.</p>
-            </div>
+        <!-- Mapa interactivo (Leaflet + recorrido de OpenStreetMap) -->
+        <div class="mapa-area">
+            <div class="mapa-leaflet" id="mapaLeaflet" role="region" aria-label="Mapa interactivo del sendero"></div>
 
-            <div class="mapa-marco">
-                <div class="mapa-escena" id="mapaEscena">
-                    <img src="img/mapa-cerro.svg" alt="Perfil del Cerro San Francisco con el sendero hasta la cima"
-                        class="mapa-silueta">
-                    <div id="mapaMarcadores"></div>
-                </div>
+            <div class="mapa-capas" role="group" aria-label="Tipo de mapa">
+                <button type="button" class="mapa-capa is-active" data-capa="satelite" aria-pressed="true">Satélite</button>
+                <button type="button" class="mapa-capa" data-capa="relieve" aria-pressed="false">Relieve</button>
             </div>
         </div>
 
-        <!-- Suelo verde con los puntos del recorrido -->
-        <nav class="mapa-suelo" aria-label="Puntos del recorrido">
-            <ol class="mapa-puntos" id="mapaPuntos"></ol>
-        </nav>
+        <!-- Panel lateral -->
+        <aside class="mapa-lateral" id="mapaLateral">
 
-        <!-- Panel con la información del punto elegido -->
-        <aside class="mapa-panel" id="mapaPanel" aria-labelledby="panelTitulo" hidden>
-            <button type="button" class="mapa-panel-close" id="panelCerrar" aria-label="Cerrar y ver todo el cerro">
-                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="currentColor"
-                        d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                </svg>
-            </button>
+            <!-- Vista general -->
+            <div class="mapa-vista-lista" id="vistaLista">
+                <div class="mapa-encabezado">
+                    <h1 class="mapa-title">Mapa del cerro</h1>
+                    <p class="mapa-text">Sendero circular hasta la cima del Cerro San Francisco, con vista a todo el Valle
+                        del Aconcagua.</p>
+                </div>
 
-            <!-- Galería de fotos -->
-            <div class="mapa-galeria" aria-roledescription="carrusel" aria-label="Fotos del punto">
-                <div class="mapa-galeria-fotos" id="galeriaFotos"></div>
-                <button type="button" class="arrow-button arrow-button--left mapa-galeria-flecha mapa-galeria-flecha--izq"
-                    id="galeriaAnterior" aria-label="Foto anterior">
-                    <img src="icons/arrow-forward.svg" alt="">
-                </button>
-                <button type="button" class="arrow-button mapa-galeria-flecha mapa-galeria-flecha--der"
-                    id="galeriaSiguiente" aria-label="Foto siguiente">
-                    <img src="icons/arrow-forward.svg" alt="">
-                </button>
-                <div class="mapa-galeria-puntos" id="galeriaPuntos"></div>
-            </div>
-
-            <div class="mapa-panel-content">
-                <span class="chip" id="panelTipo"></span>
-                <h2 class="mapa-panel-title">
-                    <span class="mapa-numero" id="panelNumero"></span>
-                    <span id="panelTitulo"></span>
-                </h2>
+                <!-- Perfil del cerro (Figma) con los mismos números del mapa -->
+                <div class="mapa-perfil">
+                    <img src="img/mapa-cerro.svg" alt="" class="mapa-perfil-img">
+                    <div id="perfilMarcadores"></div>
+                </div>
 
                 <dl class="mapa-datos">
                     <div class="mapa-dato">
-                        <dt>Tiempo estimado</dt>
-                        <dd id="panelTiempo"></dd>
-                    </div>
-                    <div class="mapa-dato">
                         <dt>Recorrido</dt>
-                        <dd id="panelLongitud"></dd>
+                        <dd>3,67 km</dd>
                     </div>
                     <div class="mapa-dato">
-                        <dt>Dificultad</dt>
-                        <dd id="panelDificultad"></dd>
+                        <dt>Tiempo estimado</dt>
+                        <dd>2 horas</dd>
+                    </div>
+                    <div class="mapa-dato">
+                        <dt>Altitud máxima</dt>
+                        <dd>761 m</dd>
                     </div>
                 </dl>
 
-                <p class="mapa-panel-text" id="panelTexto"></p>
+                <h2 class="mapa-subtitle">Puntos del recorrido</h2>
+                <ol class="mapa-puntos" id="mapaPuntos"></ol>
 
-                <a href="visita-autoguiada.html" class="btn-outline-medium mapa-panel-link" id="panelLink"></a>
+                <div class="mapa-acciones">
+                    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-32.78572,-70.68424"
+                        class="btn-primary-medium" target="_blank" rel="noopener">Cómo llegar</a>
+                    <a href="visita-autoguiada.html" class="btn-outline-medium">Visita autoguiada</a>
+                </div>
+            </div>
 
-                <div class="mapa-panel-nav">
-                    <button type="button" class="btn-underline mapa-panel-nav-btn" id="panelAnterior"></button>
-                    <button type="button" class="btn-underline mapa-panel-nav-btn" id="panelSiguiente"></button>
+            <!-- Detalle del punto elegido -->
+            <div class="mapa-vista-detalle" id="vistaDetalle" hidden>
+                <button type="button" class="mapa-volver" id="mapaVolver">
+                    <img src="icons/arrow-forward.svg" alt="" width="8" height="14">
+                    Todos los puntos
+                </button>
+
+                <div class="mapa-galeria" aria-roledescription="carrusel" aria-label="Fotos del punto">
+                    <div class="mapa-galeria-fotos" id="galeriaFotos"></div>
+                    <button type="button" class="arrow-button arrow-button--left mapa-galeria-flecha mapa-galeria-flecha--izq"
+                        id="galeriaAnterior" aria-label="Foto anterior">
+                        <img src="icons/arrow-forward.svg" alt="">
+                    </button>
+                    <button type="button" class="arrow-button mapa-galeria-flecha mapa-galeria-flecha--der"
+                        id="galeriaSiguiente" aria-label="Foto siguiente">
+                        <img src="icons/arrow-forward.svg" alt="">
+                    </button>
+                    <div class="mapa-galeria-puntos" id="galeriaPuntos"></div>
+                </div>
+
+                <div class="mapa-detalle-content">
+                    <span class="chip" id="detalleTipo"></span>
+                    <h2 class="mapa-detalle-title" id="detalleTitulo">
+                        <span class="mapa-numero" id="detalleNumero"></span>
+                        <span id="detalleNombre"></span>
+                    </h2>
+
+                    <dl class="mapa-datos">
+                        <div class="mapa-dato">
+                            <dt>Tiempo estimado</dt>
+                            <dd id="detalleTiempo"></dd>
+                        </div>
+                        <div class="mapa-dato">
+                            <dt>Recorrido</dt>
+                            <dd id="detalleLongitud"></dd>
+                        </div>
+                        <div class="mapa-dato">
+                            <dt>Dificultad</dt>
+                            <dd id="detalleDificultad"></dd>
+                        </div>
+                    </dl>
+
+                    <p class="mapa-detalle-text" id="detalleTexto"></p>
+
+                    <a href="visita-autoguiada.html" class="btn-outline-medium mapa-detalle-link" id="detalleLink"></a>
+
+                    <div class="mapa-detalle-nav">
+                        <button type="button" class="btn-underline mapa-detalle-nav-btn" id="detalleAnterior"></button>
+                        <button type="button" class="btn-underline mapa-detalle-nav-btn" id="detalleSiguiente"></button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -227,20 +258,32 @@
             event.preventDefault();
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
-        // Mapa del cerro (referencia: ciudadquequeremos.cl/coyhaique/imagen-objetivo)
-        // Para agregar un punto, copia un bloque. x e y son el % dentro de img/mapa-cerro.svg
-        // OJO: los datos repiten "3,67 km / fácil" como en el Figma (revisar)
+        // Mapa del cerro
+        // Recorrido: senderos del cerro en OpenStreetMap (© colaboradores de OpenStreetMap, licencia ODbL)
+        const recorrido = [
+            [[-32.78572, -70.68424], [-32.78562, -70.68417], [-32.78549, -70.68412], [-32.78517, -70.68395], [-32.78483, -70.68375], [-32.78464, -70.68367], [-32.78457, -70.68363], [-32.78467, -70.68362], [-32.78531, -70.68357], [-32.78542, -70.68355], [-32.78549, -70.68353], [-32.78544, -70.68346], [-32.78536, -70.68341], [-32.78519, -70.68337], [-32.78501, -70.68328], [-32.78481, -70.68314], [-32.78462, -70.68299], [-32.78446, -70.68286], [-32.7842, -70.68277], [-32.78393, -70.68273], [-32.78332, -70.68257], [-32.7833, -70.68247], [-32.78316, -70.6821], [-32.78303, -70.68178], [-32.78291, -70.68155], [-32.78269, -70.68126], [-32.78231, -70.68086], [-32.78218, -70.6807], [-32.78209, -70.6806], [-32.78201, -70.68045], [-32.78197, -70.68034], [-32.78199, -70.68022], [-32.78207, -70.68013], [-32.78216, -70.6801], [-32.78249, -70.68006], [-32.78283, -70.68], [-32.78302, -70.68008], [-32.78357, -70.68055], [-32.78385, -70.68087], [-32.78404, -70.68117], [-32.78422, -70.68138], [-32.7844, -70.68156], [-32.7845, -70.68158], [-32.78445, -70.68142], [-32.78444, -70.68128], [-32.7845, -70.68124], [-32.78457, -70.68125], [-32.78465, -70.6813], [-32.78472, -70.68133], [-32.785, -70.681]],
+            [[-32.7845, -70.68158], [-32.78464, -70.68156], [-32.78485, -70.68143], [-32.78501, -70.68126], [-32.78526, -70.6812], [-32.78557, -70.68113]],
+            [[-32.78221, -70.67868], [-32.78266, -70.6789], [-32.78278, -70.67887], [-32.78296, -70.67882], [-32.78334, -70.67873], [-32.78372, -70.6789], [-32.78405, -70.67915], [-32.7844, -70.68028], [-32.78449, -70.68054], [-32.78483, -70.68082], [-32.785, -70.681], [-32.78518, -70.68092], [-32.78551, -70.68077], [-32.78567, -70.68058], [-32.78577, -70.68032], [-32.78575, -70.68011]],
+            [[-32.78332, -70.68257], [-32.78327, -70.68261], [-32.78316, -70.68272], [-32.78302, -70.68272], [-32.7828, -70.6826], [-32.7827, -70.68247]],
+            [[-32.7827, -70.68247], [-32.78252, -70.68203], [-32.78225, -70.68148], [-32.7822, -70.68133], [-32.78215, -70.68121], [-32.7821, -70.68111], [-32.78206, -70.68091], [-32.78205, -70.68082], [-32.78207, -70.68075], [-32.7821, -70.68068], [-32.78214, -70.68066], [-32.78218, -70.6807], [-32.78227, -70.68066], [-32.78243, -70.68063], [-32.78264, -70.68055], [-32.78271, -70.6805], [-32.78275, -70.68044], [-32.78276, -70.68027], [-32.78279, -70.68012], [-32.7828, -70.68005], [-32.78283, -70.68], [-32.78289, -70.67992], [-32.78293, -70.67986], [-32.78296, -70.67982], [-32.78299, -70.67978], [-32.78309, -70.67973], [-32.78314, -70.67973], [-32.78318, -70.67974], [-32.78324, -70.67979], [-32.78329, -70.67987], [-32.78339, -70.67998], [-32.78344, -70.68005], [-32.78351, -70.68012], [-32.78356, -70.68015], [-32.78359, -70.68018], [-32.78362, -70.68019], [-32.78364, -70.68016], [-32.78364, -70.68009], [-32.78363, -70.67992], [-32.78362, -70.67977], [-32.78362, -70.67971], [-32.78364, -70.67955], [-32.78366, -70.67948], [-32.78366, -70.67944], [-32.78363, -70.67938], [-32.78354, -70.67924], [-32.78345, -70.67914], [-32.78339, -70.6791], [-32.78333, -70.67905], [-32.78325, -70.67903], [-32.78316, -70.67903], [-32.78305, -70.67906], [-32.78294, -70.67909], [-32.78287, -70.67911], [-32.78281, -70.67911], [-32.78276, -70.67908], [-32.78273, -70.67906], [-32.7827, -70.67904], [-32.78269, -70.67902], [-32.78269, -70.67898], [-32.78271, -70.67893], [-32.78274, -70.6789], [-32.78278, -70.67887]]
+        ];
+
+        // Puntos del recorrido
+        // coords: ubicación en el mapa. perfil: % dentro de img/mapa-cerro.svg
+        // OJO: la ubicación del Mirador es aproximada y los datos repiten "3,67 km / fácil" como en el Figma (revisar)
         const puntos = [
             {
                 id: 'sendero-principal',
                 tipo: 'Sendero',
                 nombre: 'Sendero Principal',
-                x: 7.9, y: 64.8,
+                coords: [-32.78572, -70.68424],
+                perfil: [7.9, 64.8],
                 tiempo: '2 horas', longitud: '3,67 km', dificultad: 'Fácil',
+                resumen: 'Inicio del recorrido',
                 // Texto provisorio
                 texto: 'Comienza en la base del cerro y sube por la ladera poniente hasta la cima. A lo largo del camino hay paneles informativos sobre la flora, la fauna y la historia del lugar.',
-                silueta: 'img/silueta-sendero.svg',
                 link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' },
                 fotos: [
                     { src: 'img/sendero-principal.png', alt: 'Panel de bienvenida al inicio del sendero' },
@@ -252,11 +295,12 @@
                 id: 'catedral-verde',
                 tipo: 'Punto de interés',
                 nombre: 'Catedral Verde',
-                x: 61.7, y: 10.4,
+                coords: [-32.78314, -70.68132],
+                perfil: [61.7, 10.4],
                 tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
+                resumen: 'Bosque de cipreses en la cima',
                 // Texto del Figma
                 texto: 'La cima del cerro, conocida como Catedral Verde, es un bosque de cipreses que da sombra y refugio a quienes la visitan. Aquí se realizan actividades comunitarias, patrimoniales y educativas, y desde el sector norte se obtiene una vista de 360° del valle, el río y la cordillera.',
-                silueta: 'img/silueta-catedral.svg',
                 link: { texto: 'Conoce los atractivos', href: 'cerro.html' },
                 fotos: [
                     { src: 'img/catedral-verde.png', alt: 'Cipreses de la Catedral Verde' },
@@ -268,11 +312,12 @@
                 id: 'mirador',
                 tipo: 'Punto de interés',
                 nombre: 'Mirador',
-                x: 34.9, y: 26.2,
+                coords: [-32.78332, -70.68257],
+                perfil: [34.9, 26.2],
                 tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
+                resumen: 'Vista al Valle del Aconcagua',
                 // Texto provisorio
                 texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
-                silueta: 'img/silueta-mirador.svg',
                 link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' },
                 fotos: [
                     { src: 'img/como-llegar.png', alt: 'Visitantes descansando en el mirador con el valle de fondo' },
@@ -281,72 +326,105 @@
             }
         ];
 
-        const celular = () => window.innerWidth < 992;
-        const mapa = document.querySelector('#mapa');
-        const vista = document.querySelector('#mapaVista');
-        const escena = document.querySelector('#mapaEscena');
-        const marcadores = document.querySelector('#mapaMarcadores');
-        const listaPuntos = document.querySelector('#mapaPuntos');
-        const panel = document.querySelector('#mapaPanel');
+        const celular = window.matchMedia('(max-width: 991.98px)').matches;
+        const lateral = document.querySelector('#mapaLateral');
+        const vistaLista = document.querySelector('#vistaLista');
+        const vistaDetalle = document.querySelector('#vistaDetalle');
         const galeriaFotos = document.querySelector('#galeriaFotos');
         const galeriaPuntos = document.querySelector('#galeriaPuntos');
         let actual = -1;
         let fotoActual = 0;
 
-        // Crear los números sobre el cerro y los puntos del suelo
-        puntos.forEach((punto, i) => {
-            const marcador = document.createElement('button');
-            marcador.type = 'button';
-            marcador.className = 'mapa-marcador';
-            marcador.style.left = punto.x + '%';
-            marcador.style.top = punto.y + '%';
-            marcador.innerHTML = '<span class="mapa-marcador-numero"></span><span class="mapa-marcador-nombre"></span>';
-            marcador.querySelector('.mapa-marcador-numero').textContent = i + 1;
-            marcador.querySelector('.mapa-marcador-nombre').textContent = punto.nombre;
-            marcador.addEventListener('click', () => elegir(i === actual ? -1 : i));
-            marcadores.appendChild(marcador);
+        // Mapa base
+        const mapa = L.map('mapaLeaflet', {
+            zoomControl: false,
+            // En celular la rueda no hace zoom; así se puede bajar por la página
+            scrollWheelZoom: !celular,
+            attributionControl: true
+        });
+        L.control.zoom({ position: 'bottomright', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(mapa);
+        mapa.attributionControl.setPrefix(false);
 
-            const li = document.createElement('li');
-            li.className = 'mapa-punto-item';
-            li.innerHTML =
-                '<img class="mapa-punto-silueta" alt="">' +
-                '<button type="button" class="mapa-punto">' +
-                '<span class="mapa-numero"></span>' +
-                '<span class="mapa-punto-texto">' +
-                '<span class="mapa-punto-nombre"></span>' +
-                '<span class="mapa-punto-datos"></span>' +
-                '</span>' +
-                '</button>';
-            const silueta = li.querySelector('.mapa-punto-silueta');
-            silueta.addEventListener('error', () => silueta.hidden = true);
-            silueta.src = punto.silueta;
-            li.querySelector('.mapa-numero').textContent = i + 1;
-            li.querySelector('.mapa-punto-nombre').textContent = punto.nombre;
-            li.querySelector('.mapa-punto-datos').textContent = punto.tiempo + ' · ' + punto.longitud + ' · ' + punto.dificultad;
-            li.querySelector('.mapa-punto').addEventListener('click', () => elegir(i === actual ? -1 : i));
-            listaPuntos.appendChild(li);
+        const capas = {
+            satelite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: 'Imagen © Esri, Maxar, Earthstar Geographics · Senderos © OpenStreetMap'
+            }),
+            relieve: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17,
+                attribution: '© OpenStreetMap, SRTM · Estilo © OpenTopoMap (CC-BY-SA)'
+            })
+        };
+        let capaActual = capas.satelite.addTo(mapa);
+
+        document.querySelectorAll('[data-capa]').forEach(boton => {
+            boton.addEventListener('click', () => {
+                mapa.removeLayer(capaActual);
+                capaActual = capas[boton.dataset.capa].addTo(mapa);
+                document.querySelectorAll('[data-capa]').forEach(otro => {
+                    otro.classList.toggle('is-active', otro === boton);
+                    otro.setAttribute('aria-pressed', otro === boton);
+                });
+            });
         });
 
-        // Acercar la vista al punto (como una cámara)
-        function moverCamara() {
-            if (actual < 0) {
-                escena.style.transform = '';
-                escena.style.setProperty('--zoom', 1);
-                return;
-            }
-            const zoom = celular() ? 2.4 : 2.6;
-            const punto = puntos[actual];
-            const px = escena.offsetWidth * punto.x / 100;
-            const py = escena.offsetHeight * punto.y / 100;
-            // En escritorio el punto queda al centro del espacio libre a la izquierda del panel
-            const libre = celular() ? vista.clientWidth : vista.clientWidth - panel.offsetWidth;
-            const destinoX = libre / 2;
-            const destinoY = celular() ? escena.offsetTop + escena.offsetHeight * 0.55 : vista.clientHeight * 0.5;
-            const tx = destinoX - escena.offsetLeft - px * zoom;
-            const ty = destinoY - escena.offsetTop - py * zoom;
-            escena.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) scale(' + zoom + ')';
-            escena.style.setProperty('--zoom', zoom);
+        // Sendero: borde oscuro + línea clara para que se lea sobre la foto satelital
+        const sendero = L.featureGroup();
+        recorrido.forEach(tramo => {
+            L.polyline(tramo, { color: '#314533', weight: 8, opacity: 0.7, lineCap: 'round', lineJoin: 'round' }).addTo(sendero);
+            L.polyline(tramo, { color: '#F4E3AD', weight: 4, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(sendero);
+        });
+        sendero.addTo(mapa);
+
+        function vistaGeneral(animado) {
+            mapa.flyToBounds(sendero.getBounds(), { padding: [48, 48], maxZoom: 17, duration: animado ? 1 : 0, animate: animado });
         }
+        mapa.fitBounds(sendero.getBounds(), { padding: [48, 48], maxZoom: 17 });
+
+        // Marcadores, puntos del perfil y tarjetas
+        const marcadores = [];
+        const perfilMarcadores = document.querySelector('#perfilMarcadores');
+        const listaPuntos = document.querySelector('#mapaPuntos');
+
+        puntos.forEach((punto, i) => {
+            const icono = L.divIcon({
+                className: 'mapa-pin',
+                html: '<span class="mapa-pin-numero">' + (i + 1) + '</span><span class="mapa-pin-nombre"></span>',
+                iconSize: null,
+                iconAnchor: [18, 18]
+            });
+            const marcador = L.marker(punto.coords, { icon: icono, title: punto.nombre, keyboard: true, riseOnHover: true }).addTo(mapa);
+            marcador.getElement().querySelector('.mapa-pin-nombre').textContent = punto.nombre;
+            marcador.on('click', () => elegir(i));
+            marcadores.push(marcador);
+
+            const enPerfil = document.createElement('button');
+            enPerfil.type = 'button';
+            enPerfil.className = 'mapa-perfil-marcador';
+            enPerfil.style.left = punto.perfil[0] + '%';
+            enPerfil.style.top = punto.perfil[1] + '%';
+            enPerfil.textContent = i + 1;
+            enPerfil.setAttribute('aria-label', (i + 1) + '. ' + punto.nombre);
+            enPerfil.addEventListener('click', () => elegir(i));
+            perfilMarcadores.appendChild(enPerfil);
+
+            const li = document.createElement('li');
+            li.innerHTML =
+                '<button type="button" class="mapa-punto">' +
+                '<span class="mapa-numero"></span>' +
+                '<span class="mapa-punto-texto"><span class="mapa-punto-nombre"></span><span class="mapa-punto-resumen"></span></span>' +
+                '<img src="icons/arrow-forward.svg" alt="" class="mapa-punto-flecha" width="8" height="14">' +
+                '</button>';
+            li.querySelector('.mapa-numero').textContent = i + 1;
+            li.querySelector('.mapa-punto-nombre').textContent = punto.nombre;
+            li.querySelector('.mapa-punto-resumen').textContent = punto.tipo + ' · ' + punto.resumen;
+            const boton = li.querySelector('.mapa-punto');
+            boton.addEventListener('click', () => elegir(i));
+            // Al pasar por la tarjeta se destaca el punto en el mapa
+            boton.addEventListener('mouseenter', () => marcador.getElement().classList.add('mapa-pin--hover'));
+            boton.addEventListener('mouseleave', () => marcador.getElement().classList.remove('mapa-pin--hover'));
+            listaPuntos.appendChild(li);
+        });
 
         // Galería (disolvencia como los otros carruseles)
         function armarGaleria(punto) {
@@ -367,7 +445,7 @@
                 galeriaPuntos.appendChild(dot);
             });
             fotoActual = 0;
-            panel.classList.toggle('mapa-panel--una-foto', punto.fotos.length < 2);
+            vistaDetalle.classList.toggle('mapa-vista-detalle--una-foto', punto.fotos.length < 2);
         }
 
         function mostrarFoto(indice) {
@@ -380,70 +458,58 @@
         document.querySelector('#galeriaAnterior').addEventListener('click', () => mostrarFoto(fotoActual - 1));
         document.querySelector('#galeriaSiguiente').addEventListener('click', () => mostrarFoto(fotoActual + 1));
 
+        // Elegir un punto (o -1 para volver a la vista general)
         function elegir(indice, sinHistorial) {
             actual = indice;
             const hayPunto = actual >= 0;
-            mapa.classList.toggle('mapa--detalle', hayPunto);
-            panel.hidden = !hayPunto;
+            vistaLista.hidden = hayPunto;
+            vistaDetalle.hidden = !hayPunto;
 
-            document.querySelectorAll('.mapa-marcador').forEach((marcador, i) => {
-                marcador.classList.toggle('mapa-marcador--activo', i === actual);
-                marcador.setAttribute('aria-pressed', i === actual);
-            });
-            document.querySelectorAll('.mapa-punto').forEach((boton, i) => {
-                boton.classList.toggle('mapa-punto--activo', i === actual);
-                boton.setAttribute('aria-pressed', i === actual);
+            marcadores.forEach((marcador, i) => {
+                marcador.getElement().classList.toggle('mapa-pin--activo', i === actual);
+                marcador.getElement().classList.toggle('mapa-pin--atenuado', hayPunto && i !== actual);
             });
 
             if (hayPunto) {
                 const punto = puntos[actual];
                 const anterior = puntos[(actual - 1 + puntos.length) % puntos.length];
                 const siguiente = puntos[(actual + 1) % puntos.length];
-                document.querySelector('#panelTipo').textContent = punto.tipo;
-                document.querySelector('#panelNumero').textContent = actual + 1;
-                document.querySelector('#panelTitulo').textContent = punto.nombre;
-                document.querySelector('#panelTiempo').textContent = punto.tiempo;
-                document.querySelector('#panelLongitud').textContent = punto.longitud;
-                document.querySelector('#panelDificultad').textContent = punto.dificultad;
-                document.querySelector('#panelTexto').textContent = punto.texto;
-                const link = document.querySelector('#panelLink');
+                document.querySelector('#detalleTipo').textContent = punto.tipo;
+                document.querySelector('#detalleNumero').textContent = actual + 1;
+                document.querySelector('#detalleNombre').textContent = punto.nombre;
+                document.querySelector('#detalleTiempo').textContent = punto.tiempo;
+                document.querySelector('#detalleLongitud').textContent = punto.longitud;
+                document.querySelector('#detalleDificultad').textContent = punto.dificultad;
+                document.querySelector('#detalleTexto').textContent = punto.texto;
+                const link = document.querySelector('#detalleLink');
                 link.textContent = punto.link.texto;
                 link.href = punto.link.href;
-                document.querySelector('#panelAnterior').textContent = '← ' + anterior.nombre;
-                document.querySelector('#panelSiguiente').textContent = siguiente.nombre + ' →';
+                document.querySelector('#detalleAnterior').textContent = '← ' + anterior.nombre;
+                document.querySelector('#detalleSiguiente').textContent = siguiente.nombre + ' →';
                 armarGaleria(punto);
-                panel.scrollTop = 0;
-
-                // En celular, el panel aparece debajo del cerro
-                if (celular()) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                lateral.scrollTop = 0;
+                mapa.flyTo(punto.coords, 17, { duration: 1 });
+                if (celular && !sinHistorial) vistaDetalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                vistaGeneral(true);
             }
 
             if (!sinHistorial) {
                 history.replaceState(null, '', hayPunto ? '#' + puntos[actual].id : 'mapa.html');
             }
-            moverCamara();
         }
 
-        document.querySelector('#panelCerrar').addEventListener('click', () => elegir(-1));
-        document.querySelector('#panelAnterior').addEventListener('click', () => {
+        document.querySelector('#mapaVolver').addEventListener('click', () => elegir(-1));
+        document.querySelector('#detalleAnterior').addEventListener('click', () => {
             elegir((actual - 1 + puntos.length) % puntos.length);
         });
-        document.querySelector('#panelSiguiente').addEventListener('click', () => {
+        document.querySelector('#detalleSiguiente').addEventListener('click', () => {
             elegir((actual + 1) % puntos.length);
         });
-
-        // Tocar el cielo (fuera del cerro) vuelve a la vista general
-        vista.addEventListener('click', (event) => {
-            if (actual >= 0 && (event.target === vista || event.target.classList.contains('mapa-marco'))) elegir(-1);
-        });
-
         document.addEventListener('keydown', (event) => {
-            if (actual < 0) return;
+            if (actual < 0 || event.target.closest('.leaflet-container')) return;
             if (event.key === 'Escape') elegir(-1);
-            if (event.key === 'ArrowRight') mostrarFoto(fotoActual + 1);
-            if (event.key === 'ArrowLeft') mostrarFoto(fotoActual - 1);
         });
-        window.addEventListener('resize', moverCamara);
 
         // Si se llega con un punto en la dirección (por ejemplo mapa.html#mirador), se abre ese punto
         function abrirDesdeDireccion() {
