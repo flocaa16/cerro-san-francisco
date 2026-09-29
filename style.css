@@ -141,7 +141,8 @@ h3 {
     align-items: center;
     padding: 4px 10px;
     border-radius: 8px;
-    background-color: rgba(244, 227, 173, 0.2);
+    /* Fondo propio para contraste AAA (7,2:1 incluso sobre una foto blanca) */
+    background-color: rgba(49, 69, 51, 0.88);
     color: #F2F7F2;
     font-size: 14px;
     white-space: nowrap;
@@ -1391,6 +1392,18 @@ button.cover:hover {
     object-fit: cover;
 }
 
+/* Capa verde (Primary 900) para que el texto cumpla contraste AAA (7:1).
+   Opacidad medida sobre los cuadros del video: 80% en la zona del texto */
+.banner-cerro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to left,
+            rgba(49, 69, 51, 0.84) 0%,
+            rgba(49, 69, 51, 0.84) 50%,
+            rgba(49, 69, 51, 0.35) 100%);
+}
+
 .banner-cerro-content {
     position: relative;
     z-index: 1;
@@ -1493,6 +1506,12 @@ button.cover:hover {
 }
 
 @media (max-width: 767.98px) {
+
+    /* En celular el texto ocupa todo el ancho: capa pareja */
+    .banner-cerro::after {
+        background: rgba(49, 69, 51, 0.84);
+    }
+
     .banner-cerro-content {
         gap: 8px;
         padding: 32px 8px;
@@ -2044,6 +2063,14 @@ button.cover:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Capa verde para contraste AAA (7:1): medido 54% sobre los cuadros del video */
+.acciones::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(49, 69, 51, 0.56);
 }
 
 .acciones .wrapper {
