@@ -3161,18 +3161,36 @@ button.cover:hover {
 /* Figma: "03 Mapa" (Perfil del cerro - Senderos). Interacción inspirada en el mapa de ciudadquequeremos.cl */
 
 .mapa {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 80px);
-    background-color: #F2F7F2;
+    position: relative;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: calc(100vh - 80px);
+    min-height: 620px;
+    max-height: 980px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #F2F7F2 0%, #E6F0E7 100%);
 }
 
-/*INTRO*/
+/*VISTA DEL CERRO*/
+.mapa-vista {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 0;
+    /* Arriba queda el título y abajo las siluetas del suelo */
+    padding: 180px 0 64px 0;
+}
+
 .mapa-intro {
+    position: absolute;
+    top: clamp(24px, 5vh, 56px);
+    left: 120px;
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 40px 120px 0 120px;
+    gap: 12px;
+    max-width: 480px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .mapa-title {
@@ -3182,35 +3200,30 @@ button.cover:hover {
 }
 
 .mapa-text {
-    max-width: 640px;
     font-size: 18px;
     line-height: 1.5;
     color: #303132;
 }
 
-/*INTRO*/
-
-/*VISTA DEL CERRO*/
-.mapa-vista {
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    min-height: 280px;
-    padding: 32px 0 64px 0;
-    overflow: hidden;
+/* Al elegir un punto, el título se aparta para dar espacio al cerro */
+.mapa--detalle .mapa-intro {
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
 }
 
 .mapa-marco {
     width: 100%;
+    padding: 0 120px;
 }
 
 .mapa-escena {
     position: relative;
-    /* El cerro se achica en pantallas bajas para que toda la página quepa en la pantalla */
-    width: min(100%, 1440px, max(720px, calc((100vh - 600px) * 3.845)));
+    /* El cerro usa todo el ancho posible sin pasar el alto disponible */
+    width: min(100%, calc((100vh - 440px) * 3.85));
+    min-width: 640px;
     margin: 0 auto;
-    aspect-ratio: 1438 / 374;
+    aspect-ratio: 1441 / 374;
     transform-origin: 0 0;
     transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -3226,32 +3239,64 @@ button.cover:hover {
     position: absolute;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+    gap: 8px;
     padding: 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+    transform: translate(-18px, -50%) scale(calc(1 / var(--zoom, 1)));
+    transform-origin: 18px 50%;
+}
+
+.mapa-marcador-numero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
     background-color: #5C8F61;
     color: #FFFFFF;
-    font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
-    cursor: pointer;
-    transform: translate(-50%, -50%) scale(calc(1 / var(--zoom, 1)));
-    transition: background-color 0.3s ease, opacity 0.5s ease, box-shadow 0.3s ease;
+    /* Elevation 1 */
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
 }
 
-.mapa-marcador:hover {
+.mapa-marcador-nombre {
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    color: #314533;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+}
+
+.mapa-marcador:hover .mapa-marcador-numero,
+.mapa-marcador:focus-visible .mapa-marcador-numero {
     background-color: #314533;
 }
 
-.mapa-vista--zoom .mapa-marcador {
-    opacity: 0.5;
+/* Con un punto elegido, solo se destaca ese */
+.mapa--detalle .mapa-marcador {
+    opacity: 0.6;
 }
 
-.mapa-vista--zoom .mapa-marcador--activo {
+.mapa--detalle .mapa-marcador-nombre {
+    opacity: 0;
+}
+
+.mapa--detalle .mapa-marcador--activo {
     opacity: 1;
+}
+
+.mapa--detalle .mapa-marcador--activo .mapa-marcador-numero {
     background-color: #314533;
     animation: mapa-pulso 1.6s ease-out infinite;
 }
@@ -3266,51 +3311,200 @@ button.cover:hover {
     }
 }
 
-/* Volver a la vista general */
-.mapa-volver {
+/*VISTA DEL CERRO*/
+
+/*SUELO CON LOS PUNTOS*/
+.mapa-suelo {
+    position: relative;
+    z-index: 3;
+    padding: 20px 120px 28px 120px;
+    background-color: #557458;
+    transition: margin-right 0.4s ease;
+}
+
+.mapa-puntos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0;
+}
+
+.mapa-punto-item {
+    position: relative;
+}
+
+/* Silueta sobre el suelo (bosque, cipreses, cruz) */
+.mapa-punto-silueta {
     position: absolute;
-    top: 16px;
-    left: 120px;
-    z-index: 2;
-    display: inline-flex;
+    bottom: calc(100% + 20px - 1px);
+    left: 50%;
+    width: auto;
+    height: 88px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.mapa--detalle .mapa-punto-silueta {
+    opacity: 0;
+}
+
+.mapa-punto {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border: none;
-    background-color: rgba(49, 69, 51, 0.85);
+    gap: 16px;
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.04);
     color: #FFFFFF;
     font-family: inherit;
-    font-size: 14px;
+    text-align: left;
     cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.mapa-punto:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mapa-punto--activo,
+.mapa-punto--activo:hover {
+    border-color: #FFFFFF;
+    background-color: #FFFFFF;
+    color: #314533;
+}
+
+.mapa-punto--activo .mapa-numero {
+    background-color: #557458;
+}
+
+.mapa-punto-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mapa-punto-nombre {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.mapa-punto-datos {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+/* Número de cada punto (Primary 600 del Figma) */
+.mapa-numero {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #5C8F61;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
     transition: background-color 0.3s ease;
 }
 
-.mapa-volver img {
-    transform: rotate(180deg);
-}
+/*SUELO*/
 
-.mapa-volver:hover {
-    background-color: #314533;
-}
-
-.mapa-volver[hidden] {
-    display: none;
-}
-
-/* Galería de fotos (Figma: "Galeria de fotos", 268 x 401) */
-.mapa-galeria {
+/*PANEL DEL PUNTO ELEGIDO*/
+.mapa-panel {
     position: absolute;
     top: 0;
-    right: max(55px, calc((100% - 1440px) / 2 + 55px));
+    right: 0;
     bottom: 0;
-    z-index: 2;
-    aspect-ratio: 268 / 401;
-    max-height: 401px;
-    animation: modal-disolver 0.6s ease;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    width: 440px;
+    overflow-y: auto;
+    background-color: #FFFFFF;
+    /* Elevation 3 */
+    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+    animation: mapa-panel-entrar 0.4s ease;
 }
 
-.mapa-galeria[hidden] {
+.mapa-panel[hidden] {
     display: none;
+}
+
+@keyframes mapa-panel-entrar {
+    from {
+        opacity: 0;
+        transform: translateX(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* El suelo deja espacio al panel */
+.mapa--detalle .mapa-suelo {
+    margin-right: 440px;
+}
+
+.mapa--detalle .mapa-puntos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.mapa--detalle .mapa-punto {
+    padding: 12px 14px;
+    gap: 12px;
+}
+
+.mapa--detalle .mapa-punto-nombre {
+    font-size: 16px;
+}
+
+.mapa--detalle .mapa-punto-datos {
+    display: none;
+}
+
+.mapa-panel-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #557458;
+    cursor: pointer;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.mapa-panel-close:hover {
+    background-color: #F2F7F2;
+}
+
+/* Galería de fotos */
+.mapa-galeria {
+    position: relative;
+    flex-shrink: 0;
+    aspect-ratio: 4 / 3;
+    background-color: #314533;
 }
 
 .mapa-galeria-fotos {
@@ -3334,233 +3528,270 @@ button.cover:hover {
     visibility: visible;
 }
 
-.mapa-galeria-flechas {
+.mapa-galeria-flecha {
     position: absolute;
     top: 50%;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    padding: 8px;
+}
+
+.mapa-galeria-flecha img {
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+}
+
+.mapa-galeria-flecha--izq {
+    left: 8px;
+}
+
+.mapa-galeria-flecha--der {
+    right: 8px;
+}
+
+.mapa-galeria-puntos {
+    position: absolute;
+    bottom: 12px;
     left: 0;
     right: 0;
     display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
+    justify-content: center;
+    gap: 8px;
 }
 
-.mapa-galeria-flechas[hidden] {
+.mapa-galeria-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.mapa-galeria-dot.is-active {
+    background-color: #FFFFFF;
+    transform: scale(1.25);
+}
+
+.mapa-panel--una-foto .mapa-galeria-flecha,
+.mapa-panel--una-foto .mapa-galeria-puntos {
     display: none;
 }
 
-.mapa-galeria .arrow-button img {
-    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
-}
-
-/*VISTA DEL CERRO*/
-
-/*PUNTOS (suelo verde con los datos)*/
-.mapa-suelo {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 16px 120px 24px 120px;
-    background-color: #557458;
-}
-
-.mapa-flecha {
-    flex-shrink: 0;
-}
-
-.mapa-puntos {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 282px));
-    justify-content: center;
-    gap: 30px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.mapa-punto {
-    position: relative;
+.mapa-panel-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    padding: 12px 20px;
-    border: none;
-    background: transparent;
-    color: #FFFFFF;
-    font-family: inherit;
-    cursor: pointer;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px 32px 32px 32px;
 }
 
-/* Silueta decorativa sobre el suelo (árboles, bosque, cruz) */
-.mapa-punto-silueta {
-    position: absolute;
-    bottom: calc(100% + 16px - 1px);
-    left: 50%;
-    height: 96px;
-    width: auto;
-    transform: translateX(-50%);
-    pointer-events: none;
-}
-
-.mapa-punto-nombre {
-    font-size: 24px;
-    font-weight: 500;
-}
-
-.mapa-punto-datos {
+.mapa-panel-title {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    font-size: 16px;
-    letter-spacing: 0.024px;
-    text-align: left;
-}
-
-.mapa-punto-datos strong {
-    font-weight: 500;
-}
-
-.mapa-numero {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-width: 56px;
-    height: 56px;
-    padding: 0 20px;
-    border-radius: 65px;
-    background-color: #5C8F61;
-    color: #FFFFFF;
-    font-size: 34px;
+    gap: 12px;
+    font-size: 32px;
     font-weight: 700;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.mapa-numero--chico {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 10px;
-    font-size: 18px;
-}
-
-.mapa-punto:hover .mapa-numero {
-    background-color: #7FB084;
-}
-
-.mapa-punto--activo .mapa-numero,
-.mapa-punto--activo:hover .mapa-numero {
-    background-color: #FFFFFF;
+    line-height: 1.15;
     color: #557458;
 }
 
-/* Detalle del punto elegido (Figma: Variant2) */
-.mapa-suelo--detalle {
-    min-height: 300px;
+/* Datos en fila, como los números del inicio */
+.mapa-datos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    margin: 0;
+    padding: 16px 0;
+    border-top: 1px solid #E0E0E2;
+    border-bottom: 1px solid #E0E0E2;
 }
 
-.mapa-puntos[hidden],
-.mapa-detalle[hidden] {
-    display: none;
-}
-
-.mapa-detalle {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 60px;
-    color: #FFFFFF;
-    animation: modal-disolver 0.5s ease;
-}
-
-.mapa-detalle-info {
-    position: relative;
-    flex-shrink: 0;
+.mapa-dato {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 282px;
-    padding: 20px;
+    gap: 4px;
+    padding: 0 12px;
 }
 
-.mapa-detalle-info .mapa-punto-nombre {
-    text-align: center;
+.mapa-dato+.mapa-dato {
+    border-left: 1px solid #E0E0E2;
 }
 
-.mapa-detalle-info .mapa-punto-silueta {
-    bottom: calc(100% + 40px - 1px);
+.mapa-dato:first-child {
+    padding-left: 0;
 }
 
-.mapa-detalle-text {
-    flex: 1;
-    max-width: 590px;
+.mapa-dato dt {
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    color: #727376;
+}
+
+.mapa-dato dd {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #314533;
+}
+
+.mapa-panel-text {
     font-size: 16px;
     line-height: 1.5;
-    letter-spacing: 0.08px;
+    color: #303132;
 }
 
-/*PUNTOS*/
+.mapa-panel-link {
+    width: 100%;
+}
+
+.mapa-panel-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding-top: 16px;
+    border-top: 1px solid #E0E0E2;
+}
+
+.mapa-panel-nav-btn {
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/*PANEL*/
 
 @media (prefers-reduced-motion: reduce) {
 
     .mapa-escena,
-    .mapa-galeria,
-    .mapa-galeria-foto,
-    .mapa-detalle {
+    .mapa-intro,
+    .mapa-suelo,
+    .mapa-panel,
+    .mapa-galeria-foto {
         transition: none;
         animation: none;
     }
 
-    .mapa-vista--zoom .mapa-marcador--activo {
+    .mapa--detalle .mapa-marcador--activo .mapa-marcador-numero {
         animation: none;
     }
 }
 
 @media (max-width: 1199.98px) {
+    .mapa-intro {
+        left: 40px;
+    }
 
-    .mapa-intro,
+    .mapa-marco,
     .mapa-suelo {
         padding-left: 40px;
         padding-right: 40px;
     }
 
-    .mapa-volver {
-        left: 40px;
+    .mapa-panel {
+        width: 400px;
     }
 
-    .mapa-detalle {
-        gap: 32px;
+    .mapa--detalle .mapa-suelo {
+        margin-right: 400px;
     }
 
     .mapa-punto-nombre {
-        font-size: 20px;
+        font-size: 18px;
     }
 }
 
+/* Tablet y celular: el panel va debajo del cerro */
 @media (max-width: 991.98px) {
+    .mapa {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+    }
+
+    .mapa-vista {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+    }
+
+    .mapa-intro {
+        position: static;
+        padding: 40px 40px 0 40px;
+        max-width: none;
+    }
+
     .mapa-title {
         font-size: 40px;
     }
 
-    .mapa-punto-datos {
-        font-size: 14px;
+    .mapa--detalle .mapa-intro {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+
+    /* El cerro acercado no se sale de su espacio */
+    .mapa-marco {
+        display: flex;
+        align-items: center;
+        height: 320px;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .mapa-escena {
+        width: 110%;
+        min-width: 0;
+        margin: 0 0 0 16px;
     }
 
     .mapa-punto-silueta {
-        height: 72px;
+        display: none;
+    }
+
+    .mapa--detalle .mapa-suelo {
+        margin-right: 0;
+    }
+
+    .mapa--detalle .mapa-punto-datos {
+        display: block;
+    }
+
+    .mapa-panel {
+        position: relative;
+        scroll-margin-top: 80px;
+        width: auto;
+        overflow: visible;
+        box-shadow: none;
+        animation: modal-disolver 0.4s ease;
+    }
+
+    .mapa-galeria {
+        aspect-ratio: 16 / 9;
+    }
+
+    .mapa-panel-content {
+        padding: 32px 40px 48px 40px;
     }
 }
 
 @media (max-width: 767.98px) {
     .mapa-intro {
-        gap: 12px;
         padding: 32px 16px 0 16px;
     }
 
-    .mapa-title {
+    .mapa-title,
+    .mapa-panel-title {
         font-size: 32px;
     }
 
@@ -3568,106 +3799,49 @@ button.cover:hover {
         font-size: 16px;
     }
 
-    .mapa-vista {
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: center;
-        min-height: 0;
-        padding: 40px 0 32px 0;
-    }
-
-    .mapa-escena {
-        width: 100%;
-    }
-
-    .mapa-volver {
-        left: 16px;
-        top: 8px;
-    }
-
-    /* El cerro acercado no se sale de su espacio */
     .mapa-marco {
-        display: flex;
-        align-items: center;
-        height: 220px;
-        overflow: hidden;
+        height: 240px;
     }
 
-    /* En celular la galería va debajo del cerro */
-    .mapa-galeria {
-        position: relative;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        order: 2;
-        width: auto;
-        max-height: none;
-        aspect-ratio: 4 / 3;
-        margin: 24px 16px 0 16px;
+    /* El cerro se ve más grande y se recorta la cola de la derecha */
+    .mapa-escena {
+        width: 150%;
+        margin-left: 8px;
     }
 
-    .mapa-suelo--detalle {
-        min-height: 0;
-    }
-
-    .mapa-detalle {
-        flex-direction: column;
-        gap: 16px;
-        padding: 8px 0;
-        text-align: center;
-    }
-
-    .mapa-detalle-info {
-        width: auto;
-        padding: 0;
-        gap: 12px;
-    }
-
-    .mapa-detalle .mapa-numero {
-        order: -1;
-    }
-
-    .mapa-detalle-text {
-        font-size: 15px;
+    .mapa-marcador-nombre {
+        display: none;
     }
 
     .mapa-suelo {
-        gap: 8px;
-        padding: 16px 8px 24px 8px;
+        padding: 16px;
     }
 
-    .mapa-flecha {
-        width: 36px;
-        height: 36px;
-    }
-
-    /* Los puntos se deslizan de a uno */
-    .mapa-puntos {
-        grid-template-columns: none;
-        grid-auto-flow: column;
-        grid-auto-columns: 100%;
-        justify-content: start;
-        gap: 0;
+    /* Los puntos se deslizan */
+    .mapa-puntos,
+    .mapa--detalle .mapa-puntos {
+        display: flex;
+        gap: 12px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         scrollbar-width: none;
     }
 
-    .mapa-puntos li {
-        scroll-snap-align: center;
+    .mapa-punto-item {
+        flex: 0 0 82%;
+        scroll-snap-align: start;
     }
 
-    .mapa-punto {
-        padding: 12px;
-        gap: 16px;
+    .mapa-galeria {
+        aspect-ratio: 4 / 3;
     }
 
-    .mapa-punto-silueta {
-        display: none;
+    .mapa-panel-content {
+        padding: 24px 16px 40px 16px;
     }
 
-    .mapa-punto-datos {
-        align-items: center;
+    .mapa-dato dd {
+        font-size: 16px;
     }
 }
 
