@@ -48,6 +48,11 @@ h3 {
 /*-----------------------ALL PAGES-----------------------*/
 
 /*
+    Escala del sitio (misma que fundacionlepe.cl):
+    títulos de sección 48px bold · títulos de tarjeta 32px o 24px bold · bajadas 18px ·
+    texto 16px con interlineado 1.5 · detalles 14px y 12px.
+    Botones medianos de 56px de alto. Espacio vertical de las secciones: clamp(48px, 9vh, 96px).
+
     Alturas: las secciones grandes usan clamp(mínimo, % del alto de pantalla, máximo).
     El máximo es la medida del Figma (pantalla de 1440 x 900 o más).
     En pantallas más bajas se achican para que cada sección quepa en la pantalla.
@@ -73,9 +78,10 @@ h3 {
 }
 
 .btn-primary-medium {
-    height: 48px;
+    height: 56px;
     padding: 0 24px;
     font-size: 16px;
+    min-width: 160px;
 }
 
 .btn-primary-medium--tall {
@@ -176,6 +182,7 @@ h3 {
     font-weight: 500;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
+    min-width: 160px;
 }
 
 .btn-outline-medium:hover {
@@ -874,7 +881,7 @@ h3 {
 
 .como-llegar-title {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 700;
     text-align: center;
 }
 
@@ -1100,8 +1107,8 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    padding-top: clamp(56px, 11vh, 120px);
-    padding-bottom: clamp(56px, 11vh, 125px);
+    padding-top: clamp(48px, 9vh, 96px);
+    padding-bottom: clamp(48px, 9vh, 96px);
 }
 
 .no-rastro-header {
@@ -1187,7 +1194,7 @@ h3 {
 
 /*EVENTOS*/
 .eventos {
-    padding-bottom: 60px;
+    padding-bottom: clamp(48px, 9vh, 96px);
 }
 
 .eventos-band {
@@ -1198,7 +1205,7 @@ h3 {
 }
 
 .eventos-subtitle {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 500;
 }
 
@@ -1256,11 +1263,7 @@ h3 {
 
 .evento-image {
     flex: 1;
-    height: clamp(300px, 46vh, 372px);
-}
-
-.evento--reverse .evento-image {
-    height: clamp(320px, 52vh, 433px);
+    height: clamp(320px, 50vh, 400px);
 }
 
 .evento-image img {
@@ -1282,7 +1285,7 @@ h3 {
     }
 
     .eventos-subtitle {
-        font-size: 22px;
+        font-size: 18px;
     }
 
     .eventos-title {
@@ -1311,7 +1314,7 @@ h3 {
 
 @media (max-width: 767.98px) {
     .eventos-subtitle {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .eventos-title {
@@ -1337,7 +1340,7 @@ h3 {
 /*PUBLICACIONES*/
 .publicaciones {
     background-color: #F2F7F2;
-    padding: clamp(40px, 7vh, 60px) 0;
+    padding: clamp(48px, 9vh, 96px) 0;
     margin-bottom: clamp(60px, 14vh, 187px);
 }
 
@@ -1349,9 +1352,21 @@ h3 {
 }
 
 .publicaciones-title {
-    font-size: 24px;
-    font-weight: 400;
+    font-size: 48px;
+    font-weight: 700;
     color: #557458;
+}
+
+@media (max-width: 991.98px) {
+    .publicaciones-title {
+        font-size: 40px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .publicaciones-title {
+        font-size: 32px;
+    }
 }
 
 .publicacion {
@@ -1447,6 +1462,7 @@ button.cover:hover {
     font-size: 18px;
     color: #557458;
     margin-bottom: -32px;
+    font-weight: 500;
 }
 
 .publicacion-title {
@@ -1457,7 +1473,7 @@ button.cover:hover {
 
 .publicacion-text {
     font-size: 18px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5;
 }
 
@@ -1687,7 +1703,7 @@ button.cover:hover {
 /*ATRACTIVOS*/
 .atractivos {
     background-color: #F2F7F2;
-    padding: 40px 0;
+    padding: clamp(48px, 9vh, 96px) 0;
 }
 
 .atractivos-title {
@@ -1805,8 +1821,8 @@ button.cover:hover {
     align-items: center;
     justify-content: space-between;
     gap: 48px;
-    padding-top: clamp(56px, 11vh, 120px);
-    padding-bottom: clamp(56px, 11vh, 120px);
+    padding-top: clamp(48px, 9vh, 96px);
+    padding-bottom: clamp(48px, 9vh, 96px);
 }
 
 .contexto-texto {
@@ -1818,7 +1834,7 @@ button.cover:hover {
 
 .contexto-title {
     font-size: 48px;
-    font-weight: 600;
+    font-weight: 700;
     color: #557458;
 }
 
@@ -1894,7 +1910,7 @@ button.cover:hover {
     isolation: isolate;
     overflow: hidden;
     margin: clamp(32px, 8vh, 82px) 0;
-    padding: clamp(40px, 8vh, 114px) 0;
+    padding: clamp(48px, 9vh, 96px) 0;
     color: #FFFFFF;
 }
 
@@ -2127,8 +2143,8 @@ button.cover:hover {
     align-items: center;
     justify-content: space-between;
     gap: 48px;
-    padding-top: 38px;
-    padding-bottom: clamp(56px, 11vh, 120px);
+    padding-top: clamp(48px, 9vh, 96px);
+    padding-bottom: clamp(48px, 9vh, 96px);
 }
 
 .fundacion-texto {
@@ -2710,14 +2726,14 @@ button.cover:hover {
 
 .ficha-tecnica-item dt {
     font-size: 18px;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0.15px;
 }
 
 .ficha-tecnica-item dd {
     margin: 0;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 @media (max-width: 991.98px) {
@@ -3780,7 +3796,7 @@ button.cover:hover {
     justify-content: center;
     gap: 8px;
     width: 100%;
-    height: 54px;
+    height: 56px;
     padding: 16px 8px;
     border: 1px solid #E0E0E2;
     border-radius: 10px;
