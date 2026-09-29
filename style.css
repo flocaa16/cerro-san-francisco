@@ -3259,7 +3259,7 @@ button.cover:hover {
     height: 36px;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background-color: #5C8F61;
+    background-color: #557458;
     color: #FFFFFF;
     font-size: 16px;
     font-weight: 700;
@@ -3364,8 +3364,7 @@ button.cover:hover {
     position: relative;
     flex-shrink: 0;
     padding: 20px 8px 8px 8px;
-    border-radius: 4px;
-    background: linear-gradient(180deg, #F2F7F2 0%, #E3EEE4 100%);
+    background-color: #F2F7F2;
 }
 
 .mapa-perfil-img {
@@ -3392,7 +3391,7 @@ button.cover:hover {
     padding: 0;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
-    background-color: #5C8F61;
+    background-color: #557458;
     color: #FFFFFF;
     font-family: inherit;
     font-size: 12px;
@@ -3413,8 +3412,8 @@ button.cover:hover {
     width: 100%;
     margin: 0;
     padding: 12px 0;
-    border-top: 1px solid #E0E0E2;
-    border-bottom: 1px solid #E0E0E2;
+    border-top: 1px solid #557458;
+    border-bottom: 1px solid #557458;
 }
 
 .mapa-dato {
@@ -3425,7 +3424,7 @@ button.cover:hover {
 }
 
 .mapa-dato+.mapa-dato {
-    border-left: 1px solid #E0E0E2;
+    border-left: 1px solid #D5E5D6;
 }
 
 .mapa-dato:first-child {
@@ -3433,52 +3432,67 @@ button.cover:hover {
 }
 
 .mapa-dato dt {
-    font-size: 12px;
+    font-size: 14px;
     color: #727376;
+    white-space: nowrap;
 }
 
 .mapa-dato dd {
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: #314533;
+    color: #557458;
 }
 
 .mapa-subtitle {
-    margin-bottom: -4px;
+    margin-bottom: -8px;
     font-size: 18px;
     font-weight: 500;
-    color: #303132;
+    color: #557458;
 }
 
 .mapa-puntos {
     display: flex;
     flex-direction: column;
-    gap: 8px;
     list-style: none;
     margin: 0;
     padding: 0;
+    border-top: 1px solid #557458;
 }
 
+/* Filas como la Card Publicacion del Figma: fondo blanco, línea verde abajo y hover P50 */
 .mapa-punto {
     display: flex;
     align-items: center;
     gap: 16px;
     width: 100%;
-    padding: 10px 16px;
-    border: 1px solid #E0E0E2;
-    border-radius: 4px;
+    padding: 12px 8px;
+    border: none;
+    border-bottom: 1px solid #557458;
     background-color: #FFFFFF;
-    color: #303132;
+    color: #557458;
     font-family: inherit;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
-.mapa-punto:hover {
-    border-color: #557458;
+.mapa-punto:hover,
+.mapa-punto:focus-visible {
     background-color: #F2F7F2;
+}
+
+.mapa-punto:focus-visible {
+    outline: 2px solid #557458;
+    outline-offset: -2px;
+}
+
+.mapa-punto-flecha {
+    transition: transform 0.3s ease;
+}
+
+.mapa-punto:hover .mapa-punto-flecha {
+    transform: translateX(4px);
 }
 
 .mapa-punto-texto {
@@ -3490,9 +3504,9 @@ button.cover:hover {
 }
 
 .mapa-punto-nombre {
-    font-size: 16px;
-    font-weight: 500;
-    color: #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #557458;
 }
 
 .mapa-punto-resumen {
@@ -3506,7 +3520,7 @@ button.cover:hover {
     filter: brightness(0) saturate(100%) invert(42%) sepia(12%) saturate(1000%) hue-rotate(76deg) brightness(92%);
 }
 
-/* Número de cada punto (Primary 600 del Figma) */
+/* Número de cada punto (color principal del sitio) */
 .mapa-numero {
     display: inline-flex;
     flex-shrink: 0;
@@ -3515,7 +3529,7 @@ button.cover:hover {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #5C8F61;
+    background-color: #557458;
     color: #FFFFFF;
     font-size: 18px;
     font-weight: 700;
@@ -3567,7 +3581,7 @@ button.cover:hover {
     width: 36px;
     height: 36px;
     padding: 0;
-    border: 1px solid #E0E0E2;
+    border: 1px solid #557458;
     border-radius: 50%;
     background-color: #FFFFFF;
     cursor: pointer;
@@ -3596,7 +3610,7 @@ button.cover:hover {
     background: none;
     color: #557458;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
