@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=32" />
+    <link rel="stylesheet" href="style.css?v=33" />
 
 </head>
 
@@ -76,8 +76,7 @@
             <div class="mapa-vista-lista" id="vistaLista">
                 <div class="mapa-encabezado">
                     <h1 class="mapa-title">Mapa del cerro</h1>
-                    <p class="mapa-text">Sendero circular hasta la cima del Cerro San Francisco, con vista a todo el Valle
-                        del Aconcagua.</p>
+                    <p class="mapa-text">Sendero circular hasta la cima, con vista a todo el Valle del Aconcagua.</p>
                 </div>
 
                 <!-- Perfil del cerro (Figma) con los mismos números del mapa -->
@@ -113,10 +112,21 @@
 
             <!-- Detalle del punto elegido -->
             <div class="mapa-vista-detalle" id="vistaDetalle" hidden>
-                <button type="button" class="mapa-volver" id="mapaVolver">
-                    <img src="icons/arrow-forward.svg" alt="" width="8" height="14">
-                    Todos los puntos
-                </button>
+                <div class="mapa-detalle-barra">
+                    <button type="button" class="mapa-volver" id="mapaVolver">
+                        <img src="icons/arrow-forward.svg" alt="" width="8" height="14">
+                        Todos los puntos
+                    </button>
+                    <div class="mapa-detalle-nav">
+                        <button type="button" class="mapa-nav-btn" id="detalleAnterior" aria-label="Punto anterior">
+                            <img src="icons/arrow-forward.svg" alt="" width="8" height="14" class="mapa-nav-izq">
+                        </button>
+                        <span class="mapa-nav-contador" id="detalleContador"></span>
+                        <button type="button" class="mapa-nav-btn" id="detalleSiguiente" aria-label="Punto siguiente">
+                            <img src="icons/arrow-forward.svg" alt="" width="8" height="14">
+                        </button>
+                    </div>
+                </div>
 
                 <div class="mapa-galeria" aria-roledescription="carrusel" aria-label="Fotos del punto">
                     <div class="mapa-galeria-fotos" id="galeriaFotos"></div>
@@ -157,10 +167,6 @@
 
                     <a href="visita-autoguiada.html" class="btn-outline-medium mapa-detalle-link" id="detalleLink"></a>
 
-                    <div class="mapa-detalle-nav">
-                        <button type="button" class="btn-underline mapa-detalle-nav-btn" id="detalleAnterior"></button>
-                        <button type="button" class="btn-underline mapa-detalle-nav-btn" id="detalleSiguiente"></button>
-                    </div>
                 </div>
             </div>
         </aside>
@@ -484,10 +490,11 @@
                 const link = document.querySelector('#detalleLink');
                 link.textContent = punto.link.texto;
                 link.href = punto.link.href;
-                document.querySelector('#detalleAnterior').textContent = '← ' + anterior.nombre;
-                document.querySelector('#detalleSiguiente').textContent = siguiente.nombre + ' →';
+                document.querySelector('#detalleContador').textContent = (actual + 1) + ' de ' + puntos.length;
+                document.querySelector('#detalleAnterior').setAttribute('aria-label', 'Anterior: ' + anterior.nombre);
+                document.querySelector('#detalleSiguiente').setAttribute('aria-label', 'Siguiente: ' + siguiente.nombre);
                 armarGaleria(punto);
-                lateral.scrollTop = 0;
+                vistaDetalle.scrollTop = 0;
                 mapa.flyTo(punto.coords, 17, { duration: 1 });
                 if (celular && !sinHistorial) vistaDetalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
