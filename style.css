@@ -3000,7 +3000,7 @@ button.cover:hover {
 
 
 /*-----------------------MODAL-----------------------*/
-/* Basado en "Modal - Formulario de Contacto" del Figma */
+/* Figma: "Flujo - Inscripción a evento" y componente Text field (outlined) */
 
 .modal {
     width: min(588px, calc(100% - 32px));
@@ -3010,8 +3010,7 @@ button.cover:hover {
     background-color: #FFFFFF;
     color: #000000;
     overflow-y: auto;
-    /* Elevation 3 */
-    box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15), 0 1px 1.5px rgba(0, 0, 0, 0.3);
 }
 
 .modal::backdrop {
@@ -3040,28 +3039,45 @@ button.cover:hover {
     right: 0;
     width: 54px;
     height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     border: none;
     background: transparent;
     color: #557458;
-    font-size: 22px;
     cursor: pointer;
+    transition: opacity 0.3s ease;
 }
 
 .modal-close:hover {
     opacity: 0.7;
 }
 
-.modal-form,
-.modal-exito {
+/* Cada paso aparece con disolvencia */
+.modal-paso,
+.modal-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 20px;
 }
 
-.modal-form[hidden],
-.modal-exito[hidden] {
+.modal-paso {
+    animation: modal-disolver 0.3s ease;
+}
+
+.modal-paso[hidden] {
     display: none;
+}
+
+@keyframes modal-disolver {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-title {
@@ -3069,84 +3085,226 @@ button.cover:hover {
     font-weight: 700;
     color: #557458;
     text-align: center;
+    outline: none;
 }
 
 .modal-subtitle {
     font-size: 14px;
-    letter-spacing: 0.1px;
+    letter-spacing: 0.014px;
     color: #303132;
     text-align: center;
 }
 
-.modal-row {
+/* Datos del evento */
+.modal-evento {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+    background-color: #F2F7F2;
+}
+
+.modal-evento-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.024px;
+}
+
+.modal-evento-text {
+    font-size: 14px;
+    letter-spacing: 0.035px;
+    color: #303132;
+}
+
+/* Opciones del paso 1 */
+.modal-opcion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    border: 1px solid #C2C3C5;
+    border-radius: 4px;
+}
+
+.modal-opcion--destacada {
+    border-color: #557458;
+}
+
+.modal-opcion-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.03px;
+    color: #557458;
+}
+
+.modal-opcion-text {
+    font-size: 14px;
+    letter-spacing: 0.035px;
+    color: #303132;
+}
+
+.modal-btn {
     width: 100%;
+    border-style: solid;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-primary-medium.modal-btn {
+    border: none;
+}
+
+.btn-outline-medium.modal-btn {
+    background-color: transparent;
+}
+
+.btn-outline-medium.modal-btn:hover {
+    background-color: #557458;
+}
+
+.modal-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.modal-link {
+    align-self: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #557458;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.035px;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.modal-link--izquierda {
+    align-self: flex-start;
+}
+
+.modal-link:hover {
+    color: #314533;
+}
+
+.modal-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.014px;
+}
+
+.modal-nota {
+    font-size: 12px;
+    letter-spacing: 0.03px;
+    color: #727376;
+}
+
+.modal-row {
     display: flex;
     gap: 16px;
 }
 
+/* Text field (outlined): el label está adentro y sube al escribir */
 .campo {
     flex: 1;
     min-width: 0;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
-.campo-label {
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 18px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-    color: #727376;
+.campo-box {
+    position: relative;
 }
 
 .campo-input {
     width: 100%;
-    height: 50px;
-    padding: 14px 16px;
-    border: 1px solid transparent;
-    background-color: #F2F7F2;
+    padding: 16px 12px 16px 16px;
+    border: 1px solid #727376;
+    border-radius: 4px;
+    background-color: #FFFFFF;
     color: #000000;
     font-family: inherit;
     font-size: 16px;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.campo-input::placeholder {
-    color: #727376;
+.campo-input--icono {
+    padding-right: 52px;
 }
 
 .campo-input:focus {
     border-color: #557458;
+    box-shadow: inset 0 0 0 1px #557458;
 }
 
 .campo-input[aria-invalid="true"] {
-    border-color: #B42318;
+    border-color: #B3261E;
+    box-shadow: none;
 }
 
-.campo-select {
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 40px;
-    background-image: linear-gradient(45deg, transparent 50%, #557458 50%), linear-gradient(135deg, #557458 50%, transparent 50%);
-    background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%;
-    background-size: 6px 6px;
-    background-repeat: no-repeat;
+.campo-label {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #727376;
+    font-size: 16px;
+    letter-spacing: 0.024px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: top 0.2s ease, left 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+}
+
+.campo-input:focus+.campo-label,
+.campo-input:not(:placeholder-shown)+.campo-label {
+    top: 0;
+    left: 11px;
+    padding: 0 4px;
+    background-color: #FFFFFF;
+    color: #4F5052;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+
+.campo-input:focus+.campo-label {
+    color: #557458;
+}
+
+.campo-icono {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    display: flex;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #727376;
     cursor: pointer;
 }
 
-.campo-textarea {
-    height: 110px;
-    resize: vertical;
+.campo-icono[aria-pressed="true"] {
+    color: #557458;
 }
 
 .campo-error,
 .modal-error {
-    font-size: 13px;
-    color: #B42318;
+    font-size: 12px;
+    letter-spacing: 0.03px;
+    color: #B3261E;
+}
+
+.campo-error {
+    padding-left: 16px;
+}
+
+.modal-error {
+    text-align: center;
 }
 
 .campo-error:empty,
@@ -3154,29 +3312,172 @@ button.cover:hover {
     display: none;
 }
 
-.modal-error {
-    text-align: center;
+/* Checkbox (Figma: Checkbox / Vacío y Seleccionado) */
+.checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 2px solid #727376;
+    border-radius: 2px;
+    background-color: #FFFFFF;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.modal-submit {
-    width: 282px;
-    max-width: 100%;
+.checkbox:checked {
+    border-color: #557458;
+    background-color: #557458;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFFFFF' d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+.checkbox:focus-visible {
+    outline: 2px solid #314533;
+    outline-offset: 2px;
+}
+
+/* Personas guardadas del Amigo del Cerro */
+.modal-grupo {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
     border: none;
+}
+
+.modal-grupo legend {
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.personas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.persona {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid #C2C3C5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.persona:has(.checkbox:checked) {
+    border-color: #557458;
+    background-color: #F2F7F2;
+}
+
+.persona-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.persona-nombre {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08px;
+}
+
+.persona-detalle {
+    font-size: 12px;
+    letter-spacing: 0.03px;
+    color: #727376;
+}
+
+.modal-agregar {
+    align-self: flex-start;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #557458;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08px;
+    cursor: pointer;
+}
+
+.modal-agregar:hover {
+    color: #314533;
+}
+
+.modal-nueva-persona {
+    display: flex;
+    gap: 16px;
+}
+
+.modal-nueva-persona[hidden] {
+    display: none;
+}
+
+.modal-nueva-persona .btn-outline-medium {
+    background-color: transparent;
     font-family: inherit;
     cursor: pointer;
 }
 
-.modal-submit:disabled {
-    opacity: 0.7;
-    cursor: wait;
+/* Cantidad de personas */
+.modal-cantidad {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.modal-exito-text {
-    font-size: 16px;
-    line-height: 1.4;
-    letter-spacing: 0.15px;
-    color: #557458;
+.modal-cantidad-label {
+    font-size: 12px;
+    letter-spacing: 0.03px;
+    color: #4F5052;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.stepper-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: #F2F7F2;
+    color: #314533;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.stepper-btn:hover {
+    background-color: #DDE9DE;
+}
+
+.stepper-valor {
+    width: 24px;
+    color: #314533;
+    font-size: 18px;
+    font-weight: 700;
     text-align: center;
+}
+
+.modal-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #303132;
+    font-size: 14px;
+    letter-spacing: 0.035px;
+    cursor: pointer;
 }
 
 .btn-inscribirme {
@@ -3186,7 +3487,9 @@ button.cover:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .modal[open] {
+
+    .modal[open],
+    .modal-paso {
         animation: none;
     }
 }
@@ -3194,6 +3497,10 @@ button.cover:hover {
 @media (max-width: 767.98px) {
     .modal {
         padding: 48px 20px 24px 20px;
+    }
+
+    .modal-opcion {
+        padding: 20px;
     }
 
     .modal-row {

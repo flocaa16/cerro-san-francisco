@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=20" />
+    <link rel="stylesheet" href="style.css?v=21" />
 
 </head>
 
@@ -80,84 +80,241 @@
     <!-- INSCRIPCION -->
 
 
-    <!-- MODAL INSCRIPCION (mismo estilo que "Modal - Formulario de Contacto" del Figma) -->
-    <dialog class="modal" id="modalInscripcion" aria-labelledby="modalTitulo">
-        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">✕</button>
+    <!-- MODAL INSCRIPCION (Figma: "Flujo - Inscripción a evento") -->
+    <dialog class="modal" id="modalInscripcion" aria-labelledby="pasoTipoTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+        </button>
 
-        <!-- Paso 1: formulario -->
-        <form class="modal-form" id="formInscripcion" novalidate>
-            <h2 class="modal-title" id="modalTitulo">Inscripción</h2>
-            <p class="modal-subtitle">Completa tus datos para inscribirte en <strong id="modalEvento">Ruta de las Aves de
-                    San Felipe</strong>.</p>
+        <!-- Paso 1: Elegir tipo -->
+        <section class="modal-paso" data-paso="tipo">
+            <h2 class="modal-title" id="pasoTipoTitulo">Inscripción al evento</h2>
+            <p class="modal-subtitle">Elige cómo quieres inscribirte.</p>
+            <div class="modal-evento"></div>
 
-            <div class="modal-row">
-                <div class="campo">
-                    <label for="insNombre" class="campo-label">Nombre</label>
-                    <input id="insNombre" name="nombre" type="text" class="campo-input" placeholder="Tu nombre"
-                        autocomplete="given-name" required>
-                    <p class="campo-error" id="insNombreError"></p>
-                </div>
-                <div class="campo">
-                    <label for="insApellido" class="campo-label">Apellido</label>
-                    <input id="insApellido" name="apellido" type="text" class="campo-input" placeholder="Tu apellido"
-                        autocomplete="family-name" required>
-                    <p class="campo-error" id="insApellidoError"></p>
-                </div>
+            <div class="modal-opcion modal-opcion--destacada">
+                <h3 class="modal-opcion-title">Soy Amigo del Cerro</h3>
+                <p class="modal-opcion-text">Inicia sesión y usa los datos guardados en tu perfil. Inscribe en un paso a
+                    las personas que ya registraste.</p>
+                <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-btn"
+                    data-ir="login">Iniciar sesión</button>
             </div>
 
-            <div class="modal-row">
-                <div class="campo">
-                    <label for="insCorreo" class="campo-label">Correo electrónico</label>
-                    <input id="insCorreo" name="correo" type="email" class="campo-input" placeholder="tu@email.com"
-                        autocomplete="email" required>
-                    <p class="campo-error" id="insCorreoError"></p>
-                </div>
-                <div class="campo">
-                    <label for="insTelefono" class="campo-label">Teléfono</label>
-                    <input id="insTelefono" name="telefono" type="tel" class="campo-input" placeholder="+56 9 1234 5678"
-                        autocomplete="tel" required>
-                    <p class="campo-error" id="insTelefonoError"></p>
-                </div>
+            <div class="modal-opcion">
+                <h3 class="modal-opcion-title">Continuar como invitado</h3>
+                <p class="modal-opcion-text">Completa tus datos para inscribirte sin crear una cuenta.</p>
+                <button type="button" class="btn-outline-medium modal-btn" data-ir="invitado">Continuar como
+                    invitado</button>
             </div>
+        </section>
+        <!-- Paso 1: Elegir tipo -->
 
-            <div class="modal-row">
+        <!-- Paso 2A: Amigo del Cerro, iniciar sesión -->
+        <section class="modal-paso" data-paso="login" hidden>
+            <form class="modal-form" id="formLogin" novalidate>
+                <h2 class="modal-title">Inicia sesión</h2>
+                <p class="modal-subtitle">Ingresa con tu cuenta de Amigo del Cerro para usar tus datos guardados.</p>
+
                 <div class="campo">
-                    <label for="insComuna" class="campo-label">Comuna</label>
-                    <input id="insComuna" name="comuna" type="text" class="campo-input" placeholder="Tu comuna"
-                        autocomplete="address-level2" required>
-                    <p class="campo-error" id="insComunaError"></p>
+                    <div class="campo-box">
+                        <input class="campo-input" id="loginCorreo" name="correo" type="email" placeholder=" "
+                            autocomplete="email" required>
+                        <label class="campo-label" for="loginCorreo">Correo electrónico</label>
+                    </div>
+                    <p class="campo-error" id="loginCorreoError"></p>
+                </div>
+
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input campo-input--icono" id="loginClave" name="clave" type="password"
+                            placeholder=" " autocomplete="current-password" minlength="6" required>
+                        <label class="campo-label" for="loginClave">Contraseña</label>
+                        <button type="button" class="campo-icono" id="verClave" aria-label="Mostrar contraseña"
+                            aria-pressed="false">
+                            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill="currentColor"
+                                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="campo-error" id="loginClaveError"></p>
+                </div>
+
+                <a href="amigos.html" class="modal-link modal-link--izquierda">¿Olvidaste tu contraseña?</a>
+                <p class="modal-error" role="alert"></p>
+                <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn">Iniciar
+                    sesión</button>
+                <button type="button" class="modal-link" data-ir="invitado">¿No eres Amigo del Cerro? Continuar como
+                    invitado</button>
+            </form>
+        </section>
+        <!-- Paso 2A: Amigo del Cerro, iniciar sesión -->
+
+        <!-- Paso 3A: Amigo del Cerro, datos prellenados -->
+        <section class="modal-paso" data-paso="amigo" hidden>
+            <form class="modal-form" id="formAmigo" novalidate>
+                <h2 class="modal-title">Inscripción · Amigo del Cerro</h2>
+                <p class="modal-subtitle">Hola, <span id="amigoSaludo">María</span>. Revisa tus datos y elige a quién
+                    quieres inscribir.</p>
+                <div class="modal-evento"></div>
+
+                <fieldset class="modal-grupo">
+                    <legend class="modal-label">¿A quién quieres inscribir?</legend>
+                    <div class="personas" id="personas"></div>
+                </fieldset>
+
+                <button type="button" class="modal-agregar" id="btnAgregarPersona" aria-expanded="false">+ Agregar
+                    otra persona</button>
+                <div class="modal-nueva-persona" id="nuevaPersona" hidden>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="nuevaPersonaNombre" type="text" placeholder=" ">
+                            <label class="campo-label" for="nuevaPersonaNombre">Nombre y apellido</label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-outline-medium" id="btnGuardarPersona">Agregar</button>
+                </div>
+
+                <p class="modal-label">Datos de contacto</p>
+                <div class="modal-row">
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="amigoNombre" name="nombre" type="text" placeholder=" "
+                                autocomplete="given-name" required>
+                            <label class="campo-label" for="amigoNombre">Nombre</label>
+                        </div>
+                        <p class="campo-error" id="amigoNombreError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="amigoApellido" name="apellido" type="text" placeholder=" "
+                                autocomplete="family-name" required>
+                            <label class="campo-label" for="amigoApellido">Apellido</label>
+                        </div>
+                        <p class="campo-error" id="amigoApellidoError"></p>
+                    </div>
+                </div>
+                <div class="modal-row">
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="amigoCorreo" name="correo" type="email" placeholder=" "
+                                autocomplete="email" required>
+                            <label class="campo-label" for="amigoCorreo">Correo electrónico</label>
+                        </div>
+                        <p class="campo-error" id="amigoCorreoError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="amigoTelefono" name="telefono" type="tel" placeholder=" "
+                                autocomplete="tel" required>
+                            <label class="campo-label" for="amigoTelefono">Teléfono</label>
+                        </div>
+                        <p class="campo-error" id="amigoTelefonoError"></p>
+                    </div>
+                </div>
+                <p class="modal-nota">Datos tomados de tu perfil de Amigo del Cerro. Puedes editarlos antes de confirmar.</p>
+
+                <p class="modal-error" role="alert"></p>
+                <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn"
+                    id="btnConfirmarAmigo">Confirmar inscripción (2 personas)</button>
+            </form>
+        </section>
+        <!-- Paso 3A: Amigo del Cerro, datos prellenados -->
+
+        <!-- Paso 2B: Invitado, completar datos -->
+        <section class="modal-paso" data-paso="invitado" hidden>
+            <form class="modal-form" id="formInvitado" novalidate>
+                <h2 class="modal-title">Inscripción como invitado</h2>
+                <p class="modal-subtitle">Completa tus datos para inscribirte.</p>
+                <div class="modal-evento"></div>
+
+                <p class="modal-label">Datos de contacto</p>
+                <div class="modal-row">
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="invNombre" name="nombre" type="text" placeholder=" "
+                                autocomplete="given-name" required>
+                            <label class="campo-label" for="invNombre">Nombre</label>
+                        </div>
+                        <p class="campo-error" id="invNombreError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="invApellido" name="apellido" type="text" placeholder=" "
+                                autocomplete="family-name" required>
+                            <label class="campo-label" for="invApellido">Apellido</label>
+                        </div>
+                        <p class="campo-error" id="invApellidoError"></p>
+                    </div>
+                </div>
+                <div class="modal-row">
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="invCorreo" name="correo" type="email" placeholder=" "
+                                autocomplete="email" required>
+                            <label class="campo-label" for="invCorreo">Correo electrónico</label>
+                        </div>
+                        <p class="campo-error" id="invCorreoError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="invTelefono" name="telefono" type="tel" placeholder=" "
+                                autocomplete="tel" required>
+                            <label class="campo-label" for="invTelefono">Teléfono</label>
+                        </div>
+                        <p class="campo-error" id="invTelefonoError"></p>
+                    </div>
                 </div>
                 <div class="campo">
-                    <label for="insPersonas" class="campo-label">Número de personas</label>
-                    <select id="insPersonas" name="personas" class="campo-input campo-select">
-                        <option value="1">1 persona</option>
-                        <option value="2">2 personas</option>
-                        <option value="3">3 personas</option>
-                        <option value="4">4 personas</option>
-                        <option value="5">5 personas</option>
-                    </select>
+                    <div class="campo-box">
+                        <input class="campo-input" id="invComuna" name="comuna" type="text" placeholder=" "
+                            autocomplete="address-level2" required>
+                        <label class="campo-label" for="invComuna">Comuna</label>
+                    </div>
+                    <p class="campo-error" id="invComunaError"></p>
                 </div>
-            </div>
 
-            <div class="campo">
-                <label for="insComentario" class="campo-label">Comentarios (opcional)</label>
-                <textarea id="insComentario" name="comentario" class="campo-input campo-textarea"
-                    placeholder="¿Algo que debamos saber? (necesidades de accesibilidad, edad de niños, etc.)"></textarea>
-            </div>
+                <div class="modal-cantidad">
+                    <p class="modal-cantidad-label" id="cantidadLabel">Cantidad de personas</p>
+                    <div class="stepper" role="group" aria-labelledby="cantidadLabel">
+                        <button type="button" class="stepper-btn" data-paso-cantidad="-1"
+                            aria-label="Quitar una persona">–</button>
+                        <output class="stepper-valor" id="invCantidad" aria-live="polite">1</output>
+                        <button type="button" class="stepper-btn" data-paso-cantidad="1"
+                            aria-label="Agregar una persona">+</button>
+                    </div>
+                </div>
 
-            <input type="hidden" name="evento" id="insEvento" value="Ruta de las Aves de San Felipe">
+                <label class="modal-check">
+                    <input type="checkbox" class="checkbox" name="crearCuenta" id="invCrearCuenta">
+                    <span>Quiero crear mi cuenta de Amigo del Cerro para guardar mis datos en próximas
+                        inscripciones.</span>
+                </label>
 
-            <p class="modal-error" id="modalError" role="alert"></p>
-            <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-submit">Enviar inscripción</button>
-        </form>
+                <p class="modal-error" role="alert"></p>
+                <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn">Confirmar
+                    inscripción</button>
+                <button type="button" class="modal-link" data-ir="login">¿Ya eres Amigo del Cerro? Inicia
+                    sesión</button>
+            </form>
+        </section>
+        <!-- Paso 2B: Invitado, completar datos -->
 
-        <!-- Paso 2: confirmación (como "Mensaje Enviado" del Figma) -->
-        <div class="modal-exito" id="modalExito" hidden>
-            <h2 class="modal-title">Inscripción recibida</h2>
-            <p class="modal-exito-text" id="modalExitoTexto"></p>
-            <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-submit"
+        <!-- Paso 4: Confirmación -->
+        <section class="modal-paso" data-paso="confirmacion" hidden>
+            <h2 class="modal-title">¡Inscripción confirmada!</h2>
+            <p class="modal-subtitle">Te enviamos un correo con todos los detalles del evento y las recomendaciones
+                para tu visita.</p>
+            <div class="modal-evento"></div>
+            <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-btn"
                 data-cerrar>Aceptar</button>
-        </div>
+            <button type="button" class="btn-outline-medium modal-btn" id="btnCalendario">Agregar a mi
+                calendario</button>
+        </section>
+        <!-- Paso 4: Confirmación -->
     </dialog>
     <!-- MODAL INSCRIPCION -->
 
@@ -243,7 +400,11 @@
                 titulo: 'Ruta de las Aves de San Felipe',
                 estado: 'Inscripciones abiertas',
                 fecha: 'Sábado 13 junio',
+                fechaLarga: 'Sábado 13 de junio',
                 hora: '10 a 13 horas',
+                lugar: 'Parque Natural Cerro San Francisco',
+                inicio: '2026-06-13T10:00',
+                fin: '2026-06-13T13:00',
                 img: 'img/evento-aves.png',
                 texto: [
                     '¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?',
@@ -255,7 +416,11 @@
                 titulo: 'Caminata y Taller de observación e interpretación de nubes',
                 estado: 'Inscripciones abiertas',
                 fecha: 'Sábado 25 julio',
+                fechaLarga: 'Sábado 25 de julio',
                 hora: '10 a 13 horas',
+                lugar: 'Parque Natural Cerro San Francisco',
+                inicio: '2026-07-25T10:00',
+                fin: '2026-07-25T13:00',
                 img: 'img/evento-nubes.png',
                 // Texto pendiente: en el Figma solo está la descripción de la Ruta de las Aves
                 texto: [],
@@ -306,26 +471,74 @@
     </script>
 
     <script>
-        // Modal de inscripción
+        // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
+        // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
+
         // Para recibir las inscripciones, crear un formulario en https://formspree.io (gratis)
         // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
         const FORM_ENDPOINT = '';
 
-        const modal = document.querySelector('#modalInscripcion');
-        const form = document.querySelector('#formInscripcion');
-        const exito = document.querySelector('#modalExito');
-        const modalError = document.querySelector('#modalError');
-        const tituloEvento = document.querySelector('#eventoTitulo').textContent;
+        // Perfil de prueba de Amigo del Cerro.
+        // GitHub Pages no tiene servidor: para un inicio de sesión real se necesita un servicio
+        // como Firebase o Supabase. Mientras tanto, cualquier correo y contraseña (6+ caracteres) entra con este perfil.
+        const perfilDemo = {
+            nombre: 'María',
+            apellido: 'González',
+            telefono: '+56 9 1234 5678',
+            personas: [
+                { nombre: 'María González', detalle: 'Tú · 34 años', elegida: true },
+                { nombre: 'Tomás González', detalle: 'Hijo · 10 años', elegida: true },
+                { nombre: 'Ana Pérez', detalle: 'Amiga · 29 años', elegida: false }
+            ]
+        };
 
-        document.querySelector('#modalEvento').textContent = tituloEvento;
-        document.querySelector('#insEvento').value = tituloEvento;
+        const MAX_PERSONAS = 10;
+        let sesion = null; // datos del Amigo del Cerro después de iniciar sesión
+        const eventoActual = eventos[id] || eventos['aves'];
+        const modal = document.querySelector('#modalInscripcion');
+        const pasos = modal.querySelectorAll('.modal-paso');
+
+        // Tarjeta del evento (se repite en varios pasos)
+        modal.querySelectorAll('.modal-evento').forEach(caja => {
+            caja.innerHTML =
+                '<span class="chip"></span>' +
+                '<p class="modal-evento-title"></p>' +
+                '<p class="modal-evento-text"></p>';
+            caja.querySelector('.chip').textContent = eventoActual.estado;
+            caja.querySelector('.modal-evento-title').textContent = eventoActual.titulo;
+            caja.querySelector('.modal-evento-text').textContent =
+                eventoActual.fechaLarga + ' · ' + eventoActual.hora + ' · ' + eventoActual.lugar;
+        });
+
+        // Cambiar de paso (con disolvencia)
+        function irA(nombre) {
+            pasos.forEach(paso => {
+                paso.hidden = paso.dataset.paso !== nombre;
+            });
+            const actual = modal.querySelector('[data-paso="' + nombre + '"]');
+            const titulo = actual.querySelector('.modal-title');
+            titulo.id = titulo.id || 'titulo-' + nombre;
+            modal.setAttribute('aria-labelledby', titulo.id);
+            modal.scrollTop = 0;
+
+            // El foco va al primer campo, o al título si el paso no tiene campos
+            const primerCampo = actual.querySelector('.campo-input');
+            if (primerCampo && !primerCampo.value) {
+                primerCampo.focus();
+            } else {
+                titulo.tabIndex = -1;
+                titulo.focus();
+            }
+        }
+
+        modal.querySelectorAll('[data-ir]').forEach(boton => {
+            boton.addEventListener('click', () => irA(boton.dataset.ir));
+        });
 
         // Abrir
         document.querySelector('#btnInscribirme').addEventListener('click', () => {
-            form.hidden = false;
-            exito.hidden = true;
             modal.showModal();
-            document.querySelector('#insNombre').focus();
+            irA(sesion ? 'amigo' : 'tipo');
         });
 
         // Cerrar con la X, con "Aceptar" o haciendo clic fuera del modal
@@ -336,50 +549,50 @@
             if (event.target === modal) modal.close();
         });
 
-        // Validación de cada campo obligatorio
-        const mensajes = {
-            valueMissing: 'Este campo es obligatorio.',
-            typeMismatch: 'Escribe un correo válido, por ejemplo nombre@email.com.',
-            tooShort: 'Revisa este dato.'
-        };
-
+        // Validación de los campos obligatorios
         function validarCampo(input) {
             const error = document.querySelector('#' + input.id + 'Error');
-            if (!error) return true;
-
             let mensaje = '';
-            if (input.validity.valueMissing) mensaje = mensajes.valueMissing;
-            else if (input.validity.typeMismatch) mensaje = mensajes.typeMismatch;
+
+            if (input.validity.valueMissing) mensaje = 'Este campo es obligatorio.';
+            else if (input.validity.typeMismatch) mensaje = 'Escribe un correo válido, por ejemplo nombre@email.com.';
+            else if (input.validity.tooShort) mensaje = 'Debe tener al menos ' + input.minLength + ' caracteres.';
             else if (input.type === 'tel' && input.value.replace(/\D/g, '').length < 8) {
                 mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
             }
 
-            error.textContent = mensaje;
+            if (error) error.textContent = mensaje;
             input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
-            if (mensaje) input.setAttribute('aria-describedby', error.id);
+            if (error && mensaje) input.setAttribute('aria-describedby', error.id);
+            else input.removeAttribute('aria-describedby');
             return !mensaje;
         }
 
-        form.querySelectorAll('[required]').forEach(input => {
-            input.addEventListener('blur', () => validarCampo(input));
+        function validarFormulario(form) {
+            const campos = [...form.querySelectorAll('[required]')];
+            const validos = campos.map(validarCampo);
+            if (validos.includes(false)) {
+                campos[validos.indexOf(false)].focus();
+                return false;
+            }
+            return true;
+        }
+
+        modal.querySelectorAll('[required]').forEach(input => {
+            input.addEventListener('blur', () => {
+                if (input.value) validarCampo(input);
+            });
             input.addEventListener('input', () => {
                 if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
             });
         });
 
-        // Enviar
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            modalError.textContent = '';
-
-            const campos = [...form.querySelectorAll('[required]')];
-            const validos = campos.map(validarCampo);
-            if (validos.includes(false)) {
-                campos[validos.indexOf(false)].focus();
-                return;
-            }
-
-            const boton = form.querySelector('.modal-submit');
+        // Enviar la inscripción (a Formspree si está configurado)
+        async function enviarInscripcion(form, datos) {
+            const boton = form.querySelector('button[type="submit"]');
+            const textoBoton = boton.textContent;
+            const error = form.querySelector('.modal-error');
+            error.textContent = '';
             boton.disabled = true;
             boton.textContent = 'Enviando...';
 
@@ -387,31 +600,200 @@
                 if (FORM_ENDPOINT) {
                     const respuesta = await fetch(FORM_ENDPOINT, {
                         method: 'POST',
-                        body: new FormData(form),
-                        headers: { 'Accept': 'application/json' }
+                        body: JSON.stringify(Object.assign({ evento: eventoActual.titulo }, datos)),
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
                     });
                     if (!respuesta.ok) throw new Error('No se pudo enviar');
                 } else {
                     // Todavía sin conexión: solo se muestra la confirmación (modo prueba)
-                    console.warn('Inscripción de prueba: falta configurar FORM_ENDPOINT.');
+                    console.warn('Inscripción de prueba: falta configurar FORM_ENDPOINT.', datos);
                 }
-
-                const nombre = document.querySelector('#insNombre').value.trim();
-                const correo = document.querySelector('#insCorreo').value.trim();
-                document.querySelector('#modalExitoTexto').textContent =
-                    'Gracias, ' + nombre + '. Recibimos tu inscripción a ' + tituloEvento +
-                    '. Te escribiremos a ' + correo + ' con los detalles del encuentro.';
-
-                form.reset();
-                form.hidden = true;
-                exito.hidden = false;
-                exito.querySelector('.modal-submit').focus();
-            } catch (error) {
-                modalError.textContent = 'No pudimos enviar tu inscripción. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
+                irA('confirmacion');
+                return true;
+            } catch (e) {
+                error.textContent = 'No pudimos enviar tu inscripción. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
+                return false;
             } finally {
                 boton.disabled = false;
-                boton.textContent = 'Enviar inscripción';
+                boton.textContent = textoBoton;
             }
+        }
+
+        // Paso 2A: iniciar sesión
+        const formLogin = document.querySelector('#formLogin');
+        const loginClave = document.querySelector('#loginClave');
+        const verClave = document.querySelector('#verClave');
+
+        verClave.addEventListener('click', () => {
+            const visible = loginClave.type === 'text';
+            loginClave.type = visible ? 'password' : 'text';
+            verClave.setAttribute('aria-pressed', !visible);
+            verClave.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
+        });
+
+        formLogin.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!validarFormulario(formLogin)) return;
+
+            sesion = Object.assign({ correo: document.querySelector('#loginCorreo').value.trim() }, perfilDemo);
+            sesion.personas = perfilDemo.personas.map(persona => Object.assign({}, persona));
+            cargarPerfil();
+            irA('amigo');
+        });
+
+        // Paso 3A: datos prellenados y personas guardadas
+        const formAmigo = document.querySelector('#formAmigo');
+        const listaPersonas = document.querySelector('#personas');
+        const btnConfirmarAmigo = document.querySelector('#btnConfirmarAmigo');
+
+        function cargarPerfil() {
+            document.querySelector('#amigoSaludo').textContent = sesion.nombre;
+            document.querySelector('#amigoNombre').value = sesion.nombre;
+            document.querySelector('#amigoApellido').value = sesion.apellido;
+            document.querySelector('#amigoCorreo').value = sesion.correo;
+            document.querySelector('#amigoTelefono').value = sesion.telefono;
+            dibujarPersonas();
+        }
+
+        function dibujarPersonas() {
+            listaPersonas.innerHTML = '';
+            sesion.personas.forEach((persona, i) => {
+                const fila = document.createElement('label');
+                fila.className = 'persona';
+                fila.innerHTML =
+                    '<input type="checkbox" class="checkbox">' +
+                    '<span class="persona-datos"><span class="persona-nombre"></span><span class="persona-detalle"></span></span>';
+                fila.querySelector('.persona-nombre').textContent = persona.nombre;
+                fila.querySelector('.persona-detalle').textContent = persona.detalle;
+
+                const check = fila.querySelector('input');
+                check.checked = persona.elegida;
+                check.addEventListener('change', () => {
+                    persona.elegida = check.checked;
+                    actualizarTotal();
+                });
+                listaPersonas.appendChild(fila);
+            });
+            actualizarTotal();
+        }
+
+        function actualizarTotal() {
+            const total = sesion.personas.filter(persona => persona.elegida).length;
+            btnConfirmarAmigo.textContent = 'Confirmar inscripción (' + total + (total === 1 ? ' persona)' : ' personas)');
+        }
+
+        // "+ Agregar otra persona"
+        const btnAgregarPersona = document.querySelector('#btnAgregarPersona');
+        const nuevaPersona = document.querySelector('#nuevaPersona');
+        const nuevaPersonaNombre = document.querySelector('#nuevaPersonaNombre');
+
+        btnAgregarPersona.addEventListener('click', () => {
+            nuevaPersona.hidden = !nuevaPersona.hidden;
+            btnAgregarPersona.setAttribute('aria-expanded', !nuevaPersona.hidden);
+            if (!nuevaPersona.hidden) nuevaPersonaNombre.focus();
+        });
+
+        function guardarPersona() {
+            const nombre = nuevaPersonaNombre.value.trim();
+            if (!nombre) {
+                nuevaPersonaNombre.focus();
+                return;
+            }
+            sesion.personas.push({ nombre: nombre, detalle: 'Acompañante', elegida: true });
+            dibujarPersonas();
+            nuevaPersonaNombre.value = '';
+            nuevaPersona.hidden = true;
+            btnAgregarPersona.setAttribute('aria-expanded', 'false');
+            btnAgregarPersona.focus();
+        }
+
+        document.querySelector('#btnGuardarPersona').addEventListener('click', guardarPersona);
+        nuevaPersonaNombre.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                guardarPersona();
+            }
+        });
+
+        formAmigo.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const elegidas = sesion.personas.filter(persona => persona.elegida).map(persona => persona.nombre);
+            if (!elegidas.length) {
+                formAmigo.querySelector('.modal-error').textContent = 'Elige al menos una persona para inscribir.';
+                listaPersonas.querySelector('input').focus();
+                return;
+            }
+            if (!validarFormulario(formAmigo)) return;
+
+            enviarInscripcion(formAmigo, {
+                tipo: 'Amigo del Cerro',
+                nombre: document.querySelector('#amigoNombre').value.trim(),
+                apellido: document.querySelector('#amigoApellido').value.trim(),
+                correo: document.querySelector('#amigoCorreo').value.trim(),
+                telefono: document.querySelector('#amigoTelefono').value.trim(),
+                personas: elegidas.join(', '),
+                cantidad: elegidas.length
+            });
+        });
+
+        // Paso 2B: invitado
+        const formInvitado = document.querySelector('#formInvitado');
+        const invCantidad = document.querySelector('#invCantidad');
+        let cantidad = 1;
+
+        formInvitado.querySelectorAll('[data-paso-cantidad]').forEach(boton => {
+            boton.addEventListener('click', () => {
+                cantidad = Math.min(MAX_PERSONAS, Math.max(1, cantidad + Number(boton.dataset.pasoCantidad)));
+                invCantidad.textContent = cantidad;
+            });
+        });
+
+        formInvitado.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!validarFormulario(formInvitado)) return;
+
+            const enviado = await enviarInscripcion(formInvitado, {
+                tipo: 'Invitado',
+                nombre: document.querySelector('#invNombre').value.trim(),
+                apellido: document.querySelector('#invApellido').value.trim(),
+                correo: document.querySelector('#invCorreo').value.trim(),
+                telefono: document.querySelector('#invTelefono').value.trim(),
+                comuna: document.querySelector('#invComuna').value.trim(),
+                cantidad: cantidad,
+                crearCuenta: document.querySelector('#invCrearCuenta').checked ? 'Sí' : 'No'
+            });
+
+            if (enviado) {
+                formInvitado.reset();
+                cantidad = 1;
+                invCantidad.textContent = cantidad;
+            }
+        });
+
+        // Paso 4: agregar a mi calendario (descarga un archivo .ics)
+        document.querySelector('#btnCalendario').addEventListener('click', () => {
+            const fecha = texto => texto.replace(/[-:]/g, '') + '00';
+            const ics = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Cerro San Francisco de Curimon//Eventos//ES',
+                'BEGIN:VEVENT',
+                'UID:' + (id || 'aves') + '@cerrosanfrancisco',
+                'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
+                'DTSTART;TZID=America/Santiago:' + fecha(eventoActual.inicio),
+                'DTEND;TZID=America/Santiago:' + fecha(eventoActual.fin),
+                'SUMMARY:' + eventoActual.titulo,
+                'LOCATION:' + eventoActual.lugar + ', Curimón',
+                'URL:' + window.location.href.split('#')[0],
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            const enlace = document.createElement('a');
+            enlace.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+            enlace.download = (id || 'aves') + '-cerro-san-francisco.ics';
+            enlace.click();
+            URL.revokeObjectURL(enlace.href);
         });
     </script>
 
