@@ -47,6 +47,12 @@ h3 {
 
 /*-----------------------ALL PAGES-----------------------*/
 
+/*
+    Alturas: las secciones grandes usan clamp(mínimo, % del alto de pantalla, máximo).
+    El máximo es la medida del Figma (pantalla de 1440 x 900 o más).
+    En pantallas más bajas se achican para que cada sección quepa en la pantalla.
+*/
+
 /*BOTONES*/
 .btn-primary-large,
 .btn-primary-medium {
@@ -141,8 +147,7 @@ h3 {
     align-items: center;
     padding: 4px 10px;
     border-radius: 8px;
-    /* Fondo propio para contraste AAA (7,2:1 incluso sobre una foto blanca) */
-    background-color: rgba(49, 69, 51, 0.88);
+    background-color: rgba(244, 227, 173, 0.2);
     color: #F2F7F2;
     font-size: 14px;
     white-space: nowrap;
@@ -670,7 +675,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     margin: 0 -20px;
-    padding-bottom: 100px;
+    padding-bottom: clamp(40px, 9vh, 100px);
 }
 
 .numero {
@@ -702,7 +707,7 @@ h3 {
 
 .como-llegar-image {
     width: 567px;
-    height: 500px;
+    height: clamp(360px, 55vh, 500px);
     flex-shrink: 0;
     opacity: 0.88;
 }
@@ -958,8 +963,8 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    padding-top: 120px;
-    padding-bottom: 125px;
+    padding-top: clamp(56px, 11vh, 120px);
+    padding-bottom: clamp(56px, 11vh, 125px);
 }
 
 .no-rastro-header {
@@ -1051,8 +1056,7 @@ h3 {
     background-color: #926483;
     color: #FFFFFF;
     text-align: center;
-    padding: 51px 20px 0 20px;
-    height: 366px;
+    padding: 51px 20px clamp(170px, 24vh, 219px) 20px;
 }
 
 .eventos-subtitle {
@@ -1114,11 +1118,11 @@ h3 {
 
 .evento-image {
     flex: 1;
-    height: 372px;
+    height: clamp(300px, 46vh, 372px);
 }
 
 .evento--reverse .evento-image {
-    height: 433px;
+    height: clamp(320px, 52vh, 433px);
 }
 
 .evento-image img {
@@ -1195,8 +1199,8 @@ h3 {
 /*PUBLICACIONES*/
 .publicaciones {
     background-color: #F2F7F2;
-    padding: 60px 0;
-    margin-bottom: 187px;
+    padding: clamp(40px, 7vh, 60px) 0;
+    margin-bottom: clamp(60px, 14vh, 187px);
 }
 
 .publicaciones-header {
@@ -1235,8 +1239,8 @@ h3 {
 
 .publicacion-covers {
     position: relative;
-    width: 418px;
-    height: 478px;
+    height: clamp(360px, 55vh, 478px);
+    aspect-ratio: 418 / 478;
     flex-shrink: 0;
 }
 
@@ -1377,7 +1381,7 @@ button.cover:hover {
 /*BANNER CERRO*/
 .banner-cerro {
     position: relative;
-    height: 738px;
+    height: clamp(480px, calc(100vh - 90px), 738px);
     overflow: hidden;
     background-color: #314533;
     color: #FFFFFF;
@@ -1392,16 +1396,12 @@ button.cover:hover {
     object-fit: cover;
 }
 
-/* Capa verde (Primary 900) para que el texto cumpla contraste AAA (7:1).
-   Opacidad medida sobre los cuadros del video: 80% en la zona del texto */
+/* Capa de color sobre el video: 20% como en Figma */
 .banner-cerro::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to left,
-            rgba(49, 69, 51, 0.84) 0%,
-            rgba(49, 69, 51, 0.84) 50%,
-            rgba(49, 69, 51, 0.35) 100%);
+    background-color: rgba(38, 46, 47, 0.2);
 }
 
 .banner-cerro-content {
@@ -1411,7 +1411,7 @@ button.cover:hover {
     align-items: center;
     justify-content: space-between;
     height: 100%;
-    padding: 60px;
+    padding: clamp(24px, 6vh, 60px) 60px;
 }
 
 .banner-cerro-right {
@@ -1507,11 +1507,6 @@ button.cover:hover {
 
 @media (max-width: 767.98px) {
 
-    /* En celular el texto ocupa todo el ancho: capa pareja */
-    .banner-cerro::after {
-        background: rgba(49, 69, 51, 0.84);
-    }
-
     .banner-cerro-content {
         gap: 8px;
         padding: 32px 8px;
@@ -1582,7 +1577,7 @@ button.cover:hover {
 
 .sendero-image {
     position: relative;
-    height: 316px;
+    height: clamp(220px, 34vh, 316px);
     overflow: hidden;
 }
 
@@ -1672,8 +1667,8 @@ button.cover:hover {
     align-items: center;
     justify-content: space-between;
     gap: 48px;
-    padding-top: 120px;
-    padding-bottom: 120px;
+    padding-top: clamp(56px, 11vh, 120px);
+    padding-bottom: clamp(56px, 11vh, 120px);
 }
 
 .contexto-texto {
@@ -1699,7 +1694,7 @@ button.cover:hover {
 .contexto-image,
 .fundacion-image {
     width: 556px;
-    height: 460px;
+    height: clamp(320px, 55vh, 460px);
     flex-shrink: 0;
 }
 
@@ -1760,8 +1755,8 @@ button.cover:hover {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    margin: 82px 0;
-    padding: 114px 0 113px 0;
+    margin: clamp(32px, 8vh, 82px) 0;
+    padding: clamp(40px, 8vh, 114px) 0;
     color: #FFFFFF;
 }
 
@@ -1803,7 +1798,7 @@ button.cover:hover {
     display: flex;
     justify-content: space-between;
     gap: 48px;
-    min-height: 446px;
+    min-height: clamp(320px, 50vh, 446px);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
@@ -1847,7 +1842,7 @@ button.cover:hover {
 
 .periodo-img {
     width: 370px;
-    height: 351px;
+    height: clamp(220px, 38vh, 351px);
     object-fit: cover;
 }
 
@@ -1860,7 +1855,7 @@ button.cover:hover {
     display: flex;
     align-items: center;
     gap: 43px;
-    margin-top: 80px;
+    margin-top: clamp(24px, 5vh, 80px);
 }
 
 .linea-tiempo-dots {
@@ -1990,7 +1985,7 @@ button.cover:hover {
     justify-content: space-between;
     gap: 48px;
     padding-top: 38px;
-    padding-bottom: 120px;
+    padding-bottom: clamp(56px, 11vh, 120px);
 }
 
 .fundacion-texto {
@@ -2050,7 +2045,7 @@ button.cover:hover {
     overflow: hidden;
     display: flex;
     align-items: center;
-    min-height: 547px;
+    min-height: clamp(420px, 65vh, 547px);
     padding: 60px 0;
     background-color: #314533;
     color: #FFFFFF;

@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=10" />
+    <link rel="stylesheet" href="style.css?v=12" />
 
 </head>
 
@@ -661,10 +661,30 @@
             document.querySelector('.acciones-video').pause();
         }
 
-        // Banner
+        // Banner: cambia solo cada 5 segundos (se pausa con el mouse encima)
         const banner = crearCarrusel(document.querySelectorAll('.banner-cerro-slide'));
-        document.querySelector('#bannerPrev').addEventListener('click', banner.anterior);
-        document.querySelector('#bannerNext').addEventListener('click', banner.siguiente);
+        const bannerSection = document.querySelector('.banner-cerro');
+        let bannerAutoplay = null;
+
+        function iniciarBannerAutoplay() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            clearInterval(bannerAutoplay);
+            bannerAutoplay = setInterval(banner.siguiente, 5000);
+        }
+
+        document.querySelector('#bannerPrev').addEventListener('click', () => {
+            banner.anterior();
+            iniciarBannerAutoplay();
+        });
+        document.querySelector('#bannerNext').addEventListener('click', () => {
+            banner.siguiente();
+            iniciarBannerAutoplay();
+        });
+
+        bannerSection.addEventListener('mouseenter', () => clearInterval(bannerAutoplay));
+        bannerSection.addEventListener('mouseleave', iniciarBannerAutoplay);
+
+        iniciarBannerAutoplay();
 
         // Línea de tiempo
         const dotsTiempo = document.querySelectorAll('.linea-tiempo-dot');
