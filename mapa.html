@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=33" />
+    <link rel="stylesheet" href="style.css?v=34" />
 
 </head>
 
@@ -278,7 +278,7 @@
 
         // Puntos del recorrido
         // coords: ubicación en el mapa. perfil: % dentro de img/mapa-cerro.svg
-        // OJO: la ubicación del Mirador es aproximada y los datos repiten "3,67 km / fácil" como en el Figma (revisar)
+        // Ubicaciones corregidas según indicación de la Fundación. Los datos repiten "3,67 km / fácil" como en el Figma (revisar)
         const puntos = [
             {
                 id: 'sendero-principal',
@@ -301,8 +301,8 @@
                 id: 'catedral-verde',
                 tipo: 'Punto de interés',
                 nombre: 'Catedral Verde',
-                coords: [-32.78314, -70.68132],
-                perfil: [61.7, 10.4],
+                coords: [-32.78286, -70.68226],
+                perfil: [34.9, 26.2],
                 tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
                 resumen: 'Bosque de cipreses en la cima',
                 // Texto del Figma
@@ -318,16 +318,15 @@
                 id: 'mirador',
                 tipo: 'Punto de interés',
                 nombre: 'Mirador',
-                coords: [-32.78332, -70.68257],
-                perfil: [34.9, 26.2],
+                coords: [-32.78428, -70.68276],
+                perfil: [22, 47],
                 tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
                 resumen: 'Vista al Valle del Aconcagua',
                 // Texto provisorio
                 texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
                 link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' },
                 fotos: [
-                    { src: 'img/como-llegar.png', alt: 'Visitantes descansando en el mirador con el valle de fondo' },
-                    { src: 'img/tl-imagen-san-francisco.png', alt: 'Imagen de San Francisco en la cima' }
+                    { src: 'img/mirador.jpg', alt: 'Cruz del mirador y dos visitantes sentados en la baranda, con la cordillera de fondo' }
                 ]
             }
         ];

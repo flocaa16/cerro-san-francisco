@@ -4,12 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- GitHub Pages muestra esta página en cualquier dirección que no exista (por ejemplo /cerro-san-francisco/a/b).
-         La etiqueta base hace que las imágenes, el CSS y los links funcionen desde cualquier ruta.
-         Si el sitio cambia de dirección, actualizar aquí. -->
-    <base href="/cerro-san-francisco/">
-    <meta name="robots" content="noindex">
-    <title>Página no encontrada | Cerro San Francisco de Curimón</title>
+    <title>Publicaciones | Cerro San Francisco de Curimón</title>
+    <meta name="description" content="Guías y materiales sobre el Parque Natural Cerro San Francisco de Curimón y el Valle del Aconcagua.">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
@@ -19,7 +15,6 @@
 </head>
 
 <body>
-
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
@@ -57,25 +52,58 @@
     </header>
     <!-- HEADER -->
 
+    <!-- PUBLICACIONES -->
+    <main class="publicaciones-pagina">
+        <div class="wrapper">
+            <h1 class="publicaciones-pagina-title">Conoce nuestras Publicaciones</h1>
+            <p class="publicaciones-pagina-lead">Guías y materiales elaborados por Fundación Lepe para conocer el cerro
+                y el Valle del Aconcagua. Se abren en una pestaña nueva, desde donde puedes descargarlos.</p>
 
-    <!-- ERROR 404 -->
-    <main class="error-404">
-        <div class="wrapper error-404-content">
-            <p class="error-404-code" aria-hidden="true">404</p>
-            <h1 class="error-404-title">Te saliste del sendero</h1>
-            <p class="error-404-text">La página que buscas no existe o cambió de lugar. Vuelve al camino principal
-                para seguir recorriendo el cerro.</p>
-            <div class="error-404-acciones">
-                <a href="index.html" class="btn-primary-medium btn-primary-medium--tall">Volver al inicio</a>
-                <a href="actividades.html" class="btn-outline-medium">Ver actividades</a>
-            </div>
+            <ul class="publicaciones-lista">
+                <!-- PUBLICACION -->
+                <li>
+                    <a class="publicacion-item" href="pdf/guia-biodiversidad.pdf" target="_blank" rel="noopener">
+                        <img class="publicacion-item-img" src="img/guia-biodiversidad-1.png" alt="" width="239" height="156" loading="lazy">
+                        <span class="publicacion-item-texto">
+                            <span class="publicacion-item-title">Guía de Biodiversidad</span>
+                            <span class="publicacion-item-meta">Flora y Fauna · PDF 33 MB</span>
+                        </span>
+                        <svg class="publicacion-item-icono" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                        <span class="visually-hidden">(se abre en una pestaña nueva)</span>
+                    </a>
+                </li>
+                <!-- PUBLICACION -->
+
+                <!-- PUBLICACION (todavía no hay PDF: cuando exista, cambiar el div por un a como los otros) -->
+                <li>
+                    <div class="publicacion-item publicacion-item--pendiente">
+                        <span class="publicacion-item-img publicacion-item-img--vacia" aria-hidden="true"></span>
+                        <span class="publicacion-item-texto">
+                            <span class="publicacion-item-title">Caracterización de la localidad de Curimón</span>
+                            <span class="publicacion-item-meta">Territorio</span>
+                        </span>
+                        <span class="chip">Próximamente</span>
+                    </div>
+                </li>
+                <!-- PUBLICACION -->
+
+                <!-- PUBLICACION -->
+                <li>
+                    <a class="publicacion-item" href="pdf/mapa-turismo-aconcagua.pdf" target="_blank" rel="noopener">
+                        <img class="publicacion-item-img" src="img/guia-biodiversidad-2.png" alt="" width="239" height="156" loading="lazy">
+                        <span class="publicacion-item-texto">
+                            <span class="publicacion-item-title">Mapa Turismo Aconcagua</span>
+                            <span class="publicacion-item-meta">Turismo · PDF 59 MB</span>
+                        </span>
+                        <svg class="publicacion-item-icono" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                        <span class="visually-hidden">(se abre en una pestaña nueva)</span>
+                    </a>
+                </li>
+                <!-- PUBLICACION -->
+            </ul>
         </div>
-
-        <!-- Silueta del cerro, igual que en el home -->
-        <div class="error-404-montanas" aria-hidden="true"></div>
     </main>
-    <!-- ERROR 404 -->
-
+    <!-- PUBLICACIONES -->
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -138,7 +166,6 @@
         </div>
     </footer>
     <!-- FOOTER -->
-
 
     <script>
         // Menú hamburguesa
