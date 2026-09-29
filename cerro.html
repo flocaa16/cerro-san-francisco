@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>El Cerro | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=8" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button nav-button--active" href="cerro.html" aria-current="page">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- BANNER CERRO -->
+    <section class="banner-cerro" aria-label="El cerro">
+        <!-- Video aéreo de fondo (sin sonido, en loop) -->
+        <video class="banner-cerro-video" autoplay muted loop playsinline aria-hidden="true">
+            <source src="video/cerro-aereo.mp4" type="video/mp4">
+        </video>
+
+        <div class="banner-cerro-content">
+            <button type="button" class="arrow-button arrow-button--left" id="bannerPrev" aria-label="Anterior">
+                <img src="icons/arrow-forward.svg" alt="">
+            </button>
+
+            <div class="banner-cerro-right">
+                <div class="banner-cerro-slides">
+                    <!-- FICHA TECNICA -->
+                    <div class="banner-cerro-slide is-active">
+                        <dl class="ficha">
+                            <div class="ficha-item">
+                                <dt>Habilitado:</dt>
+                                <dd>Abierto todo el año</dd>
+                            </div>
+                            <div class="ficha-item">
+                                <dt>Dificultad:</dt>
+                                <dd>Fácil</dd>
+                            </div>
+                            <div class="ficha-item">
+                                <dt>Superficie:</dt>
+                                <dd>20,8 hectáreas</dd>
+                            </div>
+                            <div class="ficha-item">
+                                <dt>Longitud recorrido:</dt>
+                                <dd>3,67 km</dd>
+                            </div>
+                            <div class="ficha-item">
+                                <dt>Altitud máxima:</dt>
+                                <dd>761 m</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <!-- SOBRE EL CERRO -->
+                    <div class="banner-cerro-slide" aria-hidden="true">
+                        <div class="sobre-cerro">
+                            <h1 class="sobre-cerro-title">Cerro San Francisco</h1>
+                            <p class="sobre-cerro-text">Se ubica en la localidad de Curimón, comuna de San Felipe, región
+                                de Valparaíso. Es denominado un “cerro isla” ya que es una formación geográfica aislada
+                                de menor altura en una zona relativamente llana, donde su relieve es testimonio del
+                                retroceso de una topografía de mayor altura. Se encuentra inmerso en un paisaje
+                                urbano-agrícola, siendo un refugio natural para poblaciones de flora y fauna nativa. Es
+                                parte de la ecorregión mediterránea de Chile central y se encuentra dentro del
+                                ecosistema matorral espinoso mediterráneo interior, caracterizado por un clima semiárido
+                                de lluvia invernal.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="arrow-button" id="bannerNext" aria-label="Siguiente">
+                    <img src="icons/arrow-forward.svg" alt="">
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- BANNER CERRO -->
+
+
+    <!-- ATRACTIVOS -->
+    <section class="atractivos">
+        <div class="wrapper">
+            <h2 class="atractivos-title">Conoce Nuestros Atractivos</h2>
+
+            <div class="atractivos-grid">
+<!-- OJO: en el Figma los 4 senderos repiten "2 horas / 3,67 km / fácil" (revisar) -->
+            <!-- SENDERO 1 -->
+            <a href="mapa.html" class="sendero">
+                <div class="sendero-image">
+                    <img src="img/sendero-principal.png" alt="Sendero Principal">
+                    <div class="sendero-chips">
+                        <span class="chip-claro">Visita autoguiada</span>
+                        <span class="chip-claro">Paneles informativos</span>
+                    </div>
+                </div>
+                <div class="sendero-content">
+                    <h3 class="sendero-title">Sendero Principal</h3>
+                    <ul class="sendero-datos">
+                        <li>Tiempo estimado: <strong>2 horas</strong></li>
+                        <li>Longitud recorrido: <strong>3,67 km</strong></li>
+                        <li>Dificultad: <strong>fácil</strong></li>
+                    </ul>
+                    <span class="btn-underline">Ver en el mapa</span>
+                </div>
+            </a>
+
+            <!-- SENDERO 2 -->
+            <a href="mapa.html" class="sendero">
+                <div class="sendero-image">
+                    <img src="img/banner-cerro.png" alt="Sendero Oriente">
+                    <div class="sendero-chips">
+                        <span class="chip-claro">Visita autoguiada</span>
+                        <span class="chip-claro">Paneles informativos</span>
+                    </div>
+                </div>
+                <div class="sendero-content">
+                    <h3 class="sendero-title">Sendero Oriente</h3>
+                    <ul class="sendero-datos">
+                        <li>Tiempo estimado: <strong>2 horas</strong></li>
+                        <li>Longitud recorrido: <strong>3,67 km</strong></li>
+                        <li>Dificultad: <strong>fácil</strong></li>
+                    </ul>
+                    <span class="btn-underline">Ver en el mapa</span>
+                </div>
+            </a>
+
+            <!-- SENDERO 3 -->
+            <a href="mapa.html" class="sendero">
+                <div class="sendero-image">
+                    <img src="img/bosque-esclerofilo.png" alt="Bosque Esclerófilo">
+                    <div class="sendero-chips">
+                        <span class="chip-claro">Visita autoguiada</span>
+                        <span class="chip-claro">Paneles informativos</span>
+                    </div>
+                </div>
+                <div class="sendero-content">
+                    <h3 class="sendero-title">Bosque Esclerófilo</h3>
+                    <ul class="sendero-datos">
+                        <li>Tiempo estimado: <strong>2 horas</strong></li>
+                        <li>Longitud recorrido: <strong>3,67 km</strong></li>
+                        <li>Dificultad: <strong>fácil</strong></li>
+                    </ul>
+                    <span class="btn-underline">Ver en el mapa</span>
+                </div>
+            </a>
+
+            <!-- SENDERO 4 -->
+            <a href="mapa.html" class="sendero">
+                <div class="sendero-image">
+                    <img src="img/catedral-verde.png" alt="Catedral Verde">
+                    <div class="sendero-chips">
+                        <span class="chip-claro">Visita autoguiada</span>
+                        <span class="chip-claro">Paneles informativos</span>
+                    </div>
+                </div>
+                <div class="sendero-content">
+                    <h3 class="sendero-title">Catedral Verde</h3>
+                    <ul class="sendero-datos">
+                        <li>Tiempo estimado: <strong>2 horas</strong></li>
+                        <li>Longitud recorrido: <strong>3,67 km</strong></li>
+                        <li>Dificultad: <strong>fácil</strong></li>
+                    </ul>
+                    <span class="btn-underline">Ver en el mapa</span>
+                </div>
+            </a>
+            </div>
+        </div>
+    </section>
+    <!-- ATRACTIVOS -->
+
+
+    <!-- CONTEXTO HISTORICO -->
+    <section class="wrapper contexto">
+        <div class="contexto-texto">
+            <h2 class="contexto-title">Contexto histórico y cultural</h2>
+            <p class="contexto-text">Mucho antes de ser parque, el Cerro San Francisco fue un punto de referencia para
+                quienes habitaron el Valle del Aconcagua. Desde su cumbre se domina el valle, y en sus laderas se
+                recolectaron alimentos y leña, se abrieron piques mineros y se dio sepultura a los habitantes de
+                Curimón.</p>
+            <p class="contexto-text">Curimón, en mapudungún “tierras negras”, fue el primer asentamiento español del
+                valle. El cerro acompañó cada etapa de esa historia: del Camino del Inca al Pueblo de Indios, del
+                antiguo cementerio a la imagen de San Francisco que hoy corona su cima. Recorre su historia en la
+                línea de tiempo.</p>
+        </div>
+        <div class="contexto-image">
+            <img src="img/san-francisco.png" alt="Imagen de San Francisco">
+        </div>
+    </section>
+    <!-- CONTEXTO HISTORICO -->
+
+
+    <!-- LINEA DE TIEMPO -->
+    <section class="linea-tiempo" aria-label="Línea de tiempo del cerro">
+        <div class="wrapper">
+            <div class="periodos">
+                    <!-- PERIODO 1 -->
+                    <article class="periodo is-active">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">300 a.C. – 900 d.C.</span>
+                            <h3 class="periodo-title">Período agroalfarero temprano.</h3>
+                            <p class="periodo-text">Poblaciones ocupaban los sectores precordilleranos.</p>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-puco.png" alt="Puco de la Cultura Aconcagua" class="periodo-img">
+                            <figcaption class="periodo-caption">‘Puco’. Cultura Aconcagua. Período Intermedio Tardío 1000-1450 d.C. Fuente: Museo de Historia Natural de Valparaíso, N° inv. 803.</figcaption>
+                        </figure>
+                    </article>
+
+                    <!-- PERIODO 2 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1000 d.C.</span>
+                            <h3 class="periodo-title">Asentamiento en la terraza fluvial debido al mayor desarrollo de la agricultura.</h3>
+                        </div>
+                    </article>
+
+                    <!-- OJO: en el Figma este título está repetido del primer período (revisar) -->
+                    <!-- PERIODO 3 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1400 – 1536</span>
+                            <h3 class="periodo-title">Período agroalfarero temprano.</h3>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 4 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1583</span>
+                            <h3 class="periodo-title">Llegada de los franciscanos a Curimón.</h3>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-franciscanos.png" alt="Frailes franciscanos en el convento" class="periodo-img">
+                            <figcaption class="periodo-caption">Frailes franciscanos en el Convento de la Iglesia de San Francisco de Curimón, 1920. Fuente: Colección Humberto González, Archivo Enterreno.</figcaption>
+                        </figure>
+                    </article>
+
+                    <!-- PERIODO 5 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1700 – 1733</span>
+                            <h3 class="periodo-title">Se levanta el Convento y la Iglesia de San Francisco.</h3>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-iglesia.png" alt="Iglesia San Francisco de Curimón" class="periodo-img">
+                            <figcaption class="periodo-caption">Iglesia San Francisco de Curimón, 1870. Fuente: Colección Humberto González, Archivo Enterreno.</figcaption>
+                        </figure>
+                    </article>
+
+                    <!-- PERIODO 6 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1820</span>
+                            <h3 class="periodo-title">Se desprende el Cerro San Francisco del Pueblo de Indios.</h3>
+                            <p class="periodo-text">Se le llamó Pueblo de Indios a la organización sociopolítica, religiosa y territorial en que se transformaron los asentamientos indígenas durante la evangelización española en América. Ver: Memoria Chilena.</p>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 7 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1878</span>
+                            <h3 class="periodo-title">Se funda el cementerio de Curimón en el cerro.</h3>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 8 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1883</span>
+                            <h3 class="periodo-title">Se cierra el cementerio de Curimón.</h3>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 9 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1886</span>
+                            <h3 class="periodo-title">Llegada del cólera al Valle del Aconcagua.</h3>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 10 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1901</span>
+                            <h3 class="periodo-title">Instalación de la imagen de San Francisco en la cima del cerro.</h3>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-imagen-san-francisco.png" alt="Imagen de San Francisco" class="periodo-img">
+                            <figcaption class="periodo-caption">Imagen de San Francisco, 1980. Fuente: Programa Vivo Curimón, Fundación Lepe en Cortez (2021).</figcaption>
+                        </figure>
+                    </article>
+
+                    <!-- PERIODO 11 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">1979</span>
+                            <h3 class="periodo-title">Reforestación del cerro San Francisco.</h3>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-reforestacion-1979.png" alt="Reforestación del cerro en 1979" class="periodo-img">
+                        </figure>
+                    </article>
+
+                    <!-- OJO: en el Figma tiene el mismo año que el período siguiente (revisar) -->
+                    <!-- PERIODO 12 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">2023</span>
+                            <h3 class="periodo-title">Creación de Fundación Lepe.</h3>
+                        </div>
+                    </article>
+
+                    <!-- PERIODO 13 -->
+                    <article class="periodo" aria-hidden="true">
+                        <div class="periodo-info">
+                            <span class="chip-fecha">2023</span>
+                            <h3 class="periodo-title">Plan de regeneración ecológica y social del cerro junto a la comunidad de Curimón.</h3>
+                        </div>
+                        <figure class="periodo-figura">
+                            <img src="img/tl-regeneracion-2023.png" alt="Reforestación junto al colegio Assunta Pallota" class="periodo-img">
+                            <figcaption class="periodo-caption">Reforestación junto al colegio Assunta Pallota, 2023</figcaption>
+                        </figure>
+                    </article>
+            </div>
+
+            <div class="linea-tiempo-nav">
+                <button type="button" class="arrow-button arrow-button--left" id="tiempoPrev" aria-label="Período anterior">
+                    <img src="icons/arrow-forward.svg" alt="">
+                </button>
+                <div class="linea-tiempo-dots">
+                    <button type="button" class="linea-tiempo-dot is-active" data-periodo="0" aria-label="300 a.C. – 900 d.C."></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="1" aria-label="1000 d.C."></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="2" aria-label="1400 – 1536"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="3" aria-label="1583"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="4" aria-label="1700 – 1733"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="5" aria-label="1820"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="6" aria-label="1878"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="7" aria-label="1883"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="8" aria-label="1886"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="9" aria-label="1901"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="10" aria-label="1979"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="11" aria-label="2023"></button>
+                    <button type="button" class="linea-tiempo-dot" data-periodo="12" aria-label="2023"></button>
+                </div>
+                <button type="button" class="arrow-button" id="tiempoNext" aria-label="Período siguiente">
+                    <img src="icons/arrow-forward.svg" alt="">
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- LINEA DE TIEMPO -->
+
+
+    <!-- FUNDACION LEPE -->
+    <section class="wrapper fundacion">
+        <div class="fundacion-texto">
+            <p class="fundacion-text">Actualmente Fundación Lepe, en conjunto con la comunidad local, está ejecutando
+                un plan de regeneración ecológica y social, mediante actividades como jornadas comunitarias de
+                reforestación con especies nativas, parcelas experimentales de restauración, realización de un banco
+                de semillas para la propagación de especies nativas, y control de erosión, entre otras.</p>
+            <h2 class="fundacion-title">Conoce el trabajo impulsado por Fundación Lepe</h2>
+            <div class="fundacion-acciones">
+                <img src="icons/logo-fundacion-lepe.svg" alt="Fundación Lepe" class="fundacion-logo">
+                <a href="https://www.fundacionlepe.cl" class="btn-primary-medium btn-primary-medium--tall"
+                    target="_blank" rel="noopener noreferrer">Visitar Fundación Lepe</a>
+            </div>
+        </div>
+        <div class="fundacion-image">
+            <img src="img/fundacion-lepe-trabajo.png" alt="Jornada de reforestación en el cerro">
+        </div>
+    </section>
+    <!-- FUNDACION LEPE -->
+
+
+    <!-- ACCIONES DE REGENERACION -->
+    <section class="acciones">
+        <div class="wrapper">
+            <div class="acciones-content">
+                <h2 class="acciones-title">Acciones de Regeneración</h2>
+                <p class="acciones-text">Desde 1979 Roberto Lepe desarrolló un plan de reforestación con especies
+                    nativas e introducidas, para hacer frente a la deforestación que había sufrido el cerro por la
+                    explotación de leña y recolección de frutos, raíces y tallos.</p>
+                <p class="acciones-text">Actualmente Fundación Lepe, en conjunto con la comunidad local, está
+                    ejecutando un plan de regeneración ecológica y social, mediante actividades como jornadas
+                    comunitarias de reforestación con especies nativas, parcelas experimentales de restauración,
+                    realización de un banco de semillas para la propagación de especies nativas, y control de erosión,
+                    entre otras.</p>
+            </div>
+        </div>
+    </section>
+    <!-- ACCIONES DE REGENERACION -->
+
+
+    <!-- PUBLICACIONES -->
+    <section class="publicaciones">
+        <div class="wrapper">
+            <div class="publicaciones-header">
+                <h2 class="publicaciones-title">Publicaciones</h2>
+                <a href="publicaciones.html" class="btn-underline">Ver más publicaciones</a>
+            </div>
+
+            <div class="publicacion">
+                <!-- PUBLICACION 1 -->
+                <div class="publicacion-slide is-active">
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left" type="button" data-go="1" aria-label="Ver Mapa Turismo Aconcagua"><img src="img/guia-biodiversidad-2.png" alt=""></button>
+                        <button class="cover cover--right cover--pendiente" type="button" data-go="2" aria-label="Ver Aves de San Felipe"></button>
+                        <div class="cover cover--front"><img src="img/guia-biodiversidad-1.png" alt=""></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Flora y Fauna</p>
+                        <h3 class="publicacion-title">Conoce nuestra Guía de Biodiversidad</h3>
+                        <p class="publicacion-text">Ésta es una guía en terreno desarrollada por el programa Vivo Curimón de
+                            Fundación Lepe. Para una óptima lectura y uso, te recomendamos descargarla en tu celular antes
+                            de visitar el Parque Natural Cerro San Francisco de Curimón, u otros ecosistemas similares.
+                            Toda la información de esta guía, te servirá para visitar otros entornos naturales
+                            similares.</p>
+                        <a href="pdf/guia-biodiversidad.pdf" download class="btn-primary-medium btn-primary-medium--tall btn-download">
+                            <img src="icons/download.svg" alt="" width="20" height="20" onerror="this.remove()">
+                            Descargar
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PUBLICACION 2 -->
+                <div class="publicacion-slide" aria-hidden="true" inert>
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left cover--pendiente" type="button" data-go="2" aria-label="Ver Aves de San Felipe"></button>
+                        <button class="cover cover--right" type="button" data-go="0" aria-label="Ver Guía de Biodiversidad"><img src="img/guia-biodiversidad-1.png" alt=""></button>
+                        <div class="cover cover--front"><img src="img/guia-biodiversidad-2.png" alt=""></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Turismo</p>
+                        <h3 class="publicacion-title">Mapa Turismo Aconcagua</h3>
+                        <p class="publicacion-text">Mapa con los principales atractivos naturales, patrimoniales y culturales del
+                            Valle del Aconcagua. Descárgalo para planificar tu recorrido por la zona antes o después de
+                            visitar el cerro.</p>
+                        <a href="pdf/mapa-turismo-aconcagua.pdf" download class="btn-primary-medium btn-primary-medium--tall btn-download">
+                            <img src="icons/download.svg" alt="" width="20" height="20" onerror="this.remove()">
+                            Descargar
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PUBLICACION 3 -->
+                <div class="publicacion-slide" aria-hidden="true" inert>
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left" type="button" data-go="0" aria-label="Ver Guía de Biodiversidad"><img src="img/guia-biodiversidad-1.png" alt=""></button>
+                        <button class="cover cover--right" type="button" data-go="1" aria-label="Ver Mapa Turismo Aconcagua"><img src="img/guia-biodiversidad-2.png" alt=""></button>
+                        <div class="cover cover--front cover--pendiente"></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Fauna</p>
+                        <h3 class="publicacion-title">Aves de San Felipe</h3>
+                        <p class="publicacion-text">Guía para reconocer las aves que habitan San Felipe y el Valle del Aconcagua.
+                            Llévala en tu visita al cerro y aprende a identificar las especies que puedes observar en sus
+                            senderos.</p>
+                        <!-- Sin botón de descarga: esta publicación todavía no existe -->
+                    </div>
+                </div>
+                <!-- Portada de Aves pendiente: en Figma todavía es un rectángulo naranjo -->
+            </div>
+        </div>
+    </section>
+    <!-- PUBLICACIONES -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Publicaciones: se funden de una a otra (Dissolve del prototipo en Figma)
+        const slides = document.querySelectorAll('.publicacion-slide');
+        const pubSection = document.querySelector('.publicacion');
+        let activa = 0;
+
+        function mostrarPublicacion(nueva) {
+            if (nueva === activa) return;
+
+            slides[activa].classList.remove('is-active');
+            slides[activa].setAttribute('aria-hidden', 'true');
+            slides[activa].inert = true;
+
+            slides[nueva].classList.add('is-active');
+            slides[nueva].removeAttribute('aria-hidden');
+            slides[nueva].inert = false;
+
+            activa = nueva;
+        }
+
+        // Clic en una portada de atrás
+        document.querySelectorAll('.cover[data-go]').forEach(cover => {
+            cover.addEventListener('click', function () {
+                mostrarPublicacion(Number(cover.dataset.go));
+                iniciarAutoplay();
+            });
+        });
+
+        // Avanza solo cada 5 segundos (se pausa con el mouse encima)
+        const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let autoplay = null;
+
+        function iniciarAutoplay() {
+            if (reducirMovimiento) return;
+            clearInterval(autoplay);
+            autoplay = setInterval(() => {
+                mostrarPublicacion((activa + 1) % slides.length);
+            }, 5000);
+        }
+
+        pubSection.addEventListener('mouseenter', () => clearInterval(autoplay));
+        pubSection.addEventListener('mouseleave', iniciarAutoplay);
+
+        iniciarAutoplay();
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script>
+        // Carrusel del banner (Ficha técnica / Sobre el cerro) y línea de tiempo
+        // Los dos se funden de una vista a otra (Dissolve)
+        function crearCarrusel(slides, dots) {
+            let activo = 0;
+
+            function mostrar(nuevo) {
+                // Da la vuelta al llegar al final o al principio
+                nuevo = (nuevo + slides.length) % slides.length;
+
+                slides[activo].classList.remove('is-active');
+                slides[activo].setAttribute('aria-hidden', 'true');
+                slides[nuevo].classList.add('is-active');
+                slides[nuevo].removeAttribute('aria-hidden');
+
+                if (dots) {
+                    dots[activo].classList.remove('is-active');
+                    dots[nuevo].classList.add('is-active');
+                }
+
+                activo = nuevo;
+            }
+
+            return {
+                anterior: () => mostrar(activo - 1),
+                siguiente: () => mostrar(activo + 1),
+                ir: (n) => mostrar(n)
+            };
+        }
+
+        // Si la persona prefiere menos movimiento, el video queda detenido
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.querySelector('.banner-cerro-video').removeAttribute('autoplay');
+            document.querySelector('.banner-cerro-video').pause();
+        }
+
+        // Banner
+        const banner = crearCarrusel(document.querySelectorAll('.banner-cerro-slide'));
+        document.querySelector('#bannerPrev').addEventListener('click', banner.anterior);
+        document.querySelector('#bannerNext').addEventListener('click', banner.siguiente);
+
+        // Línea de tiempo
+        const dotsTiempo = document.querySelectorAll('.linea-tiempo-dot');
+        const tiempo = crearCarrusel(document.querySelectorAll('.periodo'), dotsTiempo);
+        document.querySelector('#tiempoPrev').addEventListener('click', tiempo.anterior);
+        document.querySelector('#tiempoNext').addEventListener('click', tiempo.siguiente);
+        dotsTiempo.forEach(dot => {
+            dot.addEventListener('click', () => tiempo.ir(Number(dot.dataset.periodo)));
+        });
+    </script>
+
+</body>
+
+</html>
