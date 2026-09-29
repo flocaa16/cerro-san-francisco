@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi perfil | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=22" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button nav-button--active" href="amigos.html" aria-current="page">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- HERO -->
+    <section class="cuenta-hero">
+        <h1 class="cuenta-hero-title" id="perfilTitulo">Hola, María</h1>
+        <p class="cuenta-hero-text" id="perfilTexto">Administra tus datos, las personas que inscribes y tus inscripciones a
+            eventos.</p>
+    </section>
+    <!-- HERO -->
+
+
+    <!-- CUENTA -->
+    <main class="cuenta">
+        <nav class="cuenta-menu" aria-label="Mi cuenta">
+            <a href="#perfil" class="cuenta-menu-link" data-menu="perfil">Mi perfil</a>
+            <a href="#personas" class="cuenta-menu-link" data-menu="personas">Personas guardadas</a>
+            <a href="#inscripciones" class="cuenta-menu-link" data-menu="inscripciones">Mis inscripciones</a>
+            <button type="button" class="cuenta-menu-link cuenta-menu-link--salir" id="btnCerrarSesion">Cerrar
+                sesión</button>
+        </nav>
+
+        <div class="cuenta-principal">
+
+            <!-- Mi perfil -->
+            <div class="cuenta-vista" data-vista="perfil">
+                <form class="cuenta-card" id="formDatos" novalidate>
+                    <div class="cuenta-card-header">
+                        <h2 class="cuenta-card-title">Mis datos</h2>
+                        <button type="button" class="link-accion" id="btnEditarDatos">Editar</button>
+                    </div>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="datNombre" type="text" placeholder=" " readonly required>
+                                <label class="campo-label" for="datNombre">Nombre</label>
+                            </div>
+                            <p class="campo-error" id="datNombreError"></p>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="datApellido" type="text" placeholder=" " readonly
+                                    required>
+                                <label class="campo-label" for="datApellido">Apellido</label>
+                            </div>
+                            <p class="campo-error" id="datApellidoError"></p>
+                        </div>
+                    </div>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="datCorreo" type="email" placeholder=" " readonly
+                                    required>
+                                <label class="campo-label" for="datCorreo">Correo electrónico</label>
+                            </div>
+                            <p class="campo-error" id="datCorreoError"></p>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="datTelefono" type="tel" placeholder=" " readonly
+                                    required>
+                                <label class="campo-label" for="datTelefono">Teléfono</label>
+                            </div>
+                            <p class="campo-error" id="datTelefonoError"></p>
+                        </div>
+                    </div>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="datComuna" type="text" placeholder=" " readonly>
+                                <label class="campo-label" for="datComuna">Comuna</label>
+                            </div>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input campo-fecha" id="datNacimiento" type="text" placeholder=" "
+                                    inputmode="numeric" maxlength="10" readonly>
+                                <label class="campo-label" for="datNacimiento">Fecha de nacimiento</label>
+                            </div>
+                            <p class="campo-error" id="datNacimientoError"></p>
+                        </div>
+                    </div>
+                    <p class="cuenta-aviso" id="datosAviso" role="status"></p>
+                </form>
+
+                <section class="cuenta-card" aria-labelledby="resumenPersonasTitulo">
+                    <div class="cuenta-card-header">
+                        <h2 class="cuenta-card-title" id="resumenPersonasTitulo">Personas guardadas</h2>
+                        <button type="button" class="btn-outline-medium cuenta-btn" data-agregar-persona>Agregar
+                            persona</button>
+                    </div>
+                    <p class="cuenta-card-text">Estas personas aparecen prellenadas cuando te inscribes a un evento.</p>
+                    <ul class="cuenta-lista" id="resumenPersonas"></ul>
+                </section>
+
+                <section class="cuenta-card" aria-labelledby="resumenInscripcionesTitulo">
+                    <div class="cuenta-card-header">
+                        <h2 class="cuenta-card-title" id="resumenInscripcionesTitulo">Mis inscripciones</h2>
+                        <a href="#inscripciones" class="link-accion">Ver todas</a>
+                    </div>
+                    <ul class="cuenta-lista" id="resumenInscripciones"></ul>
+                </section>
+            </div>
+            <!-- Mi perfil -->
+
+            <!-- Personas guardadas -->
+            <div class="cuenta-vista" data-vista="personas" hidden>
+                <section class="cuenta-card" aria-labelledby="personasTitulo">
+                    <div class="cuenta-card-header">
+                        <h2 class="cuenta-card-title" id="personasTitulo">Personas guardadas</h2>
+                        <button type="button" class="btn-outline-medium cuenta-btn" data-agregar-persona>Agregar
+                            persona</button>
+                    </div>
+                    <p class="cuenta-card-text">Al inscribirte a un evento podrás elegir a cualquiera de estas personas y
+                        sus datos se completarán automáticamente.</p>
+                    <ul class="cuenta-lista" id="listaPersonas"></ul>
+                </section>
+            </div>
+            <!-- Personas guardadas -->
+
+            <!-- Mis inscripciones -->
+            <div class="cuenta-vista" data-vista="inscripciones" hidden>
+                <section class="cuenta-card cuenta-card--lista" aria-labelledby="proximasTitulo">
+                    <h2 class="cuenta-card-title" id="proximasTitulo">Próximas inscripciones</h2>
+                    <ul class="cuenta-lista" id="listaProximas"></ul>
+                </section>
+                <section class="cuenta-card cuenta-card--lista" aria-labelledby="pasadosTitulo">
+                    <h2 class="cuenta-card-title" id="pasadosTitulo">Eventos pasados</h2>
+                    <ul class="cuenta-lista" id="listaPasados"></ul>
+                </section>
+            </div>
+            <!-- Mis inscripciones -->
+
+        </div>
+    </main>
+    <!-- CUENTA -->
+
+
+    <!-- MODAL PERSONA (Figma: Amigos 6 - Agregar persona / Amigos 7 - Editar persona) -->
+    <dialog class="modal" id="modalPersona" aria-labelledby="personaTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+        </button>
+        <form class="modal-form" id="formPersona" novalidate>
+            <h2 class="modal-title" id="personaTitulo">Agregar persona</h2>
+            <p class="modal-subtitle" id="personaSubtitulo">Sus datos se completarán automáticamente cuando la
+                inscribas a un evento.</p>
+
+            <div class="modal-row">
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="perNombre" type="text" placeholder=" " required>
+                        <label class="campo-label" for="perNombre">Nombre</label>
+                    </div>
+                    <p class="campo-error" id="perNombreError"></p>
+                </div>
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input" id="perApellido" type="text" placeholder=" " required>
+                        <label class="campo-label" for="perApellido">Apellido</label>
+                    </div>
+                    <p class="campo-error" id="perApellidoError"></p>
+                </div>
+            </div>
+            <div class="modal-row">
+                <div class="campo">
+                    <div class="campo-box">
+                        <select class="campo-input campo-select" id="perRelacion" required>
+                            <option value=""></option>
+                            <option>Hijo</option>
+                            <option>Hija</option>
+                            <option>Pareja</option>
+                            <option>Madre</option>
+                            <option>Padre</option>
+                            <option>Hermano</option>
+                            <option>Hermana</option>
+                            <option>Amigo</option>
+                            <option>Amiga</option>
+                            <option>Otro</option>
+                        </select>
+                        <label class="campo-label" for="perRelacion">Relación</label>
+                        <svg class="campo-flecha" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+                        </svg>
+                    </div>
+                    <p class="campo-error" id="perRelacionError"></p>
+                </div>
+                <div class="campo">
+                    <div class="campo-box">
+                        <input class="campo-input campo-fecha" id="perNacimiento" type="text" placeholder=" "
+                            inputmode="numeric" maxlength="10" required>
+                        <label class="campo-label" for="perNacimiento">Fecha de nacimiento</label>
+                    </div>
+                    <p class="campo-error" id="perNacimientoError"></p>
+                </div>
+            </div>
+            <div class="campo">
+                <div class="campo-box">
+                    <input class="campo-input" id="perCorreo" type="email" placeholder=" " autocomplete="off">
+                    <label class="campo-label" for="perCorreo">Correo electrónico (opcional)</label>
+                </div>
+                <p class="campo-error" id="perCorreoError"></p>
+            </div>
+            <p class="modal-nota" id="personaNota">Usamos estos datos solo para agilizar tus inscripciones.</p>
+
+            <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn"
+                id="btnGuardarPersona">Guardar persona</button>
+            <button type="button" class="btn-outline-medium modal-btn" data-cerrar>Cancelar</button>
+            <button type="button" class="link-accion link-accion--gris modal-eliminar" id="btnEliminarPersona"
+                hidden>Eliminar persona</button>
+        </form>
+    </dialog>
+    <!-- MODAL PERSONA -->
+
+
+    <!-- MODAL CONFIRMAR -->
+    <dialog class="modal" id="modalConfirmar" aria-labelledby="confirmarTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+        </button>
+        <div class="modal-paso">
+            <h2 class="modal-title" id="confirmarTitulo">¿Eliminar persona?</h2>
+            <p class="modal-subtitle" id="confirmarTexto"></p>
+            <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-btn"
+                id="btnConfirmarSi">Eliminar</button>
+            <button type="button" class="btn-outline-medium modal-btn" data-cerrar>Volver</button>
+        </div>
+    </dialog>
+    <!-- MODAL CONFIRMAR -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script src="cuenta.js"></script>
+    <script>
+        // Sin sesión no se puede ver el perfil
+        let cuenta = Cuenta.obtener();
+        if (!cuenta) {
+            window.location.replace('amigos.html');
+        }
+
+        // Validación de campos (mismos mensajes que la inscripción)
+        function validarCampo(input) {
+            const error = document.querySelector('#' + input.id + 'Error');
+            let mensaje = '';
+
+            if (input.validity.valueMissing) mensaje = 'Este campo es obligatorio.';
+            else if (input.validity.typeMismatch) mensaje = 'Escribe un correo válido, por ejemplo nombre@email.com.';
+            else if (input.type === 'tel' && input.value.replace(/\D/g, '').length < 8) {
+                mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
+            } else if (input.classList.contains('campo-fecha') && input.value && Cuenta.edad(input.value) === null) {
+                mensaje = 'Escribe la fecha como dd/mm/aaaa.';
+            }
+
+            if (error) error.textContent = mensaje;
+            input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+            if (error && mensaje) input.setAttribute('aria-describedby', error.id);
+            else input.removeAttribute('aria-describedby');
+            return !mensaje;
+        }
+
+        function validarFormulario(form) {
+            const campos = [...form.querySelectorAll('[required], .campo-fecha, [type="email"]')];
+            const validos = campos.map(validarCampo);
+            if (validos.includes(false)) {
+                campos[validos.indexOf(false)].focus();
+                return false;
+            }
+            return true;
+        }
+
+        document.querySelectorAll('.campo-input').forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
+            });
+        });
+
+        // Fechas: agrega las barras mientras se escribe (dd/mm/aaaa)
+        document.querySelectorAll('.campo-fecha').forEach(input => {
+            input.addEventListener('input', () => {
+                const numeros = input.value.replace(/\D/g, '').slice(0, 8);
+                input.value = [numeros.slice(0, 2), numeros.slice(2, 4), numeros.slice(4)].filter(Boolean).join('/');
+            });
+        });
+
+        // Crear elementos de las listas
+        function crearFila(clase) {
+            const li = document.createElement('li');
+            li.className = 'cuenta-fila ' + clase;
+            return li;
+        }
+
+        function texto(etiqueta, clase, contenido) {
+            const el = document.createElement(etiqueta);
+            el.className = clase;
+            el.textContent = contenido;
+            return el;
+        }
+
+        function nombreCompleto(persona) {
+            return persona.nombre + ' ' + persona.apellido;
+        }
+
+        // Personas guardadas
+        function filaPersona(persona, titular) {
+            const li = crearFila('cuenta-persona');
+            const avatar = document.createElement('span');
+            avatar.className = 'cuenta-avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            li.appendChild(avatar);
+
+            const datos = document.createElement('div');
+            datos.className = 'cuenta-fila-datos';
+            datos.appendChild(texto('p', 'cuenta-fila-title', nombreCompleto(persona) + (titular ? ' (Tú)' : '')));
+            datos.appendChild(texto('p', 'cuenta-fila-caption',
+                Cuenta.detalle(titular ? 'Titular de la cuenta' : persona.relacion, persona.nacimiento)));
+            li.appendChild(datos);
+
+            if (!titular) {
+                const editar = texto('button', 'link-accion', 'Editar');
+                editar.type = 'button';
+                editar.setAttribute('aria-label', 'Editar a ' + nombreCompleto(persona));
+                editar.addEventListener('click', () => abrirPersona(persona));
+
+                const eliminar = texto('button', 'link-accion link-accion--gris', 'Eliminar');
+                eliminar.type = 'button';
+                eliminar.setAttribute('aria-label', 'Eliminar a ' + nombreCompleto(persona));
+                eliminar.addEventListener('click', () => confirmarEliminar(persona));
+
+                li.append(editar, eliminar);
+            }
+            return li;
+        }
+
+        function dibujarPersonas() {
+            const resumen = document.querySelector('#resumenPersonas');
+            const lista = document.querySelector('#listaPersonas');
+            resumen.innerHTML = '';
+            lista.innerHTML = '';
+
+            // En "Mi perfil" solo se muestran las personas agregadas; en "Personas guardadas" también la titular
+            lista.appendChild(filaPersona(cuenta, true));
+            cuenta.personas.forEach(persona => {
+                resumen.appendChild(filaPersona(persona, false));
+                lista.appendChild(filaPersona(persona, false));
+            });
+
+            if (!cuenta.personas.length) {
+                resumen.appendChild(texto('li', 'cuenta-vacio', 'Todavía no agregas personas.'));
+            }
+            document.querySelector('#personasTitulo').textContent =
+                'Personas guardadas (' + (cuenta.personas.length + 1) + ')';
+        }
+
+        // Inscripciones
+        function filaInscripcion(inscripcion, completa) {
+            const evento = Cuenta.eventos[inscripcion.evento];
+            const li = crearFila(completa ? 'cuenta-inscripcion cuenta-inscripcion--completa' : 'cuenta-inscripcion');
+            const cantidad = inscripcion.personas.length;
+
+            const datos = document.createElement('div');
+            datos.className = 'cuenta-fila-datos';
+            datos.appendChild(texto('p', 'cuenta-fila-title', evento.titulo));
+            if (completa) {
+                datos.appendChild(texto('p', 'cuenta-fila-text', evento.fecha + ' · ' + evento.hora));
+                datos.appendChild(texto('p', 'cuenta-fila-caption', 'Inscritos: ' + inscripcion.personas.join(', ')));
+            } else {
+                datos.appendChild(texto('p', 'cuenta-fila-caption', evento.fecha + ' · ' + evento.hora + ' · ' +
+                    cantidad + (cantidad === 1 ? ' persona' : ' personas')));
+            }
+            li.appendChild(datos);
+
+            li.appendChild(texto('span', evento.finalizado ? 'estado estado--finalizado' : 'estado',
+                evento.finalizado ? 'Finalizado' : 'Confirmada'));
+
+            const acciones = document.createElement('div');
+            acciones.className = 'cuenta-acciones';
+            const detalle = texto('a', 'link-accion', 'Ver detalle');
+            detalle.href = evento.finalizado ? 'actividades.html' : 'inscripcion.html?evento=' + inscripcion.evento + '&desde=perfil';
+            detalle.setAttribute('aria-label', 'Ver detalle de ' + evento.titulo);
+            acciones.appendChild(detalle);
+
+            if (completa && !evento.finalizado) {
+                const cancelar = texto('button', 'link-accion link-accion--gris', 'Cancelar inscripción');
+                cancelar.type = 'button';
+                cancelar.setAttribute('aria-label', 'Cancelar inscripción a ' + evento.titulo);
+                cancelar.addEventListener('click', () => confirmarCancelar(inscripcion));
+                acciones.appendChild(cancelar);
+            }
+            li.appendChild(acciones);
+            return li;
+        }
+
+        function dibujarInscripciones() {
+            const resumen = document.querySelector('#resumenInscripciones');
+            const proximas = document.querySelector('#listaProximas');
+            const pasados = document.querySelector('#listaPasados');
+            [resumen, proximas, pasados].forEach(lista => lista.innerHTML = '');
+
+            cuenta.inscripciones.forEach(inscripcion => {
+                const evento = Cuenta.eventos[inscripcion.evento];
+                if (!evento) return;
+                if (evento.finalizado) {
+                    pasados.appendChild(filaInscripcion(inscripcion, true));
+                } else {
+                    resumen.appendChild(filaInscripcion(inscripcion, false));
+                    proximas.appendChild(filaInscripcion(inscripcion, true));
+                }
+            });
+
+            const vacio = 'Todavía no tienes inscripciones. Revisa los eventos en Actividades.';
+            if (!resumen.children.length) resumen.appendChild(texto('li', 'cuenta-vacio', vacio));
+            if (!proximas.children.length) proximas.appendChild(texto('li', 'cuenta-vacio', vacio));
+            if (!pasados.children.length) pasados.appendChild(texto('li', 'cuenta-vacio', 'Aún no hay eventos pasados.'));
+        }
+
+        // Mis datos
+        const camposDatos = {
+            nombre: '#datNombre',
+            apellido: '#datApellido',
+            correo: '#datCorreo',
+            telefono: '#datTelefono',
+            comuna: '#datComuna',
+            nacimiento: '#datNacimiento'
+        };
+        const formDatos = document.querySelector('#formDatos');
+        const btnEditarDatos = document.querySelector('#btnEditarDatos');
+        let editando = false;
+
+        function cargarDatos() {
+            Object.keys(camposDatos).forEach(clave => {
+                document.querySelector(camposDatos[clave]).value = cuenta[clave] || '';
+            });
+        }
+
+        btnEditarDatos.addEventListener('click', () => {
+            const aviso = document.querySelector('#datosAviso');
+
+            if (!editando) {
+                editando = true;
+                formDatos.querySelectorAll('.campo-input').forEach(input => input.readOnly = false);
+                btnEditarDatos.textContent = 'Guardar';
+                aviso.textContent = '';
+                document.querySelector('#datNombre').focus();
+                return;
+            }
+
+            if (!validarFormulario(formDatos)) return;
+            Object.keys(camposDatos).forEach(clave => {
+                cuenta[clave] = document.querySelector(camposDatos[clave]).value.trim();
+            });
+            Cuenta.guardar(cuenta);
+
+            editando = false;
+            formDatos.querySelectorAll('.campo-input').forEach(input => input.readOnly = true);
+            btnEditarDatos.textContent = 'Editar';
+            aviso.textContent = 'Tus datos se guardaron.';
+            mostrarVista(vistaActual());
+            dibujarPersonas();
+        });
+
+        formDatos.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (editando) btnEditarDatos.click();
+        });
+
+        // Modal agregar / editar persona
+        const modalPersona = document.querySelector('#modalPersona');
+        const formPersona = document.querySelector('#formPersona');
+        const btnEliminarPersona = document.querySelector('#btnEliminarPersona');
+        let personaEditada = null;
+
+        function abrirPersona(persona) {
+            personaEditada = persona || null;
+            formPersona.reset();
+            formPersona.querySelectorAll('.campo-input').forEach(input => {
+                input.removeAttribute('aria-invalid');
+                input.removeAttribute('aria-describedby');
+            });
+            formPersona.querySelectorAll('.campo-error').forEach(error => error.textContent = '');
+
+            const editar = Boolean(persona);
+            document.querySelector('#personaTitulo').textContent = editar ? 'Editar persona' : 'Agregar persona';
+            document.querySelector('#personaSubtitulo').hidden = editar;
+            document.querySelector('#personaNota').hidden = editar;
+            document.querySelector('#btnGuardarPersona').textContent = editar ? 'Guardar cambios' : 'Guardar persona';
+            btnEliminarPersona.hidden = !editar;
+
+            if (editar) {
+                document.querySelector('#perNombre').value = persona.nombre;
+                document.querySelector('#perApellido').value = persona.apellido;
+                document.querySelector('#perRelacion').value = persona.relacion;
+                document.querySelector('#perNacimiento').value = persona.nacimiento;
+                document.querySelector('#perCorreo').value = persona.correo || '';
+            }
+
+            modalPersona.showModal();
+            document.querySelector('#perNombre').focus();
+        }
+
+        document.querySelectorAll('[data-agregar-persona]').forEach(boton => {
+            boton.addEventListener('click', () => abrirPersona(null));
+        });
+
+        formPersona.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!validarFormulario(formPersona)) return;
+
+            const datos = {
+                nombre: document.querySelector('#perNombre').value.trim(),
+                apellido: document.querySelector('#perApellido').value.trim(),
+                relacion: document.querySelector('#perRelacion').value,
+                nacimiento: document.querySelector('#perNacimiento').value.trim(),
+                correo: document.querySelector('#perCorreo').value.trim()
+            };
+
+            if (personaEditada) {
+                Object.assign(personaEditada, datos);
+            } else {
+                datos.id = Date.now();
+                datos.elegida = false;
+                cuenta.personas.push(datos);
+            }
+
+            Cuenta.guardar(cuenta);
+            dibujarPersonas();
+            modalPersona.close();
+        });
+
+        btnEliminarPersona.addEventListener('click', () => {
+            modalPersona.close();
+            confirmarEliminar(personaEditada);
+        });
+
+        // Modal de confirmación (eliminar persona o cancelar inscripción)
+        const modalConfirmar = document.querySelector('#modalConfirmar');
+        let accionConfirmada = null;
+
+        function confirmar(titulo, mensaje, boton, accion) {
+            document.querySelector('#confirmarTitulo').textContent = titulo;
+            document.querySelector('#confirmarTexto').textContent = mensaje;
+            document.querySelector('#btnConfirmarSi').textContent = boton;
+            accionConfirmada = accion;
+            modalConfirmar.showModal();
+        }
+
+        document.querySelector('#btnConfirmarSi').addEventListener('click', () => {
+            if (accionConfirmada) accionConfirmada();
+            Cuenta.guardar(cuenta);
+            modalConfirmar.close();
+        });
+
+        function confirmarEliminar(persona) {
+            confirmar('¿Eliminar persona?',
+                nombreCompleto(persona) + ' ya no aparecerá cuando te inscribas a un evento.',
+                'Eliminar persona',
+                () => {
+                    cuenta.personas = cuenta.personas.filter(otra => otra !== persona);
+                    dibujarPersonas();
+                });
+        }
+
+        function confirmarCancelar(inscripcion) {
+            const evento = Cuenta.eventos[inscripcion.evento];
+            confirmar('¿Cancelar inscripción?',
+                'Se cancelará la inscripción a ' + evento.titulo + ' (' + evento.fecha + ').',
+                'Cancelar inscripción',
+                () => {
+                    cuenta.inscripciones = cuenta.inscripciones.filter(otra => otra !== inscripcion);
+                    dibujarInscripciones();
+                });
+        }
+
+        // Cerrar modales con la X, con "Cancelar" o haciendo clic fuera
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.querySelectorAll('[data-cerrar]').forEach(boton => {
+                boton.addEventListener('click', () => modal.close());
+            });
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) modal.close();
+            });
+        });
+
+        // Vistas de la cuenta: #perfil, #personas, #inscripciones
+        const textosHero = {
+            'perfil': {
+                titulo: () => 'Hola, ' + cuenta.nombre,
+                texto: 'Administra tus datos, las personas que inscribes y tus inscripciones a eventos.'
+            },
+            'personas': {
+                titulo: () => 'Personas guardadas',
+                texto: 'Guarda a las personas con las que visitas el cerro para inscribirlas en un paso.'
+            },
+            'inscripciones': {
+                titulo: () => 'Mis inscripciones',
+                texto: 'Revisa los eventos a los que te inscribiste y a quiénes inscribiste.'
+            }
+        };
+
+        function vistaActual() {
+            const vista = window.location.hash.replace('#', '');
+            return textosHero[vista] ? vista : 'perfil';
+        }
+
+        function mostrarVista(vista) {
+            document.querySelectorAll('.cuenta-vista').forEach(seccion => {
+                seccion.hidden = seccion.dataset.vista !== vista;
+            });
+            document.querySelectorAll('[data-menu]').forEach(link => {
+                const activo = link.dataset.menu === vista;
+                link.classList.toggle('cuenta-menu-link--active', activo);
+                if (activo) link.setAttribute('aria-current', 'page');
+                else link.removeAttribute('aria-current');
+            });
+            document.querySelector('#perfilTitulo').textContent = textosHero[vista].titulo();
+            document.querySelector('#perfilTexto').textContent = textosHero[vista].texto;
+            document.title = textosHero[vista].titulo() + ' | Cerro San Francisco de Curimón';
+        }
+
+        window.addEventListener('hashchange', () => {
+            mostrarVista(vistaActual());
+            window.scrollTo(0, 0);
+        });
+
+        // Cerrar sesión
+        document.querySelector('#btnCerrarSesion').addEventListener('click', () => {
+            Cuenta.cerrar();
+            window.location.href = 'amigos.html';
+        });
+
+        if (cuenta) {
+            cargarDatos();
+
+            // Las cuentas creadas con Google no traen teléfono ni comuna
+            if (!cuenta.telefono || !cuenta.comuna) {
+                document.querySelector('#datosAviso').textContent =
+                    'Completa tu teléfono y comuna con "Editar" para inscribirte más rápido en los eventos.';
+            }
+            dibujarPersonas();
+            dibujarInscripciones();
+            mostrarVista(vistaActual());
+        }
+    </script>
+
+</body>
+
+</html>

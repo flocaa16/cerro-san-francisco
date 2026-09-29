@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=21" />
+    <link rel="stylesheet" href="style.css?v=22" />
 
 </head>
 
@@ -433,7 +433,8 @@
         // Ruta de navegación: muestra la página desde la que se llegó (Inicio o Actividades)
         const origenes = {
             'inicio': { texto: 'Inicio', href: 'index.html' },
-            'actividades': { texto: 'Actividades', href: 'actividades.html' }
+            'actividades': { texto: 'Actividades', href: 'actividades.html' },
+            'perfil': { texto: 'Mis inscripciones', href: 'perfil.html#inscripciones' }
         };
 
         let desde = params.get('desde');
@@ -470,6 +471,7 @@
         }
     </script>
 
+    <script src="cuenta.js"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
@@ -478,22 +480,11 @@
         // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
         const FORM_ENDPOINT = '';
 
-        // Perfil de prueba de Amigo del Cerro.
-        // GitHub Pages no tiene servidor: para un inicio de sesión real se necesita un servicio
-        // como Firebase o Supabase. Mientras tanto, cualquier correo y contraseña (6+ caracteres) entra con este perfil.
-        const perfilDemo = {
-            nombre: 'María',
-            apellido: 'González',
-            telefono: '+56 9 1234 5678',
-            personas: [
-                { nombre: 'María González', detalle: 'Tú · 34 años', elegida: true },
-                { nombre: 'Tomás González', detalle: 'Hijo · 10 años', elegida: true },
-                { nombre: 'Ana Pérez', detalle: 'Amiga · 29 años', elegida: false }
-            ]
-        };
-
+        // La cuenta de Amigo del Cerro está en cuenta.js (es de prueba: no hay servidor)
         const MAX_PERSONAS = 10;
-        let sesion = null; // datos del Amigo del Cerro después de iniciar sesión
+        let sesion = Cuenta.obtener(); // cuenta del Amigo del Cerro (null si no ha iniciado sesión)
+        let personasInscripcion = []; // personas que se pueden elegir en el paso 3A
+        let irACrearCuenta = false;
         const eventoActual = eventos[id] || eventos['aves'];
         const modal = document.querySelector('#modalInscripcion');
         const pasos = modal.querySelectorAll('.modal-paso');
@@ -537,13 +528,22 @@
 
         // Abrir
         document.querySelector('#btnInscribirme').addEventListener('click', () => {
+            irACrearCuenta = false;
             modal.showModal();
-            irA(sesion ? 'amigo' : 'tipo');
+            if (sesion) {
+                cargarPerfil();
+                irA('amigo');
+            } else {
+                irA('tipo');
+            }
         });
 
         // Cerrar con la X, con "Aceptar" o haciendo clic fuera del modal
         modal.querySelectorAll('[data-cerrar]').forEach(boton => {
             boton.addEventListener('click', () => modal.close());
+        });
+        modal.addEventListener('close', () => {
+            if (irACrearCuenta) window.location.href = 'amigos.html?vista=crear';
         });
         modal.addEventListener('click', (event) => {
             if (event.target === modal) modal.close();
@@ -635,8 +635,7 @@
             event.preventDefault();
             if (!validarFormulario(formLogin)) return;
 
-            sesion = Object.assign({ correo: document.querySelector('#loginCorreo').value.trim() }, perfilDemo);
-            sesion.personas = perfilDemo.personas.map(persona => Object.assign({}, persona));
+            sesion = Cuenta.iniciar(document.querySelector('#loginCorreo').value.trim(), false);
             cargarPerfil();
             irA('amigo');
         });
@@ -652,12 +651,24 @@
             document.querySelector('#amigoApellido').value = sesion.apellido;
             document.querySelector('#amigoCorreo').value = sesion.correo;
             document.querySelector('#amigoTelefono').value = sesion.telefono;
+
+            // La titular va primero y marcada; las personas guardadas según su última inscripción
+            personasInscripcion = [{
+                nombre: sesion.nombre + ' ' + sesion.apellido,
+                detalle: Cuenta.detalle('Tú', sesion.nacimiento),
+                elegida: true
+            }].concat(sesion.personas.map(persona => ({
+                nombre: persona.nombre + ' ' + persona.apellido,
+                detalle: Cuenta.detalle(persona.relacion, persona.nacimiento),
+                elegida: Boolean(persona.elegida),
+                guardada: persona
+            })));
             dibujarPersonas();
         }
 
         function dibujarPersonas() {
             listaPersonas.innerHTML = '';
-            sesion.personas.forEach((persona, i) => {
+            personasInscripcion.forEach(persona => {
                 const fila = document.createElement('label');
                 fila.className = 'persona';
                 fila.innerHTML =
@@ -678,7 +689,7 @@
         }
 
         function actualizarTotal() {
-            const total = sesion.personas.filter(persona => persona.elegida).length;
+            const total = personasInscripcion.filter(persona => persona.elegida).length;
             btnConfirmarAmigo.textContent = 'Confirmar inscripción (' + total + (total === 1 ? ' persona)' : ' personas)');
         }
 
@@ -699,7 +710,7 @@
                 nuevaPersonaNombre.focus();
                 return;
             }
-            sesion.personas.push({ nombre: nombre, detalle: 'Acompañante', elegida: true });
+            personasInscripcion.push({ nombre: nombre, detalle: 'Acompañante', elegida: true });
             dibujarPersonas();
             nuevaPersonaNombre.value = '';
             nuevaPersona.hidden = true;
@@ -717,7 +728,7 @@
 
         formAmigo.addEventListener('submit', (event) => {
             event.preventDefault();
-            const elegidas = sesion.personas.filter(persona => persona.elegida).map(persona => persona.nombre);
+            const elegidas = personasInscripcion.filter(persona => persona.elegida).map(persona => persona.nombre);
             if (!elegidas.length) {
                 formAmigo.querySelector('.modal-error').textContent = 'Elige al menos una persona para inscribir.';
                 listaPersonas.querySelector('input').focus();
@@ -725,7 +736,7 @@
             }
             if (!validarFormulario(formAmigo)) return;
 
-            enviarInscripcion(formAmigo, {
+            const datosAmigo = {
                 tipo: 'Amigo del Cerro',
                 nombre: document.querySelector('#amigoNombre').value.trim(),
                 apellido: document.querySelector('#amigoApellido').value.trim(),
@@ -733,6 +744,20 @@
                 telefono: document.querySelector('#amigoTelefono').value.trim(),
                 personas: elegidas.join(', '),
                 cantidad: elegidas.length
+            };
+
+            enviarInscripcion(formAmigo, datosAmigo).then(enviado => {
+                if (!enviado) return;
+
+                // Se guarda en "Mis inscripciones" y se recuerda a quién se eligió
+                const idEvento = eventos[id] ? id : 'aves';
+                sesion.telefono = datosAmigo.telefono;
+                sesion.inscripciones = sesion.inscripciones.filter(otra => otra.evento !== idEvento);
+                sesion.inscripciones.unshift({ evento: idEvento, personas: elegidas });
+                personasInscripcion.forEach(persona => {
+                    if (persona.guardada) persona.guardada.elegida = persona.elegida;
+                });
+                Cuenta.guardar(sesion);
             });
         });
 
@@ -764,6 +789,19 @@
             });
 
             if (enviado) {
+                // Si quiere crear su cuenta, al aceptar se abre "Crear cuenta" con sus datos
+                irACrearCuenta = document.querySelector('#invCrearCuenta').checked;
+                if (irACrearCuenta) {
+                    try {
+                        sessionStorage.setItem('cuentaBorrador', JSON.stringify({
+                            nombre: document.querySelector('#invNombre').value.trim(),
+                            apellido: document.querySelector('#invApellido').value.trim(),
+                            correo: document.querySelector('#invCorreo').value.trim(),
+                            telefono: document.querySelector('#invTelefono').value.trim(),
+                            comuna: document.querySelector('#invComuna').value.trim()
+                        }));
+                    } catch (e) { }
+                }
                 formInvitado.reset();
                 cantidad = 1;
                 invCantidad.textContent = cantidad;

@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amigos del Cerro | Cerro San Francisco de Curimón</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=22" />
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-logo">
+                <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+            </a>
+
+            <button class="header-toggler" type="button" aria-controls="headerNav" aria-expanded="false"
+                aria-label="Abrir menú">
+                <span class="icon-hamburger"></span>
+                <span class="icon-close">✕</span>
+            </button>
+
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
+                    <li><a class="nav-button nav-button--active" href="amigos.html" aria-current="page">Amigos del Cerro</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- HEADER -->
+
+
+    <!-- HERO -->
+    <section class="cuenta-hero">
+        <h1 class="cuenta-hero-title" id="accesoTitulo">Amigos del Cerro</h1>
+        <p class="cuenta-hero-text" id="accesoTexto">Ingresa y podrás acceder a beneficios exclusivos del Cerro San
+            Francisco</p>
+    </section>
+    <!-- HERO -->
+
+
+    <!-- ACCESO -->
+    <main class="acceso">
+        <div class="acceso-content">
+
+            <!-- Iniciar sesión -->
+            <section class="acceso-vista" id="vistaIngresar" aria-labelledby="ingresarTitulo">
+                <div class="acceso-text">
+                    <h2 class="acceso-title" id="ingresarTitulo">Iniciar Sesión</h2>
+                    <p class="acceso-subtitle">Por favor inicia sesión para poder ingresar</p>
+                </div>
+
+                <form class="acceso-form" id="formIngresar" novalidate>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="ingCorreo" type="email" placeholder=" "
+                                autocomplete="email" required>
+                            <label class="campo-label" for="ingCorreo">Correo electrónico</label>
+                        </div>
+                        <p class="campo-error" id="ingCorreoError"></p>
+                    </div>
+
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input campo-input--icono" id="ingClave" type="password" placeholder=" "
+                                autocomplete="current-password" minlength="6" required>
+                            <label class="campo-label" for="ingClave">Contraseña</label>
+                            <button type="button" class="campo-icono" data-ver-clave="ingClave"
+                                aria-label="Mostrar contraseña" aria-pressed="false">
+                                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor"
+                                        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="campo-error" id="ingClaveError"></p>
+                    </div>
+
+                    <label class="acceso-check">
+                        <input type="checkbox" class="checkbox checkbox--grande" id="ingMantener">
+                        <span>Mantener sesión iniciada</span>
+                    </label>
+
+                    <p class="modal-error" role="alert"></p>
+                    <button type="submit" class="btn-primary-medium btn-primary-medium--tall acceso-btn">Iniciar
+                        Sesión</button>
+
+                    <div class="acceso-o" aria-hidden="true"><span>o</span></div>
+
+                    <button type="button" class="acceso-google" id="btnGoogle">
+                        Iniciar sesión con Google
+                        <!-- Logo oficial de Google ("G"), como pide su guía de marca para este botón -->
+                        <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true">
+                            <path fill="#EA4335"
+                                d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                            <path fill="#4285F4"
+                                d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                            <path fill="#FBBC05"
+                                d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                            <path fill="#34A853"
+                                d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                        </svg>
+                    </button>
+                    <p class="acceso-aviso" id="googleAviso" role="status"></p>
+                </form>
+
+                <p class="acceso-cambio">¿No tienes una cuenta? <a href="amigos.html?vista=crear"
+                        class="acceso-cambio-link" data-vista="crear">Crea una</a></p>
+            </section>
+            <!-- Iniciar sesión -->
+
+            <!-- Crear cuenta -->
+            <section class="acceso-vista" id="vistaCrear" aria-labelledby="crearTitulo" hidden>
+                <div class="acceso-text">
+                    <h2 class="acceso-title" id="crearTitulo">Crear cuenta</h2>
+                    <p class="acceso-subtitle">Completa tus datos para crear tu cuenta de Amigo del Cerro.</p>
+                </div>
+
+                <form class="acceso-form" id="formCrear" novalidate>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="creNombre" type="text" placeholder=" "
+                                    autocomplete="given-name" required>
+                                <label class="campo-label" for="creNombre">Nombre</label>
+                            </div>
+                            <p class="campo-error" id="creNombreError"></p>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="creApellido" type="text" placeholder=" "
+                                    autocomplete="family-name" required>
+                                <label class="campo-label" for="creApellido">Apellido</label>
+                            </div>
+                            <p class="campo-error" id="creApellidoError"></p>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="creCorreo" type="email" placeholder=" " autocomplete="email"
+                                required>
+                            <label class="campo-label" for="creCorreo">Correo electrónico</label>
+                        </div>
+                        <p class="campo-error" id="creCorreoError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="creTelefono" type="tel" placeholder=" " autocomplete="tel"
+                                required>
+                            <label class="campo-label" for="creTelefono">Teléfono</label>
+                        </div>
+                        <p class="campo-error" id="creTelefonoError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="creComuna" type="text" placeholder=" "
+                                autocomplete="address-level2" required>
+                            <label class="campo-label" for="creComuna">Comuna</label>
+                        </div>
+                        <p class="campo-error" id="creComunaError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input campo-input--icono" id="creClave" type="password" placeholder=" "
+                                autocomplete="new-password" minlength="6" required>
+                            <label class="campo-label" for="creClave">Contraseña</label>
+                            <button type="button" class="campo-icono" data-ver-clave="creClave"
+                                aria-label="Mostrar contraseña" aria-pressed="false">
+                                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor"
+                                        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="campo-error" id="creClaveError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input campo-input--icono" id="creClave2" type="password"
+                                placeholder=" " autocomplete="new-password" required>
+                            <label class="campo-label" for="creClave2">Confirmar contraseña</label>
+                            <button type="button" class="campo-icono" data-ver-clave="creClave2"
+                                aria-label="Mostrar contraseña" aria-pressed="false">
+                                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor"
+                                        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5M12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5m0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="campo-error" id="creClave2Error"></p>
+                    </div>
+
+                    <div class="campo">
+                        <label class="modal-check">
+                            <input type="checkbox" class="checkbox" id="creTerminos" required>
+                            <span>Acepto los términos y condiciones y la política de privacidad.</span>
+                        </label>
+                        <p class="campo-error" id="creTerminosError"></p>
+                    </div>
+
+                    <p class="modal-error" role="alert"></p>
+                    <button type="submit" class="btn-primary-medium btn-primary-medium--tall acceso-btn">Crear
+                        cuenta</button>
+                </form>
+
+                <p class="acceso-cambio">¿Ya tienes una cuenta? <a href="amigos.html" class="acceso-cambio-link acceso-cambio-link--gris"
+                        data-vista="ingresar">Inicia sesión</a></p>
+            </section>
+            <!-- Crear cuenta -->
+
+        </div>
+
+        <!-- Foto: exportar "Rectangle 22" del Figma como img/amigos-cerro.png -->
+        <img src="img/amigos-cerro.png" alt="Familia descansando en la cima del cerro con el valle de fondo"
+            class="acceso-img">
+    </main>
+    <!-- ACCESO -->
+
+
+    <!-- MODAL CUENTA CREADA -->
+    <dialog class="modal" id="modalBienvenida" aria-labelledby="bienvenidaTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor"
+                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+        </button>
+        <div class="modal-paso">
+            <h2 class="modal-title" id="bienvenidaTitulo">¡Te damos la bienvenida a Amigos del Cerro!</h2>
+            <p class="modal-subtitle">Tu cuenta fue creada. Completa tu perfil y agrega a las personas con las que
+                visitas el cerro para inscribirlas más rápido en los eventos.</p>
+            <a href="perfil.html" class="btn-primary-medium btn-primary-medium--tall modal-btn">Ir a mi perfil</a>
+        </div>
+    </dialog>
+    <!-- MODAL CUENTA CREADA -->
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
+                </div>
+
+                <ul class="footer-nav">
+                    <li><a class="footer-link" href="index.html">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="entradas.html">Entradas</a></li>
+                </ul>
+
+                <div class="footer-horarios">
+                    <p class="footer-title">Horarios de Atención</p>
+                    <div>
+                        <p class="footer-day">Lunes a Viernes</p>
+                        <p class="footer-hour">9:00 - 18:00</p>
+                    </div>
+                    <div>
+                        <p class="footer-day">Sábado a Domingo y Feriados</p>
+                        <p class="footer-hour">9:00 - 16:00</p>
+                    </div>
+                    <p class="footer-day">contacto@fundacionlepe.cl</p>
+                </div>
+
+                <form class="footer-form" id="footerForm">
+                    <p class="footer-title">Contáctanos</p>
+                    <label for="footerNombre" class="footer-label">Nombre</label>
+                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerMensaje" class="footer-label">Mensaje</label>
+                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <hr class="footer-divider">
+
+            <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <!-- FOOTER -->
+
+
+    <script>
+        // Menú hamburguesa
+        const toggler = document.querySelector('.header-toggler');
+        const nav = document.querySelector('#headerNav');
+
+        toggler.addEventListener('click', function () {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+            toggler.setAttribute('aria-expanded', !isExpanded);
+            nav.classList.toggle('is-open');
+        });
+
+        // Si hiciste clic fuera del menú y del botón, se cierra
+        document.addEventListener('click', function (event) {
+            const isExpanded = toggler.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded && !nav.contains(event.target) && !toggler.contains(event.target)) {
+                toggler.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('is-open');
+            }
+        });
+    </script>
+    <script>
+        // Formulario del footer (todavía no envía a ningún lado)
+        document.querySelector('#footerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async onload="window.prepararGoogle && prepararGoogle()"></script>
+    <script src="cuenta.js"></script>
+    <script>
+        // Validación de campos (mismos mensajes que la inscripción)
+        function validarCampo(input) {
+            const error = document.querySelector('#' + input.id + 'Error');
+            let mensaje = '';
+
+            if (input.type === 'checkbox' && !input.checked) mensaje = 'Debes aceptar para crear tu cuenta.';
+            else if (input.validity.valueMissing) mensaje = 'Este campo es obligatorio.';
+            else if (input.validity.typeMismatch) mensaje = 'Escribe un correo válido, por ejemplo nombre@email.com.';
+            else if (input.validity.tooShort) mensaje = 'Debe tener al menos ' + input.minLength + ' caracteres.';
+            else if (input.type === 'tel' && input.value.replace(/\D/g, '').length < 8) {
+                mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
+            } else if (input.id === 'creClave2' && input.value !== document.querySelector('#creClave').value) {
+                mensaje = 'Las contraseñas no coinciden.';
+            }
+
+            if (error) error.textContent = mensaje;
+            input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+            if (error && mensaje) input.setAttribute('aria-describedby', error.id);
+            else input.removeAttribute('aria-describedby');
+            return !mensaje;
+        }
+
+        function validarFormulario(form) {
+            const campos = [...form.querySelectorAll('[required]')];
+            const validos = campos.map(validarCampo);
+            if (validos.includes(false)) {
+                campos[validos.indexOf(false)].focus();
+                return false;
+            }
+            return true;
+        }
+
+        document.querySelectorAll('[required]').forEach(input => {
+            input.addEventListener('blur', () => {
+                if (input.value && input.type !== 'checkbox') validarCampo(input);
+            });
+            input.addEventListener('input', () => {
+                if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
+            });
+        });
+
+        // Mostrar u ocultar contraseñas
+        document.querySelectorAll('[data-ver-clave]').forEach(boton => {
+            boton.addEventListener('click', () => {
+                const input = document.querySelector('#' + boton.dataset.verClave);
+                const visible = input.type === 'text';
+                input.type = visible ? 'password' : 'text';
+                boton.setAttribute('aria-pressed', !visible);
+                boton.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
+            });
+        });
+
+        // Si ya hay sesión, se va directo al perfil
+        if (Cuenta.obtener()) {
+            window.location.replace('perfil.html');
+        }
+
+        // Cambiar entre "Iniciar sesión" y "Crear cuenta"
+        const textosHero = {
+            'ingresar': {
+                titulo: 'Amigos del Cerro',
+                texto: 'Ingresa y podrás acceder a beneficios exclusivos del Cerro San Francisco'
+            },
+            'crear': {
+                titulo: 'Únete a Amigos del Cerro',
+                texto: 'Crea tu cuenta y accede a beneficios exclusivos del Cerro San Francisco.'
+            }
+        };
+
+        function mostrarVista(vista, conFoco) {
+            document.querySelector('#vistaIngresar').hidden = vista !== 'ingresar';
+            document.querySelector('#vistaCrear').hidden = vista !== 'crear';
+            document.querySelector('#accesoTitulo').textContent = textosHero[vista].titulo;
+            document.querySelector('#accesoTexto').textContent = textosHero[vista].texto;
+            document.title = textosHero[vista].titulo + ' | Cerro San Francisco de Curimón';
+            if (conFoco) document.querySelector(vista === 'crear' ? '#creNombre' : '#ingCorreo').focus();
+        }
+
+        document.querySelectorAll('[data-vista]').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const vista = link.dataset.vista;
+                history.replaceState(null, '', vista === 'crear' ? '?vista=crear' : 'amigos.html');
+                mostrarVista(vista, true);
+            });
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        mostrarVista(params.get('vista') === 'crear' ? 'crear' : 'ingresar', false);
+
+        // Si viene de una inscripción como invitado, se completan sus datos
+        try {
+            const borrador = JSON.parse(sessionStorage.getItem('cuentaBorrador'));
+            if (borrador) {
+                document.querySelector('#creNombre').value = borrador.nombre || '';
+                document.querySelector('#creApellido').value = borrador.apellido || '';
+                document.querySelector('#creCorreo').value = borrador.correo || '';
+                document.querySelector('#creTelefono').value = borrador.telefono || '';
+                document.querySelector('#creComuna').value = borrador.comuna || '';
+                sessionStorage.removeItem('cuentaBorrador');
+            }
+        } catch (e) { }
+
+        // Iniciar sesión
+        document.querySelector('#formIngresar').addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!validarFormulario(event.target)) return;
+
+            Cuenta.iniciar(document.querySelector('#ingCorreo').value.trim(), document.querySelector('#ingMantener').checked);
+            window.location.href = 'perfil.html';
+        });
+
+        // Iniciar sesión o crear la cuenta con Google (Google Identity Services)
+        // Para activarlo, crear un "ID de cliente de OAuth" (tipo Aplicación web) en
+        // https://console.cloud.google.com/apis/credentials con este origen autorizado:
+        // https://flocaa16.github.io  y pegar aquí el ID (termina en .apps.googleusercontent.com)
+        const GOOGLE_CLIENT_ID = '';
+
+        const btnGoogle = document.querySelector('#btnGoogle');
+        const googleAviso = document.querySelector('#googleAviso');
+        let clienteGoogle = null;
+
+        function prepararGoogle() {
+            if (!GOOGLE_CLIENT_ID || !window.google || clienteGoogle) return;
+
+            clienteGoogle = google.accounts.oauth2.initTokenClient({
+                client_id: GOOGLE_CLIENT_ID,
+                scope: 'openid email profile',
+                callback: async (respuesta) => {
+                    if (respuesta.error) {
+                        googleAviso.textContent = 'No se pudo ingresar con Google. Inténtalo de nuevo.';
+                        return;
+                    }
+
+                    try {
+                        // Nombre, apellido y correo de la cuenta de Google
+                        const datos = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                            headers: { 'Authorization': 'Bearer ' + respuesta.access_token }
+                        }).then(r => r.json());
+
+                        entrarConGoogle(datos);
+                    } catch (e) {
+                        googleAviso.textContent = 'No se pudo ingresar con Google. Revisa tu conexión e inténtalo de nuevo.';
+                    }
+                }
+            });
+        }
+
+        function entrarConGoogle(datos) {
+            const mantener = document.querySelector('#ingMantener').checked;
+
+            // Si ya tenía cuenta con ese correo, entra; si no, se crea en un paso
+            if (Cuenta.existe(datos.email)) {
+                Cuenta.iniciar(datos.email, mantener);
+                window.location.href = 'perfil.html';
+                return;
+            }
+
+            Cuenta.crear({
+                nombre: datos.given_name || datos.name || '',
+                apellido: datos.family_name || '',
+                correo: datos.email,
+                telefono: '',
+                comuna: '',
+                nacimiento: '',
+                google: true
+            });
+            modalBienvenida.showModal();
+        }
+
+        btnGoogle.addEventListener('click', () => {
+            googleAviso.textContent = '';
+
+            if (!GOOGLE_CLIENT_ID) {
+                googleAviso.textContent = 'Falta configurar el ingreso con Google (GOOGLE_CLIENT_ID en amigos.html).';
+                return;
+            }
+
+            prepararGoogle();
+            if (!clienteGoogle) {
+                googleAviso.textContent = 'Google no está disponible en este momento. Inténtalo en unos segundos.';
+                return;
+            }
+            clienteGoogle.requestAccessToken();
+        });
+
+        // Crear cuenta
+        const modalBienvenida = document.querySelector('#modalBienvenida');
+
+        document.querySelector('#formCrear').addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!validarFormulario(event.target)) return;
+
+            Cuenta.crear({
+                nombre: document.querySelector('#creNombre').value.trim(),
+                apellido: document.querySelector('#creApellido').value.trim(),
+                correo: document.querySelector('#creCorreo').value.trim(),
+                telefono: document.querySelector('#creTelefono').value.trim(),
+                comuna: document.querySelector('#creComuna').value.trim(),
+                nacimiento: ''
+            });
+            modalBienvenida.showModal();
+        });
+
+        // Al cerrar la bienvenida también se va al perfil
+        modalBienvenida.querySelector('[data-cerrar]').addEventListener('click', () => {
+            window.location.href = 'perfil.html';
+        });
+        modalBienvenida.addEventListener('cancel', () => {
+            window.location.href = 'perfil.html';
+        });
+    </script>
+
+</body>
+
+</html>
