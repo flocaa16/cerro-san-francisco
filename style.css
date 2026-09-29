@@ -641,12 +641,11 @@ h3 {
     opacity: 0.8;
 }
 
-/* Logo de la Fundación en blanco, como en su footer */
+/* Logo de la Fundación con sus colores originales */
 .footer-lepe img {
     display: block;
     width: auto;
-    height: 36px;
-    filter: brightness(0) invert(1);
+    height: 43px;
 }
 
 @media (max-width: 991.98px) {
