@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=8" />
+    <link rel="stylesheet" href="style.css?v=9" />
 
 </head>
 
@@ -405,6 +405,11 @@
 
     <!-- ACCIONES DE REGENERACION -->
     <section class="acciones">
+        <!-- Video de fondo (sin sonido, en loop) -->
+        <video class="acciones-video" autoplay muted loop playsinline aria-hidden="true">
+            <source src="video/acciones-regeneracion.mp4" type="video/mp4">
+        </video>
+
         <div class="wrapper">
             <div class="acciones-content">
                 <h2 class="acciones-title">Acciones de Regeneración</h2>
@@ -652,6 +657,8 @@
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelector('.banner-cerro-video').removeAttribute('autoplay');
             document.querySelector('.banner-cerro-video').pause();
+            document.querySelector('.acciones-video').removeAttribute('autoplay');
+            document.querySelector('.acciones-video').pause();
         }
 
         // Banner
