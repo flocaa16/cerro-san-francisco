@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=34" />
+    <link rel="stylesheet" href="style.css?v=36" />
 
 </head>
 
@@ -130,6 +130,12 @@
 
                 <div class="mapa-galeria" aria-roledescription="carrusel" aria-label="Fotos del punto">
                     <div class="mapa-galeria-fotos" id="galeriaFotos"></div>
+                    <!-- Al apretar la foto se abre el visor en grande -->
+                    <button type="button" class="mapa-galeria-ampliar" id="galeriaAmpliar" aria-label="Ver fotos en grande">
+                        <svg class="mapa-galeria-ampliar-icono" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M5 15H3v6h6v-2H5v-4zm0-6h0V5h4V3H3v6h2zm14 10h-4v2h6v-6h-2v4zM15 3v2h4v4h2V3h-6z" />
+                        </svg>
+                    </button>
                     <button type="button" class="arrow-button arrow-button--left mapa-galeria-flecha mapa-galeria-flecha--izq"
                         id="galeriaAnterior" aria-label="Foto anterior">
                         <img src="icons/arrow-forward.svg" alt="">
@@ -235,6 +241,32 @@
         </div>
     </footer>
     <!-- FOOTER -->
+
+    <!-- VISOR DE FOTOS -->
+    <dialog class="visor" id="visorFotos" aria-label="Fotos del punto">
+        <div class="visor-barra">
+            <p class="visor-contador" id="visorContador" aria-live="polite"></p>
+            <button type="button" class="visor-cerrar" id="visorCerrar" aria-label="Cerrar">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor"
+                        d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                </svg>
+            </button>
+        </div>
+        <figure class="visor-figura">
+            <img class="visor-foto" id="visorFoto" src="" alt="">
+            <figcaption class="visor-leyenda" id="visorLeyenda"></figcaption>
+        </figure>
+        <button type="button" class="arrow-button arrow-button--left visor-flecha visor-flecha--izq" id="visorAnterior"
+            aria-label="Foto anterior">
+            <img src="icons/arrow-forward.svg" alt="">
+        </button>
+        <button type="button" class="arrow-button visor-flecha visor-flecha--der" id="visorSiguiente"
+            aria-label="Foto siguiente">
+            <img src="icons/arrow-forward.svg" alt="">
+        </button>
+    </dialog>
+    <!-- VISOR DE FOTOS -->
 
 
     <script>
@@ -463,6 +495,52 @@
         document.querySelector('#galeriaAnterior').addEventListener('click', () => mostrarFoto(fotoActual - 1));
         document.querySelector('#galeriaSiguiente').addEventListener('click', () => mostrarFoto(fotoActual + 1));
 
+        // Visor: muestra en grande las fotos del punto elegido
+        const visor = document.querySelector('#visorFotos');
+        const visorFoto = document.querySelector('#visorFoto');
+        const visorLeyenda = document.querySelector('#visorLeyenda');
+        const visorContador = document.querySelector('#visorContador');
+
+        function mostrarEnVisor(indice) {
+            const fotos = puntos[actual].fotos;
+            mostrarFoto(indice); // la galería del panel queda en la misma foto
+            visorFoto.src = fotos[fotoActual].src;
+            visorFoto.alt = fotos[fotoActual].alt;
+            visorLeyenda.textContent = fotos[fotoActual].alt;
+            visorContador.textContent = puntos[actual].nombre + ' · ' + (fotoActual + 1) + ' de ' + fotos.length;
+            visor.classList.toggle('visor--una-foto', fotos.length < 2);
+        }
+
+        document.querySelector('#galeriaAmpliar').addEventListener('click', () => {
+            mostrarEnVisor(fotoActual);
+            visor.showModal();
+        });
+        document.querySelector('#visorCerrar').addEventListener('click', () => visor.close());
+        document.querySelector('#visorAnterior').addEventListener('click', () => mostrarEnVisor(fotoActual - 1));
+        document.querySelector('#visorSiguiente').addEventListener('click', () => mostrarEnVisor(fotoActual + 1));
+
+        // Si hiciste clic en el fondo oscuro (fuera de la foto y los botones), se cierra
+        visor.addEventListener('click', (event) => {
+            if (!event.target.closest('.visor-foto, button')) visor.close();
+        });
+
+        // Flechas del teclado
+        visor.addEventListener('keydown', (event) => {
+            if (puntos[actual].fotos.length < 2) return;
+            if (event.key === 'ArrowLeft') mostrarEnVisor(fotoActual - 1);
+            if (event.key === 'ArrowRight') mostrarEnVisor(fotoActual + 1);
+        });
+
+        // En celular se puede deslizar para cambiar de foto
+        let toqueInicio = null;
+        visor.addEventListener('touchstart', (event) => { toqueInicio = event.touches[0].clientX; }, { passive: true });
+        visor.addEventListener('touchend', (event) => {
+            if (toqueInicio === null || puntos[actual].fotos.length < 2) return;
+            const distancia = event.changedTouches[0].clientX - toqueInicio;
+            if (Math.abs(distancia) > 50) mostrarEnVisor(fotoActual + (distancia < 0 ? 1 : -1));
+            toqueInicio = null;
+        });
+
         // Elegir un punto (o -1 para volver a la vista general)
         function elegir(indice, sinHistorial) {
             actual = indice;
@@ -513,7 +591,7 @@
             elegir((actual + 1) % puntos.length);
         });
         document.addEventListener('keydown', (event) => {
-            if (actual < 0 || event.target.closest('.leaflet-container')) return;
+            if (actual < 0 || visor.open || event.target.closest('.leaflet-container')) return;
             if (event.key === 'Escape') elegir(-1);
         });
 

@@ -3695,6 +3695,199 @@ button.cover:hover {
     display: none;
 }
 
+/* Botón que cubre la foto para abrirla en grande (las flechas y puntos quedan encima) */
+.mapa-galeria-ampliar {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+}
+
+.mapa-galeria-ampliar-icono {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border-radius: 50%;
+    background-color: rgba(49, 69, 51, 0.7);
+    color: #FFFFFF;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.mapa-galeria-ampliar:hover .mapa-galeria-ampliar-icono,
+.mapa-galeria-ampliar:focus-visible .mapa-galeria-ampliar-icono {
+    background-color: #314533;
+    transform: scale(1.1);
+}
+
+.mapa-galeria-ampliar:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: -4px;
+}
+
+.mapa-galeria-flecha,
+.mapa-galeria-puntos {
+    z-index: 1;
+}
+
+/*VISOR DE FOTOS*/
+.visor {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #FFFFFF;
+    overflow: hidden;
+}
+
+.visor[open] {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    animation: visor-aparecer 0.3s ease;
+}
+
+.visor::backdrop {
+    background-color: rgba(20, 28, 21, 0.96);
+}
+
+@keyframes visor-aparecer {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.visor-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+}
+
+.visor-contador {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.visor-cerrar {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.visor-cerrar:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.visor-figura {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 0;
+    margin: 0;
+    padding: 0 96px 32px 96px;
+}
+
+/* La foto usa todo el espacio disponible sin cortarse (aunque el archivo sea chico) */
+.visor-foto {
+    display: block;
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    object-fit: contain;
+}
+
+.visor-leyenda {
+    flex-shrink: 0;
+    max-width: 720px;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    color: #E0E0E2;
+}
+
+.visor-flecha {
+    position: absolute;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    margin-top: -28px;
+    padding: 16px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.visor-flecha:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.visor-flecha--izq {
+    left: 24px;
+}
+
+.visor-flecha--der {
+    right: 24px;
+}
+
+.visor--una-foto .visor-flecha {
+    display: none;
+}
+
+@media (max-width: 767.98px) {
+    .visor-barra {
+        padding: 12px 16px;
+    }
+
+    .visor-figura {
+        padding: 0 16px 96px 16px;
+    }
+
+    /* En celular las flechas van abajo, para no tapar la foto */
+    .visor-flecha {
+        top: auto;
+        bottom: 24px;
+        margin-top: 0;
+        width: 48px;
+        height: 48px;
+        padding: 14px;
+    }
+
+    .visor-flecha--izq {
+        left: calc(50% - 64px);
+    }
+
+    .visor-flecha--der {
+        right: calc(50% - 64px);
+    }
+}
+/*VISOR DE FOTOS*/
+
 .mapa-detalle-content {
     display: flex;
     flex-shrink: 0;
