@@ -518,7 +518,8 @@ h3 {
 }
 
 .banner-image {
-    width: 632px;
+    /* La foto llega siempre hasta el borde derecho de la pantalla */
+    width: calc(50vw - 88px);
     height: 679px;
     flex-shrink: 0;
     margin-right: calc((100vw - 1160px) / -2);
@@ -537,8 +538,16 @@ h3 {
         gap: 40px;
     }
 
+    .banner-subtitle {
+        font-size: 40px;
+    }
+
+    .banner-title {
+        font-size: 48px;
+    }
+
     .banner-image {
-        width: 50%;
+        width: calc(50% + 20px);
         height: 560px;
         margin-right: -20px;
     }
@@ -661,7 +670,7 @@ h3 {
 
 .como-llegar-title {
     font-size: 34px;
-    font-weight: 700;
+    font-weight: 600;
     text-align: center;
 }
 
@@ -681,29 +690,27 @@ h3 {
     gap: 40px;
 }
 
-.select-wrapper {
+.como-llegar-info {
     position: relative;
-    display: inline-block;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.select-wrapper::after {
-    content: "";
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    width: 12px;
-    height: 8px;
-    transform: translateY(-50%);
-    background: url('icons/arrow-down.svg') no-repeat center / contain;
-    pointer-events: none;
+/* Dropdown de origen */
+.dropdown {
+    position: relative;
+    width: 184px;
 }
 
-.select-origen {
-    appearance: none;
-    -webkit-appearance: none;
+.dropdown-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
     height: 56px;
-    padding: 0 40px 0 12px;
+    padding: 0 12px;
     border: none;
     border-bottom: 1px solid #FFFFFF;
     background: transparent;
@@ -711,11 +718,95 @@ h3 {
     font-family: inherit;
     font-size: 16px;
     font-weight: 500;
+    letter-spacing: 0.15px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
-.select-origen option {
-    color: #000000;
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown.is-open .dropdown-arrow {
+    transform: scaleY(-1);
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    z-index: 5;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #5C8F61;
+}
+
+.dropdown.is-open .dropdown-options {
+    display: block;
+}
+
+.dropdown-option {
+    width: 100%;
+    height: 56px;
+    padding: 0 12px;
+    border: none;
+    background: transparent;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-option:hover,
+.dropdown-option:focus-visible {
+    background-color: #557458;
+    outline: none;
+}
+
+/* Detalle de la ruta */
+.ruta {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ruta-datos {
+    display: flex;
+    gap: 40px;
+}
+
+.ruta-dato {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ruta-dato-label,
+.ruta-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.ruta-dato-value {
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+}
+
+.ruta-subtitle {
+    margin-bottom: -8px;
+}
+
+.ruta-text {
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+    text-align: justify;
 }
 
 .como-llegar-text {
@@ -921,6 +1012,8 @@ h3 {
 
 .evento {
     display: flex;
+    /* Elevation 1 del Figma */
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .evento--reverse {
@@ -999,7 +1092,6 @@ h3 {
     .evento,
     .evento--reverse {
         flex-direction: column-reverse;
-        box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .evento-card {
@@ -1059,9 +1151,24 @@ h3 {
 }
 
 .publicacion {
+    /* Las 3 publicaciones quedan una encima de otra */
+    display: grid;
+}
+
+.publicacion-slide {
+    grid-area: 1 / 1;
     display: flex;
     align-items: center;
     gap: 46px;
+    opacity: 0;
+    visibility: hidden;
+    /* Dissolve de 0,5 s como en el prototipo */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.publicacion-slide.is-active {
+    opacity: 1;
+    visibility: visible;
 }
 
 .publicacion-covers {
@@ -1075,26 +1182,53 @@ h3 {
     position: absolute;
     width: 61.4%;
     aspect-ratio: 2304 / 4096;
-    object-fit: cover;
+    padding: 0;
+    border: none;
+    background-color: #FFFFFF;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 }
 
-.cover-back {
+.cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Portada pendiente (naranjo en el Figma) */
+.cover--pendiente {
+    background-color: #DE7900;
+}
+
+.cover--left {
     left: 0;
     top: 21.6px;
     opacity: 0.4;
 }
 
-.cover-middle {
+.cover--right {
     left: 38.5%;
     top: 0;
-    background-color: #DE7900;
     opacity: 0.4;
 }
 
-.cover-front {
+.cover--front {
     left: 19.4%;
     top: 9.7px;
+}
+
+button.cover {
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+button.cover:hover {
+    opacity: 0.7;
+}
+
+.btn-download {
+    gap: 8px;
 }
 
 .publicacion-content {
@@ -1123,12 +1257,19 @@ h3 {
     line-height: 1.4;
 }
 
+/* Si la persona prefiere menos movimiento, sin animaciones */
+@media (prefers-reduced-motion: reduce) {
+    .publicacion-slide {
+        transition: none;
+    }
+}
+
 @media (max-width: 991.98px) {
     .publicaciones {
         margin-bottom: 80px;
     }
 
-    .publicacion {
+    .publicacion-slide {
         flex-direction: column;
         align-items: flex-start;
     }

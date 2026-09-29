@@ -8,7 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css" />
+    <!-- Cambiar el número de v cada vez que se actualice style.css -->
+    <link rel="stylesheet" href="style.css?v=6" />
 
 </head>
 
@@ -95,22 +96,47 @@
                     </div>
 
                     <div class="como-llegar-body">
-                        <div>
-                            <label for="origen" class="visually-hidden">Seleccionar origen</label>
-                            <div class="select-wrapper">
-                                <select id="origen" class="select-origen">
-                                    <option value="" selected>Seleccionar Origen</option>
-                                    <option value="santiago">Santiago</option>
-                                    <option value="valparaiso">Valparaíso</option>
-                                    <option value="los-andes">Los Andes</option>
-                                </select>
+                        <div class="como-llegar-info">
+                            <!-- Dropdown de origen -->
+                            <div class="dropdown" id="dropdownOrigen">
+                                <button type="button" class="dropdown-button" aria-haspopup="listbox"
+                                    aria-expanded="false" aria-controls="dropdownOptions">
+                                    <span class="dropdown-label">Seleccionar Origen</span>
+                                    <img src="icons/arrow-down.svg" alt="" class="dropdown-arrow" width="12" height="8">
+                                </button>
+                                <ul class="dropdown-options" id="dropdownOptions" role="listbox">
+                                    <li><button type="button" class="dropdown-option" data-origen="santiago">Santiago</button></li>
+                                    <li><button type="button" class="dropdown-option" data-origen="curimon">Curimón</button></li>
+                                    <li><button type="button" class="dropdown-option" data-origen="san-felipe">San Felipe</button></li>
+                                    <li><button type="button" class="dropdown-option" data-origen="valparaiso">Valparaíso</button></li>
+                                    <li><button type="button" class="dropdown-option" data-origen="los-andes">Los Andes</button></li>
+                                    <li><button type="button" class="dropdown-option" data-origen="mendoza">Mendoza</button></li>
+                                </ul>
                             </div>
-                            <p class="como-llegar-text" id="origenText">Conoce cómo llegar desde diferentes
+
+                            <!-- Texto sin origen seleccionado -->
+                            <p class="como-llegar-text" id="rutaDefault">Conoce cómo llegar desde diferentes
                                 procedencias</p>
+
+                            <!-- Detalle de la ruta (se llena con JS) -->
+                            <div class="ruta" id="rutaDetalle" hidden>
+                                <div class="ruta-datos">
+                                    <div class="ruta-dato">
+                                        <p class="ruta-dato-label" id="rutaLabel1"></p>
+                                        <p class="ruta-dato-value" id="rutaValue1"></p>
+                                    </div>
+                                    <div class="ruta-dato">
+                                        <p class="ruta-dato-label" id="rutaLabel2"></p>
+                                        <p class="ruta-dato-value" id="rutaValue2"></p>
+                                    </div>
+                                </div>
+                                <p class="ruta-subtitle" id="rutaSubtitle"></p>
+                                <p class="ruta-text" id="rutaText"></p>
+                            </div>
                         </div>
 
                         <div class="como-llegar-links">
-                            <a class="btn-underline btn-underline--claro"
+                            <a class="btn-underline btn-underline--claro" id="linkMaps"
                                 href="https://www.google.com/maps/search/?api=1&query=Coronel+Santiago+Bueras+826,+Curim%C3%B3n,+San+Felipe"
                                 target="_blank" rel="noopener noreferrer">Abrir Google Maps</a>
                             <a class="btn-underline btn-underline--claro"
@@ -226,24 +252,74 @@
             </div>
 
             <div class="publicacion">
-                <div class="publicacion-covers">
-                    <img src="img/guia-biodiversidad-2.png" alt="" class="cover cover-back">
-                    <span class="cover cover-middle"></span>
-                    <img src="img/guia-biodiversidad-1.png" alt="Portada Guía de Biodiversidad"
-                        class="cover cover-front">
+                <!-- PUBLICACION 1 -->
+                <div class="publicacion-slide is-active">
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left" type="button" data-go="1" aria-label="Ver Mapa Turismo Aconcagua"><img src="img/guia-biodiversidad-2.png" alt=""></button>
+                        <button class="cover cover--right cover--pendiente" type="button" data-go="2" aria-label="Ver Aves de San Felipe"></button>
+                        <div class="cover cover--front"><img src="img/guia-biodiversidad-1.png" alt=""></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Flora y Fauna</p>
+                        <h3 class="publicacion-title">Conoce nuestra Guía de Biodiversidad</h3>
+                        <p class="publicacion-text">Ésta es una guía en terreno desarrollada por el programa Vivo Curimón de
+                            Fundación Lepe. Para una óptima lectura y uso, te recomendamos descargarla en tu celular antes
+                            de visitar el Parque Natural Cerro San Francisco de Curimón, u otros ecosistemas similares.
+                            Toda la información de esta guía, te servirá para visitar otros entornos naturales
+                            similares.</p>
+                        <!-- Reemplazar # por el link al PDF -->
+                        <a href="#" class="btn-primary-medium btn-primary-medium--tall btn-download">
+                            <img src="icons/download.svg" alt="" width="20" height="20" onerror="this.remove()">
+                            Descargar
+                        </a>
+                    </div>
                 </div>
 
-                <div class="publicacion-content">
-                    <p class="publicacion-eyebrow">Flora y Fauna</p>
-                    <h3 class="publicacion-title">Conoce nuestra Guía de Biodiversidad</h3>
-                    <p class="publicacion-text">Ésta es una guía en terreno desarrollada por el programa Vivo Curimón
-                        de Fundación Lepe. Para una óptima lectura y uso, te recomendamos descargarla en tu celular
-                        antes de visitar el Parque Natural Cerro San Francisco de Curimón, u otros ecosistemas
-                        similares. Toda la información de esta guía, te servirá para visitar otros entornos naturales
-                        similares.</p>
-                    <!-- Reemplazar # por el link al PDF de la guía -->
-                    <a href="#" class="btn-primary-medium btn-primary-medium--tall">Descargar</a>
+                <!-- PUBLICACION 2 -->
+                <div class="publicacion-slide" aria-hidden="true" inert>
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left cover--pendiente" type="button" data-go="2" aria-label="Ver Aves de San Felipe"></button>
+                        <button class="cover cover--right" type="button" data-go="0" aria-label="Ver Guía de Biodiversidad"><img src="img/guia-biodiversidad-1.png" alt=""></button>
+                        <div class="cover cover--front"><img src="img/guia-biodiversidad-2.png" alt=""></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Turismo</p>
+                        <h3 class="publicacion-title">Mapa Turismo Aconcagua</h3>
+                        <p class="publicacion-text">Mapa con los principales atractivos naturales, patrimoniales y culturales del
+                            Valle del Aconcagua. Descárgalo para planificar tu recorrido por la zona antes o después de
+                            visitar el cerro.</p>
+                        <!-- Reemplazar # por el link al PDF -->
+                        <a href="#" class="btn-primary-medium btn-primary-medium--tall btn-download">
+                            <img src="icons/download.svg" alt="" width="20" height="20" onerror="this.remove()">
+                            Descargar
+                        </a>
+                    </div>
                 </div>
+
+                <!-- PUBLICACION 3 -->
+                <div class="publicacion-slide" aria-hidden="true" inert>
+                    <div class="publicacion-covers">
+                        <button class="cover cover--left" type="button" data-go="0" aria-label="Ver Guía de Biodiversidad"><img src="img/guia-biodiversidad-1.png" alt=""></button>
+                        <button class="cover cover--right" type="button" data-go="1" aria-label="Ver Mapa Turismo Aconcagua"><img src="img/guia-biodiversidad-2.png" alt=""></button>
+                        <div class="cover cover--front cover--pendiente"></div>
+                    </div>
+
+                    <div class="publicacion-content">
+                        <p class="publicacion-eyebrow">Fauna</p>
+                        <h3 class="publicacion-title">Aves de San Felipe</h3>
+                        <p class="publicacion-text">Guía para reconocer las aves que habitan San Felipe y el Valle del Aconcagua.
+                            Llévala en tu visita al cerro y aprende a identificar las especies que puedes observar en sus
+                            senderos.</p>
+                        <!-- Reemplazar # por el link al PDF -->
+                        <a href="#" class="btn-primary-medium btn-primary-medium--tall btn-download">
+                            <img src="icons/download.svg" alt="" width="20" height="20" onerror="this.remove()">
+                            Descargar
+                        </a>
+                    </div>
+                </div>
+                <!-- Portada de Aves pendiente: en Figma todavía es un rectángulo naranjo -->
             </div>
         </div>
     </section>
@@ -319,21 +395,140 @@
         });
     </script>
     <script>
-        // Cómo llegar: cambia el texto según el origen
-        // Textos pendientes: reemplazar por las indicaciones reales de cada origen
+        // Cómo llegar: datos de cada origen (textos del Figma)
+        // OJO: en el Figma San Felipe, Valparaíso, Los Andes y Mendoza repiten "90 km / 1h 20 min" (revisar)
         const rutas = {
-            '': 'Conoce cómo llegar desde diferentes procedencias',
-            'santiago': 'Indicaciones desde Santiago (texto pendiente).',
-            'valparaiso': 'Indicaciones desde Valparaíso (texto pendiente).',
-            'los-andes': 'Indicaciones desde Los Andes (texto pendiente).'
+            'santiago': {
+                nombre: 'Santiago',
+                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                subtitulo: 'En bus',
+                texto: 'Toma un bus interurbano desde Santiago hacia San Felipe (aprox. 1 h 30 min). Desde San Felipe, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+            },
+            'curimon': {
+                nombre: 'Curimón',
+                datos: [['Distancia', '1,3 km'], ['A pie', '17 min']],
+                subtitulo: 'Cómo llegar a pie',
+                texto: 'Desde el centro de Curimón, camina aprox. 17 minutos (1,3 km) hasta la entrada del parque en Coronel Santiago Bueras 826. Te recomendamos llevar agua, protector solar y calzado cómodo.'
+            },
+            'san-felipe': {
+                nombre: 'San Felipe',
+                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                subtitulo: 'En bus',
+                texto: 'Desde San Felipe, toma un colectivo o bus local con destino a Curimón (aprox. 15 min). Bájate en el centro del pueblo y camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+            },
+            'valparaiso': {
+                nombre: 'Valparaíso',
+                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                subtitulo: 'En bus',
+                texto: 'Toma un bus interurbano desde Valparaíso hacia San Felipe (aprox. 2 h). Desde el terminal, continúa en colectivo o bus local hasta Curimón y camina hasta la entrada del parque.'
+            },
+            'los-andes': {
+                nombre: 'Los Andes',
+                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                subtitulo: 'En bus',
+                texto: 'Desde Los Andes, toma un bus o colectivo con dirección a San Felipe y pide bajarte en Curimón (aprox. 20 min). Desde ahí, camina hasta la entrada del parque en Coronel Santiago Bueras 826.'
+            },
+            'mendoza': {
+                nombre: 'Mendoza',
+                datos: [['Distancia', '90 km'], ['Tiempo en auto', '1h 20 min']],
+                subtitulo: 'En bus',
+                texto: 'Cruza la cordillera en bus internacional por el Paso Los Libertadores hasta Los Andes. Desde ahí, continúa en bus o colectivo hacia San Felipe y bájate en Curimón.'
+            }
         };
 
-        const origen = document.querySelector('#origen');
-        const origenText = document.querySelector('#origenText');
+        const destino = 'Coronel Santiago Bueras 826, Curimón, San Felipe';
+        const dropdown = document.querySelector('#dropdownOrigen');
+        const dropdownButton = dropdown.querySelector('.dropdown-button');
+        const dropdownLabel = dropdown.querySelector('.dropdown-label');
 
-        origen.addEventListener('change', function () {
-            origenText.textContent = rutas[origen.value];
+        function cerrarDropdown() {
+            dropdown.classList.remove('is-open');
+            dropdownButton.setAttribute('aria-expanded', 'false');
+        }
+
+        // Abrir / cerrar
+        dropdownButton.addEventListener('click', function () {
+            const isOpen = dropdown.classList.toggle('is-open');
+            dropdownButton.setAttribute('aria-expanded', isOpen);
         });
+
+        // Elegir un origen
+        dropdown.querySelectorAll('.dropdown-option').forEach(option => {
+            option.addEventListener('click', function () {
+                const ruta = rutas[option.dataset.origen];
+
+                dropdownLabel.textContent = ruta.nombre;
+                dropdown.classList.add('has-value');
+
+                document.querySelector('#rutaLabel1').textContent = ruta.datos[0][0];
+                document.querySelector('#rutaValue1').textContent = ruta.datos[0][1];
+                document.querySelector('#rutaLabel2').textContent = ruta.datos[1][0];
+                document.querySelector('#rutaValue2').textContent = ruta.datos[1][1];
+                document.querySelector('#rutaSubtitle').textContent = ruta.subtitulo;
+                document.querySelector('#rutaText').textContent = ruta.texto;
+
+                document.querySelector('#rutaDefault').hidden = true;
+                document.querySelector('#rutaDetalle').hidden = false;
+
+                // Google Maps abre la ruta desde el origen elegido
+                document.querySelector('#linkMaps').href = 'https://www.google.com/maps/dir/?api=1&origin='
+                    + encodeURIComponent(ruta.nombre) + '&destination=' + encodeURIComponent(destino);
+
+                cerrarDropdown();
+            });
+        });
+
+        // Si hiciste clic fuera del dropdown, se cierra
+        document.addEventListener('click', function (event) {
+            if (!dropdown.contains(event.target)) {
+                cerrarDropdown();
+            }
+        });
+    </script>
+    <script>
+        // Publicaciones: se funden de una a otra (Dissolve del prototipo en Figma)
+        const slides = document.querySelectorAll('.publicacion-slide');
+        const pubSection = document.querySelector('.publicacion');
+        let activa = 0;
+
+        function mostrarPublicacion(nueva) {
+            if (nueva === activa) return;
+
+            slides[activa].classList.remove('is-active');
+            slides[activa].setAttribute('aria-hidden', 'true');
+            slides[activa].inert = true;
+
+            slides[nueva].classList.add('is-active');
+            slides[nueva].removeAttribute('aria-hidden');
+            slides[nueva].inert = false;
+
+            activa = nueva;
+        }
+
+        // Clic en una portada de atrás
+        document.querySelectorAll('.cover[data-go]').forEach(cover => {
+            cover.addEventListener('click', function () {
+                mostrarPublicacion(Number(cover.dataset.go));
+                iniciarAutoplay();
+            });
+        });
+
+        // Avanza solo cada 5 segundos (se pausa con el mouse encima)
+        const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let autoplay = null;
+
+        function iniciarAutoplay() {
+            if (reducirMovimiento) return;
+            clearInterval(autoplay);
+            autoplay = setInterval(() => {
+                mostrarPublicacion((activa + 1) % slides.length);
+            }, 5000);
+        }
+
+        pubSection.addEventListener('mouseenter', () => clearInterval(autoplay));
+        pubSection.addEventListener('mouseleave', iniciarAutoplay);
+
+        iniciarAutoplay();
     </script>
     <script>
         // Formulario del footer (todavía no envía a ningún lado)
