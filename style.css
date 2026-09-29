@@ -3177,6 +3177,10 @@ button.cover:hover {
     overflow: hidden;
 }
 
+.mapa-marco {
+    width: 100%;
+}
+
 .mapa-escena {
     position: relative;
     /* El cerro se achica en pantallas bajas para que toda la página quepa en la pantalla */
@@ -3545,7 +3549,7 @@ button.cover:hover {
         align-items: stretch;
         justify-content: center;
         min-height: 0;
-        padding: 24px 0 80px 0;
+        padding: 40px 0 32px 0;
     }
 
     .mapa-escena {
@@ -3555,6 +3559,14 @@ button.cover:hover {
     .mapa-volver {
         left: 16px;
         top: 8px;
+    }
+
+    /* El cerro acercado no se sale de su espacio */
+    .mapa-marco {
+        display: flex;
+        align-items: center;
+        height: 220px;
+        overflow: hidden;
     }
 
     /* En celular la galería va debajo del cerro */
