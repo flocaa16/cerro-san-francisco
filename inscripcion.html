@@ -9,7 +9,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=19" />
+    <link rel="stylesheet" href="style.css?v=20" />
 
 </head>
 
@@ -72,15 +72,94 @@
                             acceder a premios y beneficios en distintos espacios del Valle.</p>
                     </div>
                 </div>
-
-                <!-- Reemplazar # por el link del formulario de inscripción de cada evento (en los datos de abajo) -->
-                <a href="#" class="btn-primary-medium btn-primary-medium--tall btn-inscribirme" id="eventoLink"
-                    target="_blank" rel="noopener noreferrer">Inscribirme</a>
+                <button type="button" class="btn-primary-medium btn-primary-medium--tall btn-inscribirme"
+                    id="btnInscribirme" aria-haspopup="dialog">Inscribirme</button>
             </div>
         </article>
     </main>
     <!-- INSCRIPCION -->
 
+
+    <!-- MODAL INSCRIPCION (mismo estilo que "Modal - Formulario de Contacto" del Figma) -->
+    <dialog class="modal" id="modalInscripcion" aria-labelledby="modalTitulo">
+        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">✕</button>
+
+        <!-- Paso 1: formulario -->
+        <form class="modal-form" id="formInscripcion" novalidate>
+            <h2 class="modal-title" id="modalTitulo">Inscripción</h2>
+            <p class="modal-subtitle">Completa tus datos para inscribirte en <strong id="modalEvento">Ruta de las Aves de
+                    San Felipe</strong>.</p>
+
+            <div class="modal-row">
+                <div class="campo">
+                    <label for="insNombre" class="campo-label">Nombre</label>
+                    <input id="insNombre" name="nombre" type="text" class="campo-input" placeholder="Tu nombre"
+                        autocomplete="given-name" required>
+                    <p class="campo-error" id="insNombreError"></p>
+                </div>
+                <div class="campo">
+                    <label for="insApellido" class="campo-label">Apellido</label>
+                    <input id="insApellido" name="apellido" type="text" class="campo-input" placeholder="Tu apellido"
+                        autocomplete="family-name" required>
+                    <p class="campo-error" id="insApellidoError"></p>
+                </div>
+            </div>
+
+            <div class="modal-row">
+                <div class="campo">
+                    <label for="insCorreo" class="campo-label">Correo electrónico</label>
+                    <input id="insCorreo" name="correo" type="email" class="campo-input" placeholder="tu@email.com"
+                        autocomplete="email" required>
+                    <p class="campo-error" id="insCorreoError"></p>
+                </div>
+                <div class="campo">
+                    <label for="insTelefono" class="campo-label">Teléfono</label>
+                    <input id="insTelefono" name="telefono" type="tel" class="campo-input" placeholder="+56 9 1234 5678"
+                        autocomplete="tel" required>
+                    <p class="campo-error" id="insTelefonoError"></p>
+                </div>
+            </div>
+
+            <div class="modal-row">
+                <div class="campo">
+                    <label for="insComuna" class="campo-label">Comuna</label>
+                    <input id="insComuna" name="comuna" type="text" class="campo-input" placeholder="Tu comuna"
+                        autocomplete="address-level2" required>
+                    <p class="campo-error" id="insComunaError"></p>
+                </div>
+                <div class="campo">
+                    <label for="insPersonas" class="campo-label">Número de personas</label>
+                    <select id="insPersonas" name="personas" class="campo-input campo-select">
+                        <option value="1">1 persona</option>
+                        <option value="2">2 personas</option>
+                        <option value="3">3 personas</option>
+                        <option value="4">4 personas</option>
+                        <option value="5">5 personas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="insComentario" class="campo-label">Comentarios (opcional)</label>
+                <textarea id="insComentario" name="comentario" class="campo-input campo-textarea"
+                    placeholder="¿Algo que debamos saber? (necesidades de accesibilidad, edad de niños, etc.)"></textarea>
+            </div>
+
+            <input type="hidden" name="evento" id="insEvento" value="Ruta de las Aves de San Felipe">
+
+            <p class="modal-error" id="modalError" role="alert"></p>
+            <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-submit">Enviar inscripción</button>
+        </form>
+
+        <!-- Paso 2: confirmación (como "Mensaje Enviado" del Figma) -->
+        <div class="modal-exito" id="modalExito" hidden>
+            <h2 class="modal-title">Inscripción recibida</h2>
+            <p class="modal-exito-text" id="modalExitoTexto"></p>
+            <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-submit"
+                data-cerrar>Aceptar</button>
+        </div>
+    </dialog>
+    <!-- MODAL INSCRIPCION -->
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -171,7 +250,6 @@
                     'Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San Francisco de Curimón, donde recorreremos senderos, observaremos aves y descubriremos más sobre la biodiversidad del Valle del Aconcagua.',
                     'Además, podrás obtener tu Minipasaporte de la Ruta de las Aves e ir reuniendo timbres para acceder a premios y beneficios en distintos espacios del Valle.'
                 ],
-                link: '#'
             },
             'nubes': {
                 titulo: 'Caminata y Taller de observación e interpretación de nubes',
@@ -181,7 +259,6 @@
                 img: 'img/evento-nubes.png',
                 // Texto pendiente: en el Figma solo está la descripción de la Ruta de las Aves
                 texto: [],
-                link: '#'
             }
         };
 
@@ -217,7 +294,6 @@
             document.querySelector('#eventoHora').textContent = evento.hora;
             document.querySelector('#eventoImg').src = evento.img;
             document.querySelector('#eventoImg').alt = evento.titulo;
-            document.querySelector('#eventoLink').href = evento.link;
 
             const texto = document.querySelector('#eventoTexto');
             texto.innerHTML = '';
@@ -227,6 +303,116 @@
                 texto.appendChild(p);
             });
         }
+    </script>
+
+    <script>
+        // Modal de inscripción
+        // Para recibir las inscripciones, crear un formulario en https://formspree.io (gratis)
+        // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
+        const FORM_ENDPOINT = '';
+
+        const modal = document.querySelector('#modalInscripcion');
+        const form = document.querySelector('#formInscripcion');
+        const exito = document.querySelector('#modalExito');
+        const modalError = document.querySelector('#modalError');
+        const tituloEvento = document.querySelector('#eventoTitulo').textContent;
+
+        document.querySelector('#modalEvento').textContent = tituloEvento;
+        document.querySelector('#insEvento').value = tituloEvento;
+
+        // Abrir
+        document.querySelector('#btnInscribirme').addEventListener('click', () => {
+            form.hidden = false;
+            exito.hidden = true;
+            modal.showModal();
+            document.querySelector('#insNombre').focus();
+        });
+
+        // Cerrar con la X, con "Aceptar" o haciendo clic fuera del modal
+        modal.querySelectorAll('[data-cerrar]').forEach(boton => {
+            boton.addEventListener('click', () => modal.close());
+        });
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) modal.close();
+        });
+
+        // Validación de cada campo obligatorio
+        const mensajes = {
+            valueMissing: 'Este campo es obligatorio.',
+            typeMismatch: 'Escribe un correo válido, por ejemplo nombre@email.com.',
+            tooShort: 'Revisa este dato.'
+        };
+
+        function validarCampo(input) {
+            const error = document.querySelector('#' + input.id + 'Error');
+            if (!error) return true;
+
+            let mensaje = '';
+            if (input.validity.valueMissing) mensaje = mensajes.valueMissing;
+            else if (input.validity.typeMismatch) mensaje = mensajes.typeMismatch;
+            else if (input.type === 'tel' && input.value.replace(/\D/g, '').length < 8) {
+                mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
+            }
+
+            error.textContent = mensaje;
+            input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+            if (mensaje) input.setAttribute('aria-describedby', error.id);
+            return !mensaje;
+        }
+
+        form.querySelectorAll('[required]').forEach(input => {
+            input.addEventListener('blur', () => validarCampo(input));
+            input.addEventListener('input', () => {
+                if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
+            });
+        });
+
+        // Enviar
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            modalError.textContent = '';
+
+            const campos = [...form.querySelectorAll('[required]')];
+            const validos = campos.map(validarCampo);
+            if (validos.includes(false)) {
+                campos[validos.indexOf(false)].focus();
+                return;
+            }
+
+            const boton = form.querySelector('.modal-submit');
+            boton.disabled = true;
+            boton.textContent = 'Enviando...';
+
+            try {
+                if (FORM_ENDPOINT) {
+                    const respuesta = await fetch(FORM_ENDPOINT, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (!respuesta.ok) throw new Error('No se pudo enviar');
+                } else {
+                    // Todavía sin conexión: solo se muestra la confirmación (modo prueba)
+                    console.warn('Inscripción de prueba: falta configurar FORM_ENDPOINT.');
+                }
+
+                const nombre = document.querySelector('#insNombre').value.trim();
+                const correo = document.querySelector('#insCorreo').value.trim();
+                document.querySelector('#modalExitoTexto').textContent =
+                    'Gracias, ' + nombre + '. Recibimos tu inscripción a ' + tituloEvento +
+                    '. Te escribiremos a ' + correo + ' con los detalles del encuentro.';
+
+                form.reset();
+                form.hidden = true;
+                exito.hidden = false;
+                exito.querySelector('.modal-submit').focus();
+            } catch (error) {
+                modalError.textContent = 'No pudimos enviar tu inscripción. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
+            } finally {
+                boton.disabled = false;
+                boton.textContent = 'Enviar inscripción';
+            }
+        });
     </script>
 
 </body>
