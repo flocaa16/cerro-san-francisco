@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /perfil
+
+Sitemap: https://cerrosanfrancisco.cl/sitemap.xml
