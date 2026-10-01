@@ -25,7 +25,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="header-logo">
+            <a href="./" class="header-logo">
                 <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
             </a>
 
@@ -37,10 +37,10 @@
 
             <nav class="header-nav" id="headerNav">
                 <ul class="nav-list">
-                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
-                    <li><a class="nav-button nav-button--active" href="mapa.html" aria-current="page">Mapa</a></li>
-                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
-                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                    <li><a class="nav-button" href="cerro">Cerro</a></li>
+                    <li><a class="nav-button nav-button--active" href="mapa" aria-current="page">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos">Amigos del Cerro</a></li>
                 </ul>
 
                 <!-- Redes sociales (como en fundacionlepe.cl) -->
@@ -110,7 +110,7 @@
                 <div class="mapa-acciones">
                     <a href="https://www.google.com/maps/dir/?api=1&amp;destination=-32.78572,-70.68424"
                         class="btn-primary-medium" target="_blank" rel="noopener">Cómo llegar</a>
-                    <a href="visita-autoguiada.html" class="btn-outline-medium">Visita autoguiada</a>
+                    <a href="visita-autoguiada" class="btn-outline-medium">Visita autoguiada</a>
                 </div>
             </div>
 
@@ -175,7 +175,7 @@
 
                     <p class="mapa-detalle-text" id="detalleTexto"></p>
 
-                    <a href="visita-autoguiada.html" class="btn-outline-medium mapa-detalle-link" id="detalleLink"></a>
+                    <a href="visita-autoguiada" class="btn-outline-medium mapa-detalle-link" id="detalleLink"></a>
 
                 </div>
             </div>
@@ -204,10 +204,10 @@
                 </div>
 
                 <ul class="footer-nav">
-                    <li><a class="footer-link" href="index.html">Inicio</a></li>
-                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
-                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
-                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="./">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades">Actividades</a></li>
                 </ul>
 
                 <div class="footer-horarios">
@@ -326,7 +326,7 @@
                 resumen: 'Inicio del recorrido',
                 // Texto provisorio
                 texto: 'Comienza en la base del cerro y sube por la ladera poniente hasta la cima. A lo largo del camino hay paneles informativos sobre la flora, la fauna y la historia del lugar.',
-                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' },
+                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada' },
                 fotos: [
                     { src: 'img/sendero-principal.png', alt: 'Panel de bienvenida al inicio del sendero' },
                     { src: 'img/visita-autoguiada.png', alt: 'Visitante caminando por el sendero' },
@@ -343,7 +343,7 @@
                 resumen: 'Bosque de cipreses en la cima',
                 // Texto del Figma
                 texto: 'La cima del cerro, conocida como Catedral Verde, es un bosque de cipreses que da sombra y refugio a quienes la visitan. Aquí se realizan actividades comunitarias, patrimoniales y educativas, y desde el sector norte se obtiene una vista de 360° del valle, el río y la cordillera.',
-                link: { texto: 'Conoce los atractivos', href: 'cerro.html' },
+                link: { texto: 'Conoce los atractivos', href: 'cerro' },
                 fotos: [
                     { src: 'img/catedral-verde.png', alt: 'Cipreses de la Catedral Verde' },
                     { src: 'img/banner-cerro.png', alt: 'Cima del cerro con el bosque de cipreses' },
@@ -360,7 +360,7 @@
                 resumen: 'Vista al Valle del Aconcagua',
                 // Texto provisorio
                 texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
-                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada.html' },
+                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada' },
                 fotos: [
                     { src: 'img/mirador.jpg', alt: 'Cruz del mirador y dos visitantes sentados en la baranda, con la cordillera de fondo' }
                 ]
@@ -583,7 +583,7 @@
             }
 
             if (!sinHistorial) {
-                history.replaceState(null, '', hayPunto ? '#' + puntos[actual].id : 'mapa.html');
+                history.replaceState(null, '', hayPunto ? '#' + puntos[actual].id : 'mapa');
             }
         }
 
@@ -599,7 +599,7 @@
             if (event.key === 'Escape') elegir(-1);
         });
 
-        // Si se llega con un punto en la dirección (por ejemplo mapa.html#mirador), se abre ese punto
+        // Si se llega con un punto en la dirección (por ejemplo mapa#mirador), se abre ese punto
         function abrirDesdeDireccion() {
             const indice = puntos.findIndex(punto => '#' + punto.id === window.location.hash);
             elegir(indice, true);

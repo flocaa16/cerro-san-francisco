@@ -22,7 +22,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="header-logo">
+            <a href="./" class="header-logo">
                 <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
             </a>
 
@@ -34,10 +34,10 @@
 
             <nav class="header-nav" id="headerNav">
                 <ul class="nav-list">
-                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
-                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
-                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
-                    <li><a class="nav-button nav-button--active" href="amigos.html" aria-current="page">Amigos del Cerro</a></li>
+                    <li><a class="nav-button" href="cerro">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades">Actividades</a></li>
+                    <li><a class="nav-button nav-button--active" href="amigos" aria-current="page">Amigos del Cerro</a></li>
                 </ul>
 
                 <!-- Redes sociales (como en fundacionlepe.cl) -->
@@ -131,7 +131,7 @@
                     <p class="acceso-aviso" id="googleAviso" role="status"></p>
                 </form>
 
-                <p class="acceso-cambio">¿No tienes una cuenta? <a href="amigos.html?vista=crear"
+                <p class="acceso-cambio">¿No tienes una cuenta? <a href="amigos?vista=crear"
                         class="acceso-cambio-link" data-vista="crear">Crea una</a></p>
             </section>
             <!-- Iniciar sesión -->
@@ -230,7 +230,7 @@
                         cuenta</button>
                 </form>
 
-                <p class="acceso-cambio">¿Ya tienes una cuenta? <a href="amigos.html" class="acceso-cambio-link acceso-cambio-link--gris"
+                <p class="acceso-cambio">¿Ya tienes una cuenta? <a href="amigos" class="acceso-cambio-link acceso-cambio-link--gris"
                         data-vista="ingresar">Inicia sesión</a></p>
             </section>
             <!-- Crear cuenta -->
@@ -255,7 +255,7 @@
             <h2 class="modal-title" id="bienvenidaTitulo">¡Te damos la bienvenida a Amigos del Cerro!</h2>
             <p class="modal-subtitle">Tu cuenta fue creada. Completa tu perfil y agrega a las personas con las que
                 visitas el cerro para inscribirlas más rápido en los eventos.</p>
-            <a href="perfil.html" class="btn-primary-medium btn-primary-medium--tall modal-btn">Ir a mi perfil</a>
+            <a href="perfil" class="btn-primary-medium btn-primary-medium--tall modal-btn">Ir a mi perfil</a>
         </div>
     </dialog>
     <!-- MODAL CUENTA CREADA -->
@@ -281,10 +281,10 @@
                 </div>
 
                 <ul class="footer-nav">
-                    <li><a class="footer-link" href="index.html">Inicio</a></li>
-                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
-                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
-                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="./">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades">Actividades</a></li>
                 </ul>
 
                 <div class="footer-horarios">
@@ -408,7 +408,7 @@
 
         // Si ya hay sesión, se va directo al perfil
         if (Cuenta.obtener()) {
-            window.location.replace('perfil.html');
+            window.location.replace('perfil');
         }
 
         // Cambiar entre "Iniciar sesión" y "Crear cuenta"
@@ -436,7 +436,7 @@
             link.addEventListener('click', (event) => {
                 event.preventDefault();
                 const vista = link.dataset.vista;
-                history.replaceState(null, '', vista === 'crear' ? '?vista=crear' : 'amigos.html');
+                history.replaceState(null, '', vista === 'crear' ? '?vista=crear' : 'amigos');
                 mostrarVista(vista, true);
             });
         });
@@ -463,7 +463,7 @@
             if (!validarFormulario(event.target)) return;
 
             Cuenta.iniciar(document.querySelector('#ingCorreo').value.trim(), document.querySelector('#ingMantener').checked);
-            window.location.href = 'perfil.html';
+            window.location.href = 'perfil';
         });
 
         // Iniciar sesión o crear la cuenta con Google (Google Identity Services)
@@ -508,7 +508,7 @@
             // Si ya tenía cuenta con ese correo, entra; si no, se crea en un paso
             if (Cuenta.existe(datos.email)) {
                 Cuenta.iniciar(datos.email, mantener);
-                window.location.href = 'perfil.html';
+                window.location.href = 'perfil';
                 return;
             }
 
@@ -528,7 +528,7 @@
             googleAviso.textContent = '';
 
             if (!GOOGLE_CLIENT_ID) {
-                googleAviso.textContent = 'Falta configurar el ingreso con Google (GOOGLE_CLIENT_ID en amigos.html).';
+                googleAviso.textContent = 'Falta configurar el ingreso con Google (GOOGLE_CLIENT_ID en amigos).';
                 return;
             }
 
@@ -560,10 +560,10 @@
 
         // Al cerrar la bienvenida también se va al perfil
         modalBienvenida.querySelector('[data-cerrar]').addEventListener('click', () => {
-            window.location.href = 'perfil.html';
+            window.location.href = 'perfil';
         });
         modalBienvenida.addEventListener('cancel', () => {
-            window.location.href = 'perfil.html';
+            window.location.href = 'perfil';
         });
     </script>
 

@@ -22,7 +22,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="header-logo">
+            <a href="./" class="header-logo">
                 <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
             </a>
 
@@ -34,10 +34,10 @@
 
             <nav class="header-nav" id="headerNav">
                 <ul class="nav-list">
-                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
-                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
-                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
-                    <li><a class="nav-button nav-button--active" href="amigos.html" aria-current="page">Amigos del Cerro</a></li>
+                    <li><a class="nav-button" href="cerro">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades">Actividades</a></li>
+                    <li><a class="nav-button nav-button--active" href="amigos" aria-current="page">Amigos del Cerro</a></li>
                 </ul>
 
                 <!-- Redes sociales (como en fundacionlepe.cl) -->
@@ -311,10 +311,10 @@
                 </div>
 
                 <ul class="footer-nav">
-                    <li><a class="footer-link" href="index.html">Inicio</a></li>
-                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
-                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
-                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="./">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades">Actividades</a></li>
                 </ul>
 
                 <div class="footer-horarios">
@@ -386,7 +386,7 @@
         // Sin sesión no se puede ver el perfil
         let cuenta = Cuenta.obtener();
         if (!cuenta) {
-            window.location.replace('amigos.html');
+            window.location.replace('amigos');
         }
 
         // Validación de campos (mismos mensajes que la inscripción)
@@ -526,7 +526,7 @@
             const acciones = document.createElement('div');
             acciones.className = 'cuenta-acciones';
             const detalle = texto('a', 'link-accion', 'Ver detalle');
-            detalle.href = evento.finalizado ? 'actividades.html' : 'inscripcion.html?evento=' + inscripcion.evento + '&desde=perfil';
+            detalle.href = evento.finalizado ? 'actividades' : 'inscripcion?evento=' + inscripcion.evento + '&desde=perfil';
             detalle.setAttribute('aria-label', 'Ver detalle de ' + evento.titulo);
             acciones.appendChild(detalle);
 
@@ -775,7 +775,7 @@
         // Cerrar sesión
         document.querySelector('#btnCerrarSesion').addEventListener('click', () => {
             Cuenta.cerrar();
-            window.location.href = 'amigos.html';
+            window.location.href = 'amigos';
         });
 
         if (cuenta) {

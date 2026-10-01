@@ -22,7 +22,7 @@
     <!-- HEADER -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="header-logo">
+            <a href="./" class="header-logo">
                 <img src="img/logo-curimon.png" alt="Cerro San Francisco de Curimón">
             </a>
 
@@ -34,10 +34,10 @@
 
             <nav class="header-nav" id="headerNav">
                 <ul class="nav-list">
-                    <li><a class="nav-button" href="cerro.html">Cerro</a></li>
-                    <li><a class="nav-button" href="mapa.html">Mapa</a></li>
-                    <li><a class="nav-button" href="actividades.html">Actividades</a></li>
-                    <li><a class="nav-button" href="amigos.html">Amigos del Cerro</a></li>
+                    <li><a class="nav-button" href="cerro">Cerro</a></li>
+                    <li><a class="nav-button" href="mapa">Mapa</a></li>
+                    <li><a class="nav-button" href="actividades">Actividades</a></li>
+                    <li><a class="nav-button" href="amigos">Amigos del Cerro</a></li>
                 </ul>
 
                 <!-- Redes sociales (como en fundacionlepe.cl) -->
@@ -60,7 +60,7 @@
     <!-- INSCRIPCION -->
     <main class="inscripcion">
         <nav class="breadcrumb breadcrumb--claro" aria-label="Estás en">
-            <a href="index.html" class="breadcrumb-link" id="migaOrigen">Inicio</a>
+            <a href="./" class="breadcrumb-link" id="migaOrigen">Inicio</a>
             <span class="breadcrumb-sep" aria-hidden="true">|</span>
             <span class="breadcrumb-actual" aria-current="page" id="eventoMigas">Ruta de las Aves de San Felipe</span>
         </nav>
@@ -159,7 +159,7 @@
                     <p class="campo-error" id="loginClaveError"></p>
                 </div>
 
-                <a href="amigos.html" class="modal-link modal-link--izquierda">¿Olvidaste tu contraseña?</a>
+                <a href="amigos" class="modal-link modal-link--izquierda">¿Olvidaste tu contraseña?</a>
                 <p class="modal-error" role="alert"></p>
                 <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn">Iniciar
                     sesión</button>
@@ -354,10 +354,10 @@
                 </div>
 
                 <ul class="footer-nav">
-                    <li><a class="footer-link" href="index.html">Inicio</a></li>
-                    <li><a class="footer-link" href="cerro.html">Cerro</a></li>
-                    <li><a class="footer-link" href="mapa.html">Mapa</a></li>
-                    <li><a class="footer-link" href="actividades.html">Actividades</a></li>
+                    <li><a class="footer-link" href="./">Inicio</a></li>
+                    <li><a class="footer-link" href="cerro">Cerro</a></li>
+                    <li><a class="footer-link" href="mapa">Mapa</a></li>
+                    <li><a class="footer-link" href="actividades">Actividades</a></li>
                 </ul>
 
                 <div class="footer-horarios">
@@ -426,7 +426,7 @@
     </script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
-        // La página se abre con inscripcion.html?evento=aves (o nubes, etc.)
+        // La página se abre con inscripcion?evento=aves (o nubes, etc.)
         const eventos = {
             'aves': {
                 titulo: 'Ruta de las Aves de San Felipe',
@@ -467,15 +467,15 @@
 
         // Ruta de navegación: muestra la página desde la que se llegó (Inicio o Actividades)
         const origenes = {
-            'inicio': { texto: 'Inicio', href: 'index.html' },
-            'actividades': { texto: 'Actividades', href: 'actividades.html' },
-            'perfil': { texto: 'Mis inscripciones', href: 'perfil.html#inscripciones' }
+            'inicio': { texto: 'Inicio', href: './' },
+            'actividades': { texto: 'Actividades', href: 'actividades' },
+            'perfil': { texto: 'Mis inscripciones', href: 'perfil#inscripciones' }
         };
 
         let desde = params.get('desde');
 
         // Si el link no trae "desde", se usa la página anterior del navegador
-        if (!origenes[desde] && document.referrer.includes('actividades.html')) {
+        if (!origenes[desde] && document.referrer.includes('actividades')) {
             desde = 'actividades';
         }
 
@@ -578,7 +578,7 @@
             boton.addEventListener('click', () => modal.close());
         });
         modal.addEventListener('close', () => {
-            if (irACrearCuenta) window.location.href = 'amigos.html?vista=crear';
+            if (irACrearCuenta) window.location.href = 'amigos?vista=crear';
         });
         modal.addEventListener('click', (event) => {
             if (event.target === modal) modal.close();
