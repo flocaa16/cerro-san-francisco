@@ -28,54 +28,51 @@
 // ============================================================================
 
 const EVENTOS = {
-    'aves': {
-        titulo: 'Ruta de las Aves de San Felipe',
+    'taller-souvenir': {
+        titulo: 'Primer Taller del Souvenir Comunitario: Curimón en tus manos',
         estado: 'Inscripciones abiertas',
-        fecha: 'Sábado 13 junio',
-        fechaLarga: 'Sábado 13 de junio',
-        hora: '10 a 13 horas',
+        fecha: 'Jueves 8 octubre',
+        fechaLarga: 'Jueves 8 de octubre',
+        hora: 'Por confirmar',
         lugar: 'Parque Natural Cerro San Francisco',
-        inicio: '2026-06-13T10:00',
-        fin: '2026-06-13T13:00',
-        img: 'img/evento-aves.jpg',
-        alt: 'Ruta de las Aves de San Felipe',
+        inicio: '2026-10-08T10:00',
+        fin: '2026-10-08T13:00',
+        img: 'img/visita-inmersiva.jpg',
+        alt: 'Primer Taller del Souvenir Comunitario: Curimón en tus manos',
         finalizado: false,
         texto: [
-            '¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?',
-            'Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San Francisco de Curimón, donde recorreremos senderos, observaremos aves y descubriremos más sobre la biodiversidad del Valle del Aconcagua.',
-            'Además, podrás obtener tu Minipasaporte de la Ruta de las Aves e ir reuniendo timbres para acceder a premios y beneficios en distintos espacios del Valle.'
+            
         ],
     },
-    'nubes': {
-        titulo: 'Caminata y Taller de observación e interpretación de nubes',
+    'aves': {
+        titulo: 'Recorrido: Ruta de las Aves Santuario Serranía el Ciprés',
         estado: 'Inscripciones abiertas',
-        fecha: 'Sábado 25 julio',
-        fechaLarga: 'Sábado 25 de julio',
-        hora: '10 a 13 horas',
+        fecha: 'Sábado 10 octubre',
+        fechaLarga: 'Sábado 10 de octubre',
+        hora: 'Por confirmar',
         lugar: 'Parque Natural Cerro San Francisco',
-        inicio: '2026-07-25T10:00',
-        fin: '2026-07-25T13:00',
-        img: 'img/evento-nubes.jpg',
-        alt: 'Caminata y taller de observación de nubes',
+        inicio: '2026-10-10T10:00',
+        fin: '2026-10-10T13:00',
+        img: 'img/evento-aves-2.jpg',
+        alt: 'Recorrido: Ruta de las Aves Santuario Serranía el Ciprés',
         finalizado: false,
         // Texto pendiente: en el Figma solo está la descripción de la Ruta de las Aves
         texto: [
-            'Durante el recorrido por el cerro, los participantes aprenderán a reconocer distintos tipos de nubes, comprender cómo se originan la lluvia y las tormentas, y descubrir la estrecha relación que existe entre la atmósfera, el clima y el paisaje que nos rodea.',
-            'La actividad permitirá acercarse a estos fenómenos desde la observación directa y comprender que mirar con atención nuestro entorno también es una forma de conocer y conectarnos con el territorio.'
+    
         ],
     },
     'reforestacion': {
-        titulo: 'Jornada de reforestación comunitaria',
-        estado: 'Finalizado',
-        fecha: 'Sábado 16 mayo',
-        fechaLarga: 'Sábado 16 de mayo',
-        hora: '10 a 13 horas',
+        titulo: 'Caminata Muévete por tu Corazóna',
+        estado: 'Inscripciones abiertas',
+        fecha: 'Jueves 15 octubre',
+        fechaLarga: 'Jueves 15 de octubre',
+        hora: 'Por confirmar',
         lugar: 'Parque Natural Cerro San Francisco',
-        inicio: '2026-05-16T10:00',
-        fin: '2026-05-16T13:00',
-        img: 'img/tl-regeneracion-2023.jpg',
-        alt: 'Jornada de reforestación en el cerro',
-        finalizado: true,
+        inicio: '2026-10-15T10:00',
+        fin: '2026-10-15T13:00',
+        img: 'img/evento-caminata.jpg',
+        alt: 'Caminata Muévete por tu Corazóna',
+        finalizado: false,
         texto: []
     }
 };

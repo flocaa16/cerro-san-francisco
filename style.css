@@ -5521,3 +5521,28 @@ a.publicacion-item:hover .publicacion-item-icono {
     text-align: center;
     color: #4F5052;
 }
+
+/* Campo trampa contra spam (formularios de contacto): fuera de la pantalla */
+.campo-trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+/* Aviso del formulario del footer (enviado / error) */
+.footer-aviso {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #FFFFFF;
+}
+
+.footer-aviso:empty {
+    display: none;
+}
+
+.footer-aviso--error {
+    color: #FFD8D3;
+}

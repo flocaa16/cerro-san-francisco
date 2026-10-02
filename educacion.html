@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=51" />
+    <link rel="stylesheet" href="style.css?v=52" />
 
 </head>
 
@@ -190,6 +190,8 @@
             </div>
 
             <input type="hidden" name="asunto" value="Educación en la Naturaleza">
+            <!-- Campo trampa contra spam: las personas no lo ven -->
+            <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" aria-hidden="true">
             <p class="modal-error" role="alert"></p>
             <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn modal-btn--centro">Enviar
                 mensaje</button>
@@ -253,8 +255,14 @@
                     <p class="footer-title">Contáctanos</p>
                     <label for="footerNombre" class="footer-label">Nombre</label>
                     <input id="footerNombre" autocomplete="name" name="nombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerCorreo" class="footer-label">Correo</label>
+                    <input id="footerCorreo" autocomplete="email" name="correo" type="email" class="footer-input"
+                        placeholder="Para poder responderte">
+                    <!-- Campo trampa contra spam: las personas no lo ven -->
+                    <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" aria-hidden="true">
                     <label for="footerMensaje" class="footer-label">Mensaje</label>
                     <textarea id="footerMensaje" name="mensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <p class="footer-aviso" role="status"></p>
                     <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
                 </form>
             </div>
@@ -295,12 +303,7 @@
             }
         });
     </script>
-    <script>
-        // Formulario del footer (todavía no envía a ningún lado)
-        document.querySelector('#footerForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-        });
-    </script>
+    <script src="contacto.js?v=1"></script>
     <script>
         // Pestañas de la card Educación (Variant2 / Variant3 del componente)
         const tabs = document.querySelectorAll('.tab');
@@ -336,7 +339,8 @@
         // Modal "Formulario de Contacto"
         // Para recibir los mensajes, crear un formulario en https://formspree.io (gratis)
         // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
-        const FORM_ENDPOINT = '';
+        // Se envía a api/contacto.php, que lo reenvía al correo configurado en cPanel (config-cerro.php)
+        const FORM_ENDPOINT = 'api/contacto.php';
 
         const modalContacto = document.querySelector('#modalContacto');
         const formContacto = document.querySelector('#formContacto');
@@ -407,7 +411,10 @@
                         body: new FormData(formContacto),
                         headers: { 'Accept': 'application/json' }
                     });
-                    if (!respuesta.ok) throw new Error('No se pudo enviar');
+                    if (!respuesta.ok) {
+                        const resultado = await respuesta.json().catch(() => ({}));
+                        throw new Error(resultado.mensaje || 'No se pudo enviar');
+                    }
                 } else {
                     // Todavía sin conexión: solo se muestra la confirmación (modo prueba)
                     console.warn('Mensaje de prueba: falta configurar FORM_ENDPOINT.');
@@ -419,7 +426,8 @@
                 modalContacto.setAttribute('aria-labelledby', 'enviadoTitulo');
                 contactoEnviado.querySelector('button').focus();
             } catch (e) {
-                error.textContent = 'No pudimos enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
+                error.textContent = e.message && e.message !== 'Failed to fetch' && e.message !== 'No se pudo enviar' ? e.message :
+                    'No pudimos enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
             } finally {
                 boton.disabled = false;
                 boton.textContent = 'Enviar mensaje';

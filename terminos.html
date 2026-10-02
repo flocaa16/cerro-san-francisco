@@ -21,7 +21,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=51" />
+    <link rel="stylesheet" href="style.css?v=52" />
 
 </head>
 
@@ -205,8 +205,14 @@
                     <p class="footer-title">Contáctanos</p>
                     <label for="footerNombre" class="footer-label">Nombre</label>
                     <input id="footerNombre" autocomplete="name" name="nombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <label for="footerCorreo" class="footer-label">Correo</label>
+                    <input id="footerCorreo" autocomplete="email" name="correo" type="email" class="footer-input"
+                        placeholder="Para poder responderte">
+                    <!-- Campo trampa contra spam: las personas no lo ven -->
+                    <input type="text" name="sitio_web" class="campo-trampa" tabindex="-1" autocomplete="off" aria-hidden="true">
                     <label for="footerMensaje" class="footer-label">Mensaje</label>
                     <textarea id="footerMensaje" name="mensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <p class="footer-aviso" role="status"></p>
                     <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
                 </form>
             </div>
@@ -246,12 +252,7 @@
             }
         });
     </script>
-    <script>
-        // Formulario del footer (todavía no envía a ningún lado)
-        document.querySelector('#footerForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-        });
-    </script>
+    <script src="contacto.js?v=1"></script>
 
 </body>
 
