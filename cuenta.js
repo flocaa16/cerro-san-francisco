@@ -1,12 +1,18 @@
 // Cuenta de Amigo del Cerro (compartida por amigos.html, perfil.html e inscripcion.html)
 //
-// OJO: GitHub Pages no tiene servidor, así que esto es una versión de prueba.
-// Los datos se guardan solo en el navegador de cada persona (localStorage).
-// Para cuentas reales hay que conectar un servicio como Firebase o Supabase.
+// Las cuentas y las inscripciones se guardan en Supabase (https://supabase.com).
+// Necesita que la página cargue antes la librería:
+// <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+// ⚙️ CONFIGURACIÓN: en Supabase → Project Settings → API (o "Connect")
+// Pega la "Project URL" y la clave pública "anon" / "publishable".
+// La clave pública SÍ puede ir en el código: los datos los protegen las reglas (RLS) de supabase.sql.
+// ⚠️ NUNCA pegues aquí la clave "service_role" / "secret".
+const SUPABASE_URL = '';
+const SUPABASE_ANON_KEY = '';
 
 const Cuenta = (function () {
-    const CLAVE_SESION = 'amigosSesion';
-    const CLAVE_REGISTRO = 'amigosRegistro';
+    const CLAVE_MANTENER = 'amigosMantener';
 
     // Eventos que pueden aparecer en "Mis inscripciones"
     const eventos = {
@@ -30,90 +36,233 @@ const Cuenta = (function () {
         }
     };
 
-    // Perfil de ejemplo (el del Figma) para cuando se inicia sesión sin haber creado cuenta
-    function perfilDemo(correo) {
-        return {
-            nombre: 'María',
-            apellido: 'González',
-            correo: correo,
-            telefono: '+56 9 1234 5678',
-            comuna: 'San Felipe',
-            nacimiento: '14/03/1992',
-            personas: [
-                { id: 1, nombre: 'Tomás', apellido: 'González', relacion: 'Hijo', nacimiento: '02/05/2016', correo: '', elegida: true },
-                { id: 2, nombre: 'Ana', apellido: 'Pérez', relacion: 'Amiga', nacimiento: '08/11/1996', correo: '', elegida: false }
-            ],
-            inscripciones: [
-                { evento: 'aves', personas: ['María González', 'Tomás González'] },
-                { evento: 'nubes', personas: ['María González'] },
-                { evento: 'reforestacion', personas: ['María González', 'Ana Pérez'] }
-            ]
-        };
-    }
-
     // Lectura y escritura segura (el navegador puede bloquear el almacenamiento)
-    function leer(almacen, clave) {
-        try {
-            return JSON.parse(almacen.getItem(clave));
-        } catch (e) {
-            return null;
-        }
+    function intentar(fn) {
+        try { return fn(); } catch (e) { return null; }
     }
 
-    function escribir(almacen, clave, valor) {
-        try {
-            if (valor === null) almacen.removeItem(clave);
-            else almacen.setItem(clave, JSON.stringify(valor));
-        } catch (e) {
-            // Sin almacenamiento: la sesión dura solo mientras la página esté abierta
-        }
+    // "Mantener sesión iniciada": si está marcado, la sesión queda en localStorage;
+    // si no, en sessionStorage (se borra al cerrar el navegador)
+    function mantener() {
+        return intentar(() => localStorage.getItem(CLAVE_MANTENER)) !== 'no';
     }
+
+    const almacen = {
+        getItem: (k) => intentar(() => localStorage.getItem(k)) || intentar(() => sessionStorage.getItem(k)),
+        setItem: (k, v) => intentar(() => (mantener() ? localStorage : sessionStorage).setItem(k, v)),
+        removeItem: (k) => {
+            intentar(() => localStorage.removeItem(k));
+            intentar(() => sessionStorage.removeItem(k));
+        }
+    };
+
+    const configurado = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
+    if (!configurado) {
+        console.error('Amigos del Cerro: falta configurar SUPABASE_URL y SUPABASE_ANON_KEY en cuenta.js, ' +
+            'o no cargó la librería de Supabase.');
+    }
+
+    const db = configurado
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { storage: almacen, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        })
+        : null;
 
     let memoria = null;
 
-    // Devuelve la cuenta con sesión iniciada (o null)
+    function sinConexion() {
+        return new Error('El sistema de cuentas no está disponible en este momento. Inténtalo más tarde.');
+    }
+
+    // Traduce los errores de Supabase a mensajes para el usuario
+    function traducir(error) {
+        const texto = (error && (error.message || error.code)) || '';
+        if (/invalid login credentials/i.test(texto)) return new Error('El correo o la contraseña no son correctos.');
+        if (/email not confirmed/i.test(texto)) return new Error('Primero confirma tu cuenta con el enlace que te enviamos por correo.');
+        if (/already registered|already exists/i.test(texto)) return new Error('Ya existe una cuenta con ese correo. Inicia sesión.');
+        if (/password should be|weak/i.test(texto)) return new Error('La contraseña debe tener al menos 6 caracteres.');
+        if (/rate limit|too many/i.test(texto)) return new Error('Hiciste muchos intentos seguidos. Espera unos minutos e inténtalo de nuevo.');
+        if (/session missing|not authenticated|expired/i.test(texto)) return new Error('El enlace expiró. Pide uno nuevo con "¿Olvidaste tu contraseña?".');
+        if (/failed to fetch|network/i.test(texto)) return new Error('No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.');
+        return new Error('Ocurrió un error. Inténtalo de nuevo o escríbenos a contacto@fundacionlepe.cl.');
+    }
+
+    // Carga el perfil y las inscripciones del usuario con sesión iniciada
+    async function cargar(usuario) {
+        const [perfil, inscripciones] = await Promise.all([
+            db.from('perfiles').select('*').eq('id', usuario.id).maybeSingle(),
+            db.from('inscripciones').select('evento, personas, creado')
+                .eq('user_id', usuario.id).order('creado', { ascending: false })
+        ]);
+        if (perfil.error) throw perfil.error;
+
+        const datos = perfil.data || {};
+        memoria = {
+            id: usuario.id,
+            nombre: datos.nombre || '',
+            apellido: datos.apellido || '',
+            correo: usuario.email,
+            telefono: datos.telefono || '',
+            comuna: datos.comuna || '',
+            nacimiento: datos.nacimiento || '',
+            personas: Array.isArray(datos.personas) ? datos.personas : [],
+            inscripciones: (inscripciones.data || []).map(fila => ({ evento: fila.evento, personas: fila.personas || [] })),
+            google: (usuario.app_metadata && usuario.app_metadata.provider) === 'google'
+        };
+        return memoria;
+    }
+
+    // Promesa que se resuelve con la cuenta con sesión iniciada (o null).
+    // Uso: Cuenta.listo.then(cuenta => { ... })
+    const listo = (async function () {
+        if (!db) return null;
+        try {
+            const { data } = await db.auth.getSession();
+            return data.session ? await cargar(data.session.user) : null;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    })();
+
+    // Devuelve la cuenta ya cargada (usar después de Cuenta.listo)
     function obtener() {
-        return memoria || leer(sessionStorage, CLAVE_SESION) || leer(localStorage, CLAVE_SESION);
+        return memoria;
     }
 
-    // Guarda los cambios en la sesión y en el registro de cuentas creadas
-    function guardar(cuenta) {
+    // Guarda los datos del perfil y las personas guardadas
+    async function guardar(cuenta) {
+        if (!db) throw sinConexion();
         memoria = cuenta;
-        const almacen = leer(localStorage, CLAVE_SESION) ? localStorage : sessionStorage;
-        escribir(almacen, CLAVE_SESION, cuenta);
-
-        const registro = leer(localStorage, CLAVE_REGISTRO) || {};
-        registro[cuenta.correo.toLowerCase()] = cuenta;
-        escribir(localStorage, CLAVE_REGISTRO, registro);
+        const { error } = await db.from('perfiles').upsert({
+            id: cuenta.id,
+            nombre: cuenta.nombre,
+            apellido: cuenta.apellido,
+            correo: cuenta.correo,
+            telefono: cuenta.telefono,
+            comuna: cuenta.comuna,
+            nacimiento: cuenta.nacimiento,
+            personas: cuenta.personas
+        });
+        if (error) {
+            console.error(error);
+            throw traducir(error);
+        }
     }
 
-    // Inicia sesión: usa la cuenta creada con ese correo o, si no existe, el perfil de ejemplo
-    function iniciar(correo, mantener) {
-        const registro = leer(localStorage, CLAVE_REGISTRO) || {};
-        const cuenta = registro[correo.toLowerCase()] || perfilDemo(correo);
-        escribir(mantener ? localStorage : sessionStorage, CLAVE_SESION, cuenta);
-        memoria = cuenta;
-        return cuenta;
+    // Inicia sesión con correo y contraseña
+    async function iniciar(correo, clave, mantenerSesion) {
+        if (!db) throw sinConexion();
+        intentar(() => localStorage.setItem(CLAVE_MANTENER, mantenerSesion ? 'si' : 'no'));
+        const { data, error } = await db.auth.signInWithPassword({ email: correo, password: clave });
+        if (error) throw traducir(error);
+        return cargar(data.user);
     }
 
-    // ¿Ya se creó una cuenta con ese correo en este navegador?
-    function existe(correo) {
-        const registro = leer(localStorage, CLAVE_REGISTRO) || {};
-        return Boolean(registro[correo.toLowerCase()]);
+    // Crea la cuenta. Devuelve { cuenta, confirmar }:
+    // confirmar = true si Supabase pide confirmar el correo antes de entrar
+    async function crear(datos, clave) {
+        if (!db) throw sinConexion();
+        intentar(() => localStorage.setItem(CLAVE_MANTENER, 'si'));
+        const { data, error } = await db.auth.signUp({
+            email: datos.correo,
+            password: clave,
+            options: {
+                // Estos datos los usa supabase.sql para crear el perfil
+                data: {
+                    nombre: datos.nombre,
+                    apellido: datos.apellido,
+                    telefono: datos.telefono,
+                    comuna: datos.comuna
+                },
+                emailRedirectTo: new URL('perfil', window.location.href).href
+            }
+        });
+        if (error) throw traducir(error);
+
+        // Si el correo ya existía, Supabase no avisa con error pero devuelve un usuario sin identidades
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+            throw new Error('Ya existe una cuenta con ese correo. Inicia sesión.');
+        }
+        if (!data.session) return { cuenta: null, confirmar: true };
+        return { cuenta: await cargar(data.user), confirmar: false };
     }
 
-    function crear(datos) {
-        const cuenta = Object.assign({ personas: [], inscripciones: [] }, datos);
-        escribir(sessionStorage, CLAVE_SESION, cuenta);
-        memoria = cuenta;
-        guardar(cuenta);
-        return cuenta;
+    // Iniciar sesión o crear la cuenta con Google (se configura en Supabase → Authentication → Providers)
+    async function conGoogle() {
+        if (!db) throw sinConexion();
+        intentar(() => localStorage.setItem(CLAVE_MANTENER, 'si'));
+        const { error } = await db.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: new URL('perfil', window.location.href).href }
+        });
+        if (error) throw traducir(error);
     }
 
-    function cerrar() {
+    // Envía el correo para crear una nueva contraseña
+    async function recuperar(correo) {
+        if (!db) throw sinConexion();
+        const { error } = await db.auth.resetPasswordForEmail(correo, {
+            redirectTo: new URL('amigos?vista=nueva-clave', window.location.href).href
+        });
+        if (error) throw traducir(error);
+    }
+
+    // Cambia la contraseña (después de abrir el enlace del correo)
+    async function cambiarClave(clave) {
+        if (!db) throw sinConexion();
+        const { error } = await db.auth.updateUser({ password: clave });
+        if (error) throw traducir(error);
+    }
+
+    // Guarda una inscripción a un evento (Amigo del Cerro o invitado)
+    async function inscribir(idEvento, datos) {
+        if (!db) throw sinConexion();
+        const fila = {
+            evento: idEvento,
+            tipo: datos.tipo,
+            nombre: datos.nombre,
+            apellido: datos.apellido,
+            correo: datos.correo,
+            telefono: datos.telefono,
+            comuna: datos.comuna || (memoria && memoria.comuna) || null,
+            personas: datos.listaPersonas || [],
+            cantidad: datos.cantidad || 1,
+            crear_cuenta: datos.crearCuenta === 'Sí'
+        };
+
+        if (memoria) {
+            // Un Amigo del Cerro tiene una sola inscripción por evento: se reemplaza la anterior
+            fila.user_id = memoria.id;
+            await db.from('inscripciones').delete().eq('user_id', memoria.id).eq('evento', idEvento);
+        }
+
+        // Sin .select(): los invitados pueden inscribirse pero no leer la tabla
+        const { error } = await db.from('inscripciones').insert(fila);
+        if (error) {
+            console.error(error);
+            throw traducir(error);
+        }
+    }
+
+    async function cancelarInscripcion(idEvento) {
+        if (!db || !memoria) throw sinConexion();
+        const { error } = await db.from('inscripciones').delete().eq('user_id', memoria.id).eq('evento', idEvento);
+        if (error) throw traducir(error);
+    }
+
+    async function cerrar() {
         memoria = null;
-        escribir(sessionStorage, CLAVE_SESION, null);
-        escribir(localStorage, CLAVE_SESION, null);
+        if (db) await db.auth.signOut().catch(() => { });
+        almacen.removeItem(CLAVE_MANTENER);
+    }
+
+    // Avisa cuando el usuario abre el enlace para cambiar la contraseña
+    function alRecuperar(funcion) {
+        if (!db) return;
+        db.auth.onAuthStateChange((evento) => {
+            if (evento === 'PASSWORD_RECOVERY') funcion();
+        });
     }
 
     // Edad a partir de una fecha dd/mm/aaaa
@@ -134,11 +283,17 @@ const Cuenta = (function () {
 
     return {
         eventos: eventos,
+        listo: listo,
         obtener: obtener,
         guardar: guardar,
         iniciar: iniciar,
         crear: crear,
-        existe: existe,
+        conGoogle: conGoogle,
+        recuperar: recuperar,
+        cambiarClave: cambiarClave,
+        alRecuperar: alRecuperar,
+        inscribir: inscribir,
+        cancelarInscripcion: cancelarInscripcion,
         cerrar: cerrar,
         edad: edad,
         detalle: detalle

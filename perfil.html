@@ -14,7 +14,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=38" />
+    <link rel="stylesheet" href="style.css?v=39" />
 
 </head>
 
@@ -344,7 +344,8 @@
             <hr class="footer-divider">
 
             <div class="footer-bottom">
-                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.
+                    · <a href="terminos" class="footer-copy-link">Términos y condiciones</a></p>
                 <a href="https://www.fundacionlepe.cl/" class="footer-lepe" target="_blank" rel="noopener">
                     <span>Una iniciativa de</span>
                     <img src="icons/logo-fundacion-lepe.svg" alt="Fundación Lepe" width="136" height="43">
@@ -382,12 +383,17 @@
             event.preventDefault();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cuenta.js"></script>
     <script>
-        // Sin sesión no se puede ver el perfil
-        let cuenta = Cuenta.obtener();
-        if (!cuenta) {
-            window.location.replace('amigos');
+        // La cuenta se carga desde Supabase al final de este script (sin sesión vuelve a "amigos")
+        let cuenta = null;
+
+        // Guarda en Supabase; si falla, lo avisa
+        function guardarCuenta() {
+            return Cuenta.guardar(cuenta).catch(e => {
+                document.querySelector('#datosAviso').textContent = e.message;
+            });
         }
 
         // Validación de campos (mismos mensajes que la inscripción)
@@ -600,7 +606,7 @@
             Object.keys(camposDatos).forEach(clave => {
                 cuenta[clave] = document.querySelector(camposDatos[clave]).value.trim();
             });
-            Cuenta.guardar(cuenta);
+            guardarCuenta();
 
             editando = false;
             formDatos.querySelectorAll('.campo-input').forEach(input => input.readOnly = true);
@@ -673,7 +679,7 @@
                 cuenta.personas.push(datos);
             }
 
-            Cuenta.guardar(cuenta);
+            guardarCuenta();
             dibujarPersonas();
             modalPersona.close();
         });
@@ -697,7 +703,7 @@
 
         document.querySelector('#btnConfirmarSi').addEventListener('click', () => {
             if (accionConfirmada) accionConfirmada();
-            Cuenta.guardar(cuenta);
+            guardarCuenta();
             modalConfirmar.close();
         });
 
@@ -718,6 +724,7 @@
                 'Cancelar inscripción',
                 () => {
                     cuenta.inscripciones = cuenta.inscripciones.filter(otra => otra !== inscripcion);
+                    Cuenta.cancelarInscripcion(inscripcion.evento).catch(e => alert(e.message));
                     dibujarInscripciones();
                 });
         }
@@ -775,11 +782,17 @@
 
         // Cerrar sesión
         document.querySelector('#btnCerrarSesion').addEventListener('click', () => {
-            Cuenta.cerrar();
-            window.location.href = 'amigos';
+            Cuenta.cerrar().then(() => {
+                window.location.href = 'amigos';
+            });
         });
 
-        if (cuenta) {
+        Cuenta.listo.then(cargada => {
+            cuenta = cargada;
+            if (!cuenta) {
+                window.location.replace('amigos');
+                return;
+            }
             cargarDatos();
 
             // Las cuentas creadas con Google no traen teléfono ni comuna
@@ -790,7 +803,7 @@
             dibujarPersonas();
             dibujarInscripciones();
             mostrarVista(vistaActual());
-        }
+        });
     </script>
 
 </body>

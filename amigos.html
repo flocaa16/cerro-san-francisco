@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=38" />
+    <link rel="stylesheet" href="style.css?v=39" />
 
 </head>
 
@@ -111,6 +111,9 @@
                         </div>
                         <p class="campo-error" id="ingClaveError"></p>
                     </div>
+
+                    <button type="button" class="modal-link modal-link--izquierda" id="btnOlvide">¿Olvidaste tu
+                        contraseña?</button>
 
                     <label class="acceso-check">
                         <input type="checkbox" class="checkbox checkbox--grande" id="ingMantener">
@@ -229,7 +232,9 @@
                     <div class="campo">
                         <label class="modal-check">
                             <input type="checkbox" class="checkbox" id="creTerminos" required>
-                            <span>Acepto los términos y condiciones y la política de privacidad.</span>
+                            <span>Acepto los <a href="terminos" target="_blank" rel="noopener">términos y condiciones</a>
+                                y el <a href="terminos#datos-personales" target="_blank" rel="noopener">tratamiento
+                                    de mis datos personales</a>.</span>
                         </label>
                         <p class="campo-error" id="creTerminosError"></p>
                     </div>
@@ -243,6 +248,29 @@
                         data-vista="ingresar">Inicia sesión</a></p>
             </section>
             <!-- Crear cuenta -->
+
+            <!-- Nueva contraseña (desde el enlace del correo "¿Olvidaste tu contraseña?") -->
+            <section class="acceso-vista" id="vistaClave" aria-labelledby="claveTitulo" hidden>
+                <div class="acceso-text">
+                    <h2 class="acceso-title" id="claveTitulo">Nueva contraseña</h2>
+                    <p class="acceso-subtitle">Escribe tu nueva contraseña para ingresar</p>
+                </div>
+
+                <form class="acceso-form" id="formClave" novalidate>
+                    <div class="campo">
+                        <div class="campo-box">
+                            <input class="campo-input" id="nuevaClave" type="password" placeholder=" "
+                                autocomplete="new-password" minlength="6" required>
+                            <label class="campo-label" for="nuevaClave">Nueva contraseña</label>
+                        </div>
+                        <p class="campo-error" id="nuevaClaveError"></p>
+                    </div>
+
+                    <p class="modal-error" role="alert"></p>
+                    <button type="submit" class="btn-primary-medium btn-primary-medium--tall acceso-btn">Guardar
+                        contraseña</button>
+                </form>
+            </section>
 
         </div>
 
@@ -322,7 +350,8 @@
             <hr class="footer-divider">
 
             <div class="footer-bottom">
-                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.
+                    · <a href="terminos" class="footer-copy-link">Términos y condiciones</a></p>
                 <a href="https://www.fundacionlepe.cl/" class="footer-lepe" target="_blank" rel="noopener">
                     <span>Una iniciativa de</span>
                     <img src="icons/logo-fundacion-lepe.svg" alt="Fundación Lepe" width="136" height="43">
@@ -360,7 +389,7 @@
             event.preventDefault();
         });
     </script>
-    <script src="https://accounts.google.com/gsi/client" async onload="window.prepararGoogle && prepararGoogle()"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cuenta.js"></script>
     <script>
         // Validación de campos (mismos mensajes que la inscripción)
@@ -415,9 +444,31 @@
             });
         });
 
-        // Si ya hay sesión, se va directo al perfil
-        if (Cuenta.obtener()) {
-            window.location.replace('perfil');
+        // Si ya hay sesión, se va directo al perfil (salvo que esté creando una nueva contraseña)
+        Cuenta.listo.then(cuenta => {
+            if (cuenta && new URLSearchParams(window.location.search).get('vista') !== 'nueva-clave') {
+                window.location.replace('perfil');
+            }
+        });
+
+        const googleAviso = document.querySelector('#googleAviso');
+
+        // Muestra "Cargando..." en el botón mientras responde Supabase, y el error si falla
+        async function conEspera(form, accion) {
+            const boton = form.querySelector('button[type="submit"]');
+            const error = form.querySelector('.modal-error');
+            const texto = boton.textContent;
+            error.textContent = '';
+            boton.disabled = true;
+            boton.textContent = 'Cargando...';
+            try {
+                await accion();
+            } catch (e) {
+                error.textContent = e.message;
+            } finally {
+                boton.disabled = false;
+                boton.textContent = texto;
+            }
         }
 
         // Cambiar entre "Iniciar sesión" y "Crear cuenta"
@@ -429,16 +480,21 @@
             'crear': {
                 titulo: 'Únete a Amigos del Cerro',
                 texto: 'Crea tu cuenta y accede a beneficios exclusivos del Cerro San Francisco.'
+            },
+            'nueva-clave': {
+                titulo: 'Amigos del Cerro',
+                texto: 'Crea una nueva contraseña para tu cuenta.'
             }
         };
 
         function mostrarVista(vista, conFoco) {
             document.querySelector('#vistaIngresar').hidden = vista !== 'ingresar';
             document.querySelector('#vistaCrear').hidden = vista !== 'crear';
+            document.querySelector('#vistaClave').hidden = vista !== 'nueva-clave';
             document.querySelector('#accesoTitulo').textContent = textosHero[vista].titulo;
             document.querySelector('#accesoTexto').textContent = textosHero[vista].texto;
             document.title = textosHero[vista].titulo + ' | Cerro San Francisco de Curimón';
-            if (conFoco) document.querySelector(vista === 'crear' ? '#creNombre' : '#ingCorreo').focus();
+            if (conFoco) document.querySelector({ 'crear': '#creNombre', 'nueva-clave': '#nuevaClave' }[vista] || '#ingCorreo').focus();
         }
 
         document.querySelectorAll('[data-vista]').forEach(link => {
@@ -451,7 +507,10 @@
         });
 
         const params = new URLSearchParams(window.location.search);
-        mostrarVista(params.get('vista') === 'crear' ? 'crear' : 'ingresar', false);
+        mostrarVista(['crear', 'nueva-clave'].includes(params.get('vista')) ? params.get('vista') : 'ingresar', false);
+
+        // Si abre el enlace del correo en otra pestaña o sin "?vista=nueva-clave"
+        Cuenta.alRecuperar(() => mostrarVista('nueva-clave', true));
 
         // Si viene de una inscripción como invitado, se completan sus datos
         try {
@@ -471,82 +530,56 @@
             event.preventDefault();
             if (!validarFormulario(event.target)) return;
 
-            Cuenta.iniciar(document.querySelector('#ingCorreo').value.trim(), document.querySelector('#ingMantener').checked);
-            window.location.href = 'perfil';
+            conEspera(event.target, async () => {
+                await Cuenta.iniciar(
+                    document.querySelector('#ingCorreo').value.trim(),
+                    document.querySelector('#ingClave').value,
+                    document.querySelector('#ingMantener').checked);
+                window.location.href = 'perfil';
+            });
         });
 
-        // Iniciar sesión o crear la cuenta con Google (Google Identity Services)
-        // Para activarlo, crear un "ID de cliente de OAuth" (tipo Aplicación web) en
-        // https://console.cloud.google.com/apis/credentials con este origen autorizado:
-        // https://flocaa16.github.io  y pegar aquí el ID (termina en .apps.googleusercontent.com)
-        const GOOGLE_CLIENT_ID = '';
-
-        const btnGoogle = document.querySelector('#btnGoogle');
-        const googleAviso = document.querySelector('#googleAviso');
-        let clienteGoogle = null;
-
-        function prepararGoogle() {
-            if (!GOOGLE_CLIENT_ID || !window.google || clienteGoogle) return;
-
-            clienteGoogle = google.accounts.oauth2.initTokenClient({
-                client_id: GOOGLE_CLIENT_ID,
-                scope: 'openid email profile',
-                callback: async (respuesta) => {
-                    if (respuesta.error) {
-                        googleAviso.textContent = 'No se pudo ingresar con Google. Inténtalo de nuevo.';
-                        return;
-                    }
-
-                    try {
-                        // Nombre, apellido y correo de la cuenta de Google
-                        const datos = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                            headers: { 'Authorization': 'Bearer ' + respuesta.access_token }
-                        }).then(r => r.json());
-
-                        entrarConGoogle(datos);
-                    } catch (e) {
-                        googleAviso.textContent = 'No se pudo ingresar con Google. Revisa tu conexión e inténtalo de nuevo.';
-                    }
-                }
-            });
-        }
-
-        function entrarConGoogle(datos) {
-            const mantener = document.querySelector('#ingMantener').checked;
-
-            // Si ya tenía cuenta con ese correo, entra; si no, se crea en un paso
-            if (Cuenta.existe(datos.email)) {
-                Cuenta.iniciar(datos.email, mantener);
-                window.location.href = 'perfil';
-                return;
-            }
-
-            Cuenta.crear({
-                nombre: datos.given_name || datos.name || '',
-                apellido: datos.family_name || '',
-                correo: datos.email,
-                telefono: '',
-                comuna: '',
-                nacimiento: '',
-                google: true
-            });
-            modalBienvenida.showModal();
-        }
-
-        btnGoogle.addEventListener('click', () => {
+        // ¿Olvidaste tu contraseña? Se envía un correo con un enlace para crear una nueva
+        document.querySelector('#btnOlvide').addEventListener('click', async () => {
+            const correo = document.querySelector('#ingCorreo');
+            const error = document.querySelector('#formIngresar .modal-error');
+            error.textContent = '';
             googleAviso.textContent = '';
-
-            if (!GOOGLE_CLIENT_ID) {
-                googleAviso.textContent = 'Falta configurar el ingreso con Google (GOOGLE_CLIENT_ID en amigos).';
+            if (!validarCampo(correo)) {
+                correo.focus();
                 return;
             }
-
-            prepararGoogle();
-            if (!clienteGoogle) {
-                googleAviso.textContent = 'Google no está disponible en este momento. Inténtalo en unos segundos.';
-                return;
+            try {
+                await Cuenta.recuperar(correo.value.trim());
+                googleAviso.textContent = 'Te enviamos un correo a ' + correo.value.trim() +
+                    ' para crear una nueva contraseña. Revisa también la carpeta de spam.';
+            } catch (e) {
+                error.textContent = e.message;
             }
-            clienteGoogle.requestAccessToken();
+        });
+
+        // Guardar la nueva contraseña
+        document.querySelector('#formClave').addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!validarFormulario(event.target)) return;
+
+            conEspera(event.target, async () => {
+                await Cuenta.cambiarClave(document.querySelector('#nuevaClave').value);
+                window.location.href = 'perfil';
+            });
+        });
+
+        // Iniciar sesión o crear la cuenta con Google
+        // Se activa en Supabase → Authentication → Sign In / Providers → Google (ver SUPABASE.md)
+        const btnGoogle = document.querySelector('#btnGoogle');
+
+        btnGoogle.addEventListener('click', async () => {
+            googleAviso.textContent = '';
+            try {
+                await Cuenta.conGoogle(); // lleva a Google y después vuelve a "perfil"
+            } catch (e) {
+                googleAviso.textContent = e.message;
+            }
         });
 
         // Crear cuenta
@@ -556,15 +589,28 @@
             event.preventDefault();
             if (!validarFormulario(event.target)) return;
 
-            Cuenta.crear({
-                nombre: document.querySelector('#creNombre').value.trim(),
-                apellido: document.querySelector('#creApellido').value.trim(),
-                correo: document.querySelector('#creCorreo').value.trim(),
-                telefono: document.querySelector('#creTelefono').value.trim(),
-                comuna: document.querySelector('#creComuna').value.trim(),
-                nacimiento: ''
+            const form = event.target;
+            conEspera(form, async () => {
+                const correo = document.querySelector('#creCorreo').value.trim();
+                const resultado = await Cuenta.crear({
+                    nombre: document.querySelector('#creNombre').value.trim(),
+                    apellido: document.querySelector('#creApellido').value.trim(),
+                    correo: correo,
+                    telefono: document.querySelector('#creTelefono').value.trim(),
+                    comuna: document.querySelector('#creComuna').value.trim()
+                }, document.querySelector('#creClave').value);
+
+                if (resultado.confirmar) {
+                    // Supabase pide confirmar el correo: la cuenta se activa con el enlace del correo
+                    form.reset();
+                    setTimeout(() => {
+                        form.querySelector('.modal-error').textContent = '¡Casi listo! Te enviamos un correo a ' + correo +
+                            '. Abre el enlace para activar tu cuenta (revisa también la carpeta de spam).';
+                    });
+                    return;
+                }
+                modalBienvenida.showModal();
             });
-            modalBienvenida.showModal();
         });
 
         // Al cerrar la bienvenida también se va al perfil

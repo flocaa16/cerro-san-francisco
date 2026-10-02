@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=38" />
+    <link rel="stylesheet" href="style.css?v=39" />
 
 </head>
 
@@ -319,6 +319,10 @@
                         inscripciones.</span>
                 </label>
 
+                <p class="modal-legal">Al inscribirte aceptas los <a href="terminos" target="_blank"
+
+                        rel="noopener">términos y condiciones</a> del sitio.</p>
+
                 <p class="modal-error" role="alert"></p>
                 <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn">Confirmar
                     inscripción</button>
@@ -395,7 +399,8 @@
             <hr class="footer-divider">
 
             <div class="footer-bottom">
-                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.</p>
+                <p class="footer-copy">© 2026 Cerro San Francisco de Curimón. Todos los derechos reservados.
+                    · <a href="terminos" class="footer-copy-link">Términos y condiciones</a></p>
                 <a href="https://www.fundacionlepe.cl/" class="footer-lepe" target="_blank" rel="noopener">
                     <span>Una iniciativa de</span>
                     <img src="icons/logo-fundacion-lepe.svg" alt="Fundación Lepe" width="136" height="43">
@@ -515,18 +520,16 @@
         }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cuenta.js"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
 
-        // Para recibir las inscripciones, crear un formulario en https://formspree.io (gratis)
-        // y pegar aquí su dirección, por ejemplo 'https://formspree.io/f/abcdwxyz'
-        const FORM_ENDPOINT = '';
-
-        // La cuenta de Amigo del Cerro está en cuenta.js (es de prueba: no hay servidor)
+        // Las inscripciones y la cuenta de Amigo del Cerro se guardan en Supabase (ver cuenta.js)
         const MAX_PERSONAS = 10;
-        let sesion = Cuenta.obtener(); // cuenta del Amigo del Cerro (null si no ha iniciado sesión)
+        let sesion = null; // cuenta del Amigo del Cerro (null si no ha iniciado sesión)
+        Cuenta.listo.then(cuenta => { sesion = cuenta; });
         let personasInscripcion = []; // personas que se pueden elegir en el paso 3A
         let irACrearCuenta = false;
         const eventoActual = eventos[id] || eventos['aves'];
@@ -631,7 +634,7 @@
             });
         });
 
-        // Enviar la inscripción (a Formspree si está configurado)
+        // Enviar la inscripción (se guarda en Supabase, tabla "inscripciones")
         async function enviarInscripcion(form, datos) {
             const boton = form.querySelector('button[type="submit"]');
             const textoBoton = boton.textContent;
@@ -641,17 +644,7 @@
             boton.textContent = 'Enviando...';
 
             try {
-                if (FORM_ENDPOINT) {
-                    const respuesta = await fetch(FORM_ENDPOINT, {
-                        method: 'POST',
-                        body: JSON.stringify(Object.assign({ evento: eventoActual.titulo }, datos)),
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
-                    });
-                    if (!respuesta.ok) throw new Error('No se pudo enviar');
-                } else {
-                    // Todavía sin conexión: solo se muestra la confirmación (modo prueba)
-                    console.warn('Inscripción de prueba: falta configurar FORM_ENDPOINT.', datos);
-                }
+                await Cuenta.inscribir(eventos[id] ? id : 'aves', datos);
                 irA('confirmacion');
                 return true;
             } catch (e) {
@@ -675,13 +668,26 @@
             verClave.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
         });
 
-        formLogin.addEventListener('submit', (event) => {
+        formLogin.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (!validarFormulario(formLogin)) return;
 
-            sesion = Cuenta.iniciar(document.querySelector('#loginCorreo').value.trim(), false);
-            cargarPerfil();
-            irA('amigo');
+            const boton = formLogin.querySelector('button[type="submit"]');
+            const error = formLogin.querySelector('.modal-error');
+            const texto = boton.textContent;
+            error.textContent = '';
+            boton.disabled = true;
+            boton.textContent = 'Cargando...';
+            try {
+                sesion = await Cuenta.iniciar(document.querySelector('#loginCorreo').value.trim(), loginClave.value, false);
+                cargarPerfil();
+                irA('amigo');
+            } catch (e) {
+                error.textContent = e.message;
+            } finally {
+                boton.disabled = false;
+                boton.textContent = texto;
+            }
         });
 
         // Paso 3A: datos prellenados y personas guardadas
@@ -787,6 +793,7 @@
                 correo: document.querySelector('#amigoCorreo').value.trim(),
                 telefono: document.querySelector('#amigoTelefono').value.trim(),
                 personas: elegidas.join(', '),
+                listaPersonas: elegidas,
                 cantidad: elegidas.length
             };
 
@@ -801,7 +808,7 @@
                 personasInscripcion.forEach(persona => {
                     if (persona.guardada) persona.guardada.elegida = persona.elegida;
                 });
-                Cuenta.guardar(sesion);
+                Cuenta.guardar(sesion).catch(console.error);
             });
         });
 

@@ -19,3 +19,6 @@ RewriteRule ^([^/.]+)/$ /$1 [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{DOCUMENT_ROOT}/$1.html -f
 RewriteRule ^([^/.]+)$ $1.html [L]
+
+# La carpeta supabase/ es solo para configurar, no se muestra en la web
+RedirectMatch 404 ^/supabase(/|$)
