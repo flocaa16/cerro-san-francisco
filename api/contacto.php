@@ -1,7 +1,9 @@
 <?php
 /**
  * Formularios de contacto (footer de todas las páginas y "Educación en la naturaleza").
- * Envía el mensaje al correo configurado en /home/USUARIO/config-cerro.php ('contacto_destino').
+ * Envía el mensaje al correo configurado en /home/USUARIO/config-cerro.php:
+ *   'contacto_destino'  → formulario "Contáctanos" del footer
+ *   'educacion_destino' → formulario de "Educación en la naturaleza" (si falta, usa contacto_destino)
  * Al responder ese correo, la respuesta le llega directo a quien escribió (Reply-To).
  */
 
@@ -34,6 +36,10 @@ if (!empty($_POST['sitio_web'])) {
 $rutaConfig = dirname($_SERVER['DOCUMENT_ROOT']) . '/config-cerro.php';
 $config = is_readable($rutaConfig) ? require $rutaConfig : [];
 $destino = !empty($config['contacto_destino']) ? $config['contacto_destino'] : 'contacto@fundacionlepe.cl';
+// Cada formulario puede llegar a una persona distinta
+if (isset($_POST['formulario']) && $_POST['formulario'] === 'educacion' && !empty($config['educacion_destino'])) {
+    $destino = $config['educacion_destino'];
+}
 $remitente = !empty($config['remitente']) ? $config['remitente'] : 'no-responder@cerrosanfrancisco.cl';
 
 // Límite: máximo 5 mensajes por hora desde la misma conexión

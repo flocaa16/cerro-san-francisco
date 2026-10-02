@@ -27,6 +27,7 @@
 
         const datos = new FormData(form);
         datos.append('asunto', 'Mensaje desde la web');
+        datos.append('formulario', 'contacto');
         datos.append('pagina', window.location.href.split('#')[0]);
 
         boton.disabled = true;
