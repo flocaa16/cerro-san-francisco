@@ -51,7 +51,7 @@ declare
     datos jsonb := coalesce(new.raw_user_meta_data, '{}'::jsonb);
     completo text := coalesce(datos ->> 'full_name', datos ->> 'name', '');
 begin
-    insert into public.perfiles (id, correo, nombre, apellido, telefono, comuna)
+    insert into public.perfiles (id, correo, nombre, apellido, telefono, comuna, nacimiento)
     values (
         new.id,
         new.email,
@@ -59,7 +59,8 @@ begin
         coalesce(datos ->> 'apellido', datos ->> 'family_name',
                  nullif(substr(completo, length(split_part(completo, ' ', 1)) + 2), ''), ''),
         coalesce(datos ->> 'telefono', ''),
-        coalesce(datos ->> 'comuna', '')
+        coalesce(datos ->> 'comuna', ''),
+        coalesce(datos ->> 'nacimiento', '')
     )
     on conflict (id) do nothing;
     return new;
@@ -110,6 +111,17 @@ create policy "inscripcion: ver las propias" on public.inscripciones
 drop policy if exists "inscripcion: cancelar las propias" on public.inscripciones;
 create policy "inscripcion: cancelar las propias" on public.inscripciones
     for delete to authenticated using (user_id = (select auth.uid()));
+
+
+-- 2b. PERMISOS --------------------------------------------------------------
+-- Los proyectos nuevos de Supabase no dan acceso automático a las tablas creadas por SQL.
+-- Esto permite usar las tablas desde la web; las reglas de arriba (RLS) siguen decidiendo
+-- QUÉ filas puede ver o cambiar cada persona.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update on public.perfiles to authenticated;
+grant insert on public.inscripciones to anon, authenticated;
+grant select, delete on public.inscripciones to authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
 
 
 -- 3. VISTA PARA LA FUNDACIÓN -------------------------------------------------

@@ -201,6 +201,14 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
+                            <input class="campo-input campo-fecha" id="creNacimiento" name="nacimiento" type="text" placeholder=" "
+                                inputmode="numeric" maxlength="10" autocomplete="off" required>
+                            <label class="campo-label" for="creNacimiento">Fecha de nacimiento (dd/mm/aaaa)</label>
+                        </div>
+                        <p class="campo-error" id="creNacimientoError"></p>
+                    </div>
+                    <div class="campo">
+                        <div class="campo-box">
                             <input class="campo-input campo-input--icono" id="creClave" name="password" type="password" placeholder=" "
                                 autocomplete="new-password" minlength="6" required>
                             <label class="campo-label" for="creClave">Contraseña</label>
@@ -281,22 +289,6 @@
     <!-- ACCESO -->
 
 
-    <!-- MODAL CUENTA CREADA -->
-    <dialog class="modal" id="modalBienvenida" aria-labelledby="bienvenidaTitulo">
-        <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">
-            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor"
-                    d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-            </svg>
-        </button>
-        <div class="modal-paso">
-            <h2 class="modal-title" id="bienvenidaTitulo">¡Te damos la bienvenida a Amigos del Cerro!</h2>
-            <p class="modal-subtitle">Tu cuenta fue creada. Completa tu perfil y agrega a las personas con las que
-                visitas el cerro para inscribirlas más rápido en los eventos.</p>
-            <a href="perfil" class="btn-primary-medium btn-primary-medium--tall modal-btn">Ir a mi perfil</a>
-        </div>
-    </dialog>
-    <!-- MODAL CUENTA CREADA -->
 
 
     <!-- FOOTER -->
@@ -406,6 +398,8 @@
                 mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
             } else if (input.id === 'creClave2' && input.value !== document.querySelector('#creClave').value) {
                 mensaje = 'Las contraseñas no coinciden.';
+            } else if (input.classList.contains('campo-fecha') && !fechaValida(input.value)) {
+                mensaje = 'Escribe una fecha válida como dd/mm/aaaa, por ejemplo 14/03/1992.';
             }
 
             if (error) error.textContent = mensaje;
@@ -414,6 +408,23 @@
             else input.removeAttribute('aria-describedby');
             return !mensaje;
         }
+
+        // Fecha dd/mm/aaaa que exista (no 31/02) y no sea futura
+        function fechaValida(texto) {
+            const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto || '');
+            if (!m) return false;
+            const fecha = new Date(+m[3], +m[2] - 1, +m[1]);
+            return fecha.getDate() === +m[1] && fecha.getMonth() === +m[2] - 1 &&
+                fecha <= new Date() && +m[3] >= 1900;
+        }
+
+        // Fechas: agrega las barras mientras se escribe (dd/mm/aaaa)
+        document.querySelectorAll('.campo-fecha').forEach(input => {
+            input.addEventListener('input', () => {
+                const numeros = input.value.replace(/\D/g, '').slice(0, 8);
+                input.value = [numeros.slice(0, 2), numeros.slice(2, 4), numeros.slice(4)].filter(Boolean).join('/');
+            });
+        });
 
         function validarFormulario(form) {
             const campos = [...form.querySelectorAll('[required]')];
@@ -445,9 +456,18 @@
             });
         });
 
-        // Si ya hay sesión, se va directo al perfil (salvo que esté creando una nueva contraseña)
-        Cuenta.listo.then(cuenta => {
-            if (cuenta && new URLSearchParams(window.location.search).get('vista') !== 'nueva-clave') {
+        // Si ya hay sesión, se va directo al perfil (salvo que esté creando una nueva contraseña).
+        // Si viene del enlace de confirmación del correo, se cierra esa sesión y se pide iniciar sesión.
+        Cuenta.listo.then(async cuenta => {
+            const vista = new URLSearchParams(window.location.search);
+            if (vista.get('confirmada')) {
+                if (cuenta) await Cuenta.cerrar();
+                history.replaceState(null, '', 'amigos');
+                volverAIngresar(cuenta ? cuenta.correo : '',
+                    '¡Tu cuenta está activada! Inicia sesión con tu correo y contraseña.');
+                return;
+            }
+            if (cuenta && vista.get('vista') !== 'nueva-clave') {
                 window.location.replace('perfil');
             }
         });
@@ -583,8 +603,17 @@
             }
         });
 
-        // Crear cuenta
-        const modalBienvenida = document.querySelector('#modalBienvenida');
+        // Vuelve a "Iniciar sesión" con el correo ya escrito y un aviso
+        function volverAIngresar(correo, aviso) {
+            history.replaceState(null, '', 'amigos');
+            mostrarVista('ingresar', false);
+            if (correo) document.querySelector('#ingCorreo').value = correo;
+            googleAviso.textContent = aviso;
+            document.querySelector('#ingClave').focus();
+            window.scrollTo(0, 0);
+        }
+
+        // Crear cuenta: al terminar vuelve a "Iniciar sesión"
 
         document.querySelector('#formCrear').addEventListener('submit', (event) => {
             event.preventDefault();
@@ -598,28 +627,21 @@
                     apellido: document.querySelector('#creApellido').value.trim(),
                     correo: correo,
                     telefono: document.querySelector('#creTelefono').value.trim(),
-                    comuna: document.querySelector('#creComuna').value.trim()
+                    comuna: document.querySelector('#creComuna').value.trim(),
+                    nacimiento: document.querySelector('#creNacimiento').value.trim()
                 }, document.querySelector('#creClave').value);
 
+                form.reset();
                 if (resultado.confirmar) {
                     // Supabase pide confirmar el correo: la cuenta se activa con el enlace del correo
-                    form.reset();
-                    setTimeout(() => {
-                        form.querySelector('.modal-error').textContent = '¡Casi listo! Te enviamos un correo a ' + correo +
-                            '. Abre el enlace para activar tu cuenta (revisa también la carpeta de spam).';
-                    });
+                    volverAIngresar(correo, '¡Cuenta creada! Te enviamos un correo a ' + correo +
+                        '. Abre el enlace para activarla y luego inicia sesión aquí (revisa también la carpeta de spam).');
                     return;
                 }
-                modalBienvenida.showModal();
+                // Sin confirmación por correo: se cierra la sesión automática para que la persona inicie sesión
+                await Cuenta.cerrar();
+                volverAIngresar(correo, '¡Cuenta creada! Ya puedes iniciar sesión.');
             });
-        });
-
-        // Al cerrar la bienvenida también se va al perfil
-        modalBienvenida.querySelector('[data-cerrar]').addEventListener('click', () => {
-            window.location.href = 'perfil';
-        });
-        modalBienvenida.addEventListener('cancel', () => {
-            window.location.href = 'perfil';
         });
     </script>
 

@@ -83,6 +83,7 @@ const Cuenta = (function () {
         if (/password should be|weak/i.test(texto)) return new Error('La contraseña debe tener al menos 6 caracteres.');
         if (/rate limit|too many/i.test(texto)) return new Error('Hiciste muchos intentos seguidos. Espera unos minutos e inténtalo de nuevo.');
         if (/session missing|not authenticated|expired/i.test(texto)) return new Error('El enlace expiró. Pide uno nuevo con "¿Olvidaste tu contraseña?".');
+        if (/permission denied|42501|row-level security/i.test(texto)) return new Error('No pudimos acceder a tu cuenta en este momento. Inténtalo más tarde o escríbenos a contacto@fundacionlepe.cl.');
         if (/failed to fetch|network/i.test(texto)) return new Error('No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.');
         return new Error('Ocurrió un error. Inténtalo de nuevo o escríbenos a contacto@fundacionlepe.cl.');
     }
@@ -94,7 +95,10 @@ const Cuenta = (function () {
             db.from('inscripciones').select('evento, personas, creado')
                 .eq('user_id', usuario.id).order('creado', { ascending: false })
         ]);
-        if (perfil.error) throw perfil.error;
+        if (perfil.error) {
+            console.error(perfil.error);
+            throw traducir(perfil.error);
+        }
 
         const datos = perfil.data || {};
         memoria = {
@@ -173,9 +177,10 @@ const Cuenta = (function () {
                     nombre: datos.nombre,
                     apellido: datos.apellido,
                     telefono: datos.telefono,
-                    comuna: datos.comuna
+                    comuna: datos.comuna,
+                    nacimiento: datos.nacimiento || ''
                 },
-                emailRedirectTo: new URL('perfil', window.location.href).href
+                emailRedirectTo: new URL('amigos?confirmada=1', window.location.href).href
             }
         });
         if (error) throw traducir(error);
