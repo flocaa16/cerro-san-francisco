@@ -8,8 +8,8 @@
 // Pega la "Project URL" y la clave pública "anon" / "publishable".
 // La clave pública SÍ puede ir en el código: los datos los protegen las reglas (RLS) de supabase.sql.
 // ⚠️ NUNCA pegues aquí la clave "service_role" / "secret".
-const SUPABASE_URL = '';
-const SUPABASE_ANON_KEY = '';
+const SUPABASE_URL = 'https://oelpndfakeajbticouhl.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_1o_DMrEfSrUKAhocMOuApQ_UdgH479N';
 
 const Cuenta = (function () {
     const CLAVE_MANTENER = 'amigosMantener';
