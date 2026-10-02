@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=44" />
+    <link rel="stylesheet" href="style.css?v=45" />
 
 </head>
 
@@ -89,7 +89,7 @@
                 <form class="acceso-form" id="formIngresar" novalidate>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="ingCorreo" type="email" placeholder=" "
+                            <input class="campo-input" id="ingCorreo" name="email" type="email" placeholder=" "
                                 autocomplete="email" required>
                             <label class="campo-label" for="ingCorreo">Correo electrónico</label>
                         </div>
@@ -98,7 +98,7 @@
 
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input campo-input--icono" id="ingClave" type="password" placeholder=" "
+                            <input class="campo-input campo-input--icono" id="ingClave" name="password" type="password" placeholder=" "
                                 autocomplete="current-password" minlength="6" required>
                             <label class="campo-label" for="ingClave">Contraseña</label>
                             <button type="button" class="campo-icono" data-ver-clave="ingClave"
@@ -124,9 +124,10 @@
                     <button type="submit" class="btn-primary-medium btn-primary-medium--tall acceso-btn">Iniciar
                         Sesión</button>
 
-                    <div class="acceso-o" aria-hidden="true"><span>o</span></div>
+                    <!-- Ingreso con Google oculto hasta activarlo en Supabase: para mostrarlo, quitar "hidden" aquí y en el botón -->
+                    <div class="acceso-o" aria-hidden="true" hidden><span>o</span></div>
 
-                    <button type="button" class="acceso-google" id="btnGoogle">
+                    <button type="button" class="acceso-google" id="btnGoogle" hidden>
                         Iniciar sesión con Google
                         <!-- Logo oficial de Google ("G"), como pide su guía de marca para este botón -->
                         <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true">
@@ -159,7 +160,7 @@
                     <div class="modal-row">
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="creNombre" type="text" placeholder=" "
+                                <input class="campo-input" id="creNombre" name="nombre" type="text" placeholder=" "
                                     autocomplete="given-name" required>
                                 <label class="campo-label" for="creNombre">Nombre</label>
                             </div>
@@ -167,7 +168,7 @@
                         </div>
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="creApellido" type="text" placeholder=" "
+                                <input class="campo-input" id="creApellido" name="apellido" type="text" placeholder=" "
                                     autocomplete="family-name" required>
                                 <label class="campo-label" for="creApellido">Apellido</label>
                             </div>
@@ -176,7 +177,7 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="creCorreo" type="email" placeholder=" " autocomplete="email"
+                            <input class="campo-input" id="creCorreo" name="email" type="email" placeholder=" " autocomplete="email"
                                 required>
                             <label class="campo-label" for="creCorreo">Correo electrónico</label>
                         </div>
@@ -184,7 +185,7 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="creTelefono" type="tel" placeholder=" " autocomplete="tel"
+                            <input class="campo-input" id="creTelefono" name="telefono" type="tel" placeholder=" " autocomplete="tel"
                                 required>
                             <label class="campo-label" for="creTelefono">Teléfono</label>
                         </div>
@@ -192,7 +193,7 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="creComuna" type="text" placeholder=" "
+                            <input class="campo-input" id="creComuna" name="comuna" type="text" placeholder=" "
                                 autocomplete="address-level2" required>
                             <label class="campo-label" for="creComuna">Comuna</label>
                         </div>
@@ -200,7 +201,7 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input campo-input--icono" id="creClave" type="password" placeholder=" "
+                            <input class="campo-input campo-input--icono" id="creClave" name="password" type="password" placeholder=" "
                                 autocomplete="new-password" minlength="6" required>
                             <label class="campo-label" for="creClave">Contraseña</label>
                             <button type="button" class="campo-icono" data-ver-clave="creClave"
@@ -215,7 +216,7 @@
                     </div>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input campo-input--icono" id="creClave2" type="password"
+                            <input class="campo-input campo-input--icono" id="creClave2" name="password2" type="password"
                                 placeholder=" " autocomplete="new-password" required>
                             <label class="campo-label" for="creClave2">Confirmar contraseña</label>
                             <button type="button" class="campo-icono" data-ver-clave="creClave2"
@@ -259,7 +260,7 @@
                 <form class="acceso-form" id="formClave" novalidate>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="nuevaClave" type="password" placeholder=" "
+                            <input class="campo-input" id="nuevaClave" name="password" type="password" placeholder=" "
                                 autocomplete="new-password" minlength="6" required>
                             <label class="campo-label" for="nuevaClave">Nueva contraseña</label>
                         </div>
@@ -340,9 +341,9 @@
                 <form class="footer-form" id="footerForm">
                     <p class="footer-title">Contáctanos</p>
                     <label for="footerNombre" class="footer-label">Nombre</label>
-                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <input id="footerNombre" autocomplete="name" name="nombre" type="text" class="footer-input" placeholder="Tu nombre completo">
                     <label for="footerMensaje" class="footer-label">Mensaje</label>
-                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <textarea id="footerMensaje" name="mensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
                     <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
                 </form>
             </div>

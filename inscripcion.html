@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=44" />
+    <link rel="stylesheet" href="style.css?v=45" />
 
 </head>
 
@@ -196,7 +196,7 @@
                 <div class="modal-nueva-persona" id="nuevaPersona" hidden>
                     <div class="campo">
                         <div class="campo-box">
-                            <input class="campo-input" id="nuevaPersonaNombre" type="text" placeholder=" ">
+                            <input class="campo-input" id="nuevaPersonaNombre" autocomplete="off" type="text" placeholder=" ">
                             <label class="campo-label" for="nuevaPersonaNombre">Nombre y apellido</label>
                         </div>
                     </div>
@@ -389,9 +389,9 @@
                 <form class="footer-form" id="footerForm">
                     <p class="footer-title">Contáctanos</p>
                     <label for="footerNombre" class="footer-label">Nombre</label>
-                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <input id="footerNombre" autocomplete="name" name="nombre" type="text" class="footer-input" placeholder="Tu nombre completo">
                     <label for="footerMensaje" class="footer-label">Mensaje</label>
-                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <textarea id="footerMensaje" name="mensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
                     <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
                 </form>
             </div>

@@ -4203,6 +4203,12 @@ button.cover:hover {
     background-color: #C2C3C5;
 }
 
+/* Google oculto (atributo hidden en amigos.html) */
+.acceso-google[hidden],
+.acceso-o[hidden] {
+    display: none;
+}
+
 .acceso-google {
     display: flex;
     align-items: center;
@@ -4957,6 +4963,28 @@ button.cover:hover {
 
 .campo-input:focus+.campo-label {
     color: #557458;
+}
+
+/* Autocompletado del navegador: la etiqueta sube para no quedar encima del texto
+   (reglas separadas: si un navegador no entiende un selector, no anula los demás) */
+.campo-input:-webkit-autofill+.campo-label {
+    top: 0;
+    left: 11px;
+    padding: 0 4px;
+    background-color: #FFFFFF;
+    color: #4F5052;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+
+.campo-input:autofill+.campo-label {
+    top: 0;
+    left: 11px;
+    padding: 0 4px;
+    background-color: #FFFFFF;
+    color: #4F5052;
+    font-size: 12px;
+    letter-spacing: 0;
 }
 
 .campo-icono {

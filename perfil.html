@@ -14,7 +14,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=44" />
+    <link rel="stylesheet" href="style.css?v=45" />
 
 </head>
 
@@ -89,14 +89,14 @@
                     <div class="modal-row">
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="datNombre" type="text" placeholder=" " readonly required>
+                                <input class="campo-input" id="datNombre" autocomplete="given-name" name="nombre" type="text" placeholder=" " readonly required>
                                 <label class="campo-label" for="datNombre">Nombre</label>
                             </div>
                             <p class="campo-error" id="datNombreError"></p>
                         </div>
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="datApellido" type="text" placeholder=" " readonly
+                                <input class="campo-input" id="datApellido" autocomplete="family-name" name="apellido" type="text" placeholder=" " readonly
                                     required>
                                 <label class="campo-label" for="datApellido">Apellido</label>
                             </div>
@@ -106,7 +106,7 @@
                     <div class="modal-row">
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="datCorreo" type="email" placeholder=" " readonly
+                                <input class="campo-input" id="datCorreo" autocomplete="email" name="email" type="email" placeholder=" " readonly
                                     required>
                                 <label class="campo-label" for="datCorreo">Correo electrónico</label>
                             </div>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="datTelefono" type="tel" placeholder=" " readonly
+                                <input class="campo-input" id="datTelefono" autocomplete="tel" name="telefono" type="tel" placeholder=" " readonly
                                     required>
                                 <label class="campo-label" for="datTelefono">Teléfono</label>
                             </div>
@@ -124,13 +124,13 @@
                     <div class="modal-row">
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input" id="datComuna" type="text" placeholder=" " readonly>
+                                <input class="campo-input" id="datComuna" autocomplete="address-level2" name="comuna" type="text" placeholder=" " readonly>
                                 <label class="campo-label" for="datComuna">Comuna</label>
                             </div>
                         </div>
                         <div class="campo">
                             <div class="campo-box">
-                                <input class="campo-input campo-fecha" id="datNacimiento" type="text" placeholder=" "
+                                <input class="campo-input campo-fecha" id="datNacimiento" autocomplete="off" name="nacimiento" type="text" placeholder=" "
                                     inputmode="numeric" maxlength="10" readonly>
                                 <label class="campo-label" for="datNacimiento">Fecha de nacimiento</label>
                             </div>
@@ -209,14 +209,14 @@
             <div class="modal-row">
                 <div class="campo">
                     <div class="campo-box">
-                        <input class="campo-input" id="perNombre" type="text" placeholder=" " required>
+                        <input class="campo-input" id="perNombre" autocomplete="off" type="text" placeholder=" " required>
                         <label class="campo-label" for="perNombre">Nombre</label>
                     </div>
                     <p class="campo-error" id="perNombreError"></p>
                 </div>
                 <div class="campo">
                     <div class="campo-box">
-                        <input class="campo-input" id="perApellido" type="text" placeholder=" " required>
+                        <input class="campo-input" id="perApellido" autocomplete="off" type="text" placeholder=" " required>
                         <label class="campo-label" for="perApellido">Apellido</label>
                     </div>
                     <p class="campo-error" id="perApellidoError"></p>
@@ -247,7 +247,7 @@
                 </div>
                 <div class="campo">
                     <div class="campo-box">
-                        <input class="campo-input campo-fecha" id="perNacimiento" type="text" placeholder=" "
+                        <input class="campo-input campo-fecha" id="perNacimiento" autocomplete="off" type="text" placeholder=" "
                             inputmode="numeric" maxlength="10" required>
                         <label class="campo-label" for="perNacimiento">Fecha de nacimiento</label>
                     </div>
@@ -334,9 +334,9 @@
                 <form class="footer-form" id="footerForm">
                     <p class="footer-title">Contáctanos</p>
                     <label for="footerNombre" class="footer-label">Nombre</label>
-                    <input id="footerNombre" type="text" class="footer-input" placeholder="Tu nombre completo">
+                    <input id="footerNombre" autocomplete="name" name="nombre" type="text" class="footer-input" placeholder="Tu nombre completo">
                     <label for="footerMensaje" class="footer-label">Mensaje</label>
-                    <textarea id="footerMensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
+                    <textarea id="footerMensaje" name="mensaje" class="footer-textarea" placeholder="Escribe tu mensaje..."></textarea>
                     <button type="submit" class="btn-outline-footer">Enviar mensaje</button>
                 </form>
             </div>
