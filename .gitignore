@@ -1,0 +1,16 @@
+# Archivos del sistema (Mac / Windows)
+.DS_Store
+._*
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Secretos y datos de personas: NUNCA deben subirse
+.env
+.env.*
+*.key
+*.pem
+*.csv
+*.xlsx
