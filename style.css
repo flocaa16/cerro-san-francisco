@@ -5512,3 +5512,12 @@ a.publicacion-item:hover .publicacion-item-icono {
     }
 }
 /*-----------------------TÉRMINOS Y CONDICIONES-----------------------*/
+
+/* Mensaje cuando no hay próximos eventos (eventos.js) */
+.eventos-vacio {
+    margin: 0;
+    padding: 40px 0;
+    font-size: 18px;
+    text-align: center;
+    color: #4F5052;
+}

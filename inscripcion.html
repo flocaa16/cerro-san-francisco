@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=50" />
+    <link rel="stylesheet" href="style.css?v=51" />
 
 </head>
 
@@ -491,43 +491,12 @@
             event.preventDefault();
         });
     </script>
+    <script src="eventos.js?v=1"></script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
         // La página se abre con inscripcion?evento=aves (o nubes, etc.)
-        const eventos = {
-            'aves': {
-                titulo: 'Ruta de las Aves de San Felipe',
-                estado: 'Inscripciones abiertas',
-                fecha: 'Sábado 13 junio',
-                fechaLarga: 'Sábado 13 de junio',
-                hora: '10 a 13 horas',
-                lugar: 'Parque Natural Cerro San Francisco',
-                inicio: '2026-06-13T10:00',
-                fin: '2026-06-13T13:00',
-                img: 'img/evento-aves.jpg',
-                texto: [
-                    '¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?',
-                    'Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San Francisco de Curimón, donde recorreremos senderos, observaremos aves y descubriremos más sobre la biodiversidad del Valle del Aconcagua.',
-                    'Además, podrás obtener tu Minipasaporte de la Ruta de las Aves e ir reuniendo timbres para acceder a premios y beneficios en distintos espacios del Valle.'
-                ],
-            },
-            'nubes': {
-                titulo: 'Caminata y Taller de observación e interpretación de nubes',
-                estado: 'Inscripciones abiertas',
-                fecha: 'Sábado 25 julio',
-                fechaLarga: 'Sábado 25 de julio',
-                hora: '10 a 13 horas',
-                lugar: 'Parque Natural Cerro San Francisco',
-                inicio: '2026-07-25T10:00',
-                fin: '2026-07-25T13:00',
-                img: 'img/evento-nubes.jpg',
-                // Texto pendiente: en el Figma solo está la descripción de la Ruta de las Aves
-                texto: [
-                    'Durante el recorrido por el cerro, los participantes aprenderán a reconocer distintos tipos de nubes, comprender cómo se originan la lluvia y las tormentas, y descubrir la estrecha relación que existe entre la atmósfera, el clima y el paisaje que nos rodea.',
-                    'La actividad permitirá acercarse a estos fenómenos desde la observación directa y comprender que mirar con atención nuestro entorno también es una forma de conocer y conectarnos con el territorio.'
-                ],
-            }
-        };
+        // Los eventos están en eventos.js (un solo lugar para todo el sitio)
+        const eventos = EVENTOS;
 
         const params = new URLSearchParams(window.location.search);
         const id = params.get('evento');
@@ -574,7 +543,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js?v=3"></script>
+    <script src="cuenta.js?v=5"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion

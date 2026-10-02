@@ -24,27 +24,8 @@ const Cuenta = (function () {
     const datosEnlace = new URLSearchParams(window.location.hash.slice(1));
     const tipoEnlace = datosEnlace.get('type') || new URLSearchParams(window.location.search).get('type') || '';
 
-    // Eventos que pueden aparecer en "Mis inscripciones"
-    const eventos = {
-        'aves': {
-            titulo: 'Ruta de las Aves de San Felipe',
-            fecha: 'Sábado 13 de junio',
-            hora: '10 a 13 horas',
-            finalizado: false
-        },
-        'nubes': {
-            titulo: 'Caminata y Taller de observación e interpretación de nubes',
-            fecha: 'Sábado 25 de julio',
-            hora: '10 a 13 horas',
-            finalizado: false
-        },
-        'reforestacion': {
-            titulo: 'Jornada de reforestación comunitaria',
-            fecha: 'Sábado 16 de mayo',
-            hora: '10 a 13 horas',
-            finalizado: true
-        }
-    };
+    // Eventos: están en eventos.js (la página debe cargarlo antes que cuenta.js)
+    const eventos = typeof EVENTOS !== 'undefined' ? EVENTOS : {};
 
     // Lectura y escritura segura (el navegador puede bloquear el almacenamiento)
     function intentar(fn) {

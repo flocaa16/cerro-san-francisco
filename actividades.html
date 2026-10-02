@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=50" />
+    <link rel="stylesheet" href="style.css?v=51" />
 
 </head>
 
@@ -103,44 +103,8 @@
             <h2 class="eventos-title">Próximos eventos</h2>
         </div>
 
-        <div class="wrapper eventos-list">
-            <!-- EVENTO 1 -->
-            <article class="evento">
-                <div class="evento-card">
-                    <span class="chip">Inscripciones abiertas</span>
-                    <h3 class="evento-title">Ruta de las Aves de San Felipe</h3>
-                    <div class="evento-info">
-                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 13
-                            junio</p>
-                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
-                        </p>
-                    </div>
-                    <a href="inscripcion?evento=aves&amp;desde=actividades" class="btn-primary-medium">Ver más</a>
-                </div>
-                <div class="evento-image">
-                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
-                    <img src="img/evento-aves.jpg" alt="Ruta de las Aves de San Felipe">
-                </div>
-            </article>
-
-            <!-- EVENTO 2 -->
-            <article class="evento evento--reverse">
-                <div class="evento-card">
-                    <span class="chip">Inscripciones abiertas</span>
-                    <h3 class="evento-title">Caminata y Taller de observación e interpretación de nubes</h3>
-                    <div class="evento-info">
-                        <p class="evento-dato"><img src="icons/calendar.svg" alt="" width="24" height="24">Sábado 25
-                            julio</p>
-                        <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24">10 a 13 horas
-                        </p>
-                    </div>
-                    <a href="inscripcion?evento=nubes&amp;desde=actividades" class="btn-primary-medium">Ver más</a>
-                </div>
-                <div class="evento-image">
-                    <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
-                    <img src="img/evento-nubes.jpg" alt="Caminata y taller de observación de nubes">
-                </div>
-            </article>
+        <div class="wrapper eventos-list" data-lista-eventos="actividades">
+            <!-- Los eventos se dibujan desde eventos.js -->
         </div>
     </section>
     <!-- EVENTOS -->
@@ -268,6 +232,7 @@
         }
     </script>
 
+    <script src="eventos.js?v=1"></script>
 </body>
 
 </html>
