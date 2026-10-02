@@ -61,7 +61,7 @@ const EVENTOS = {
     
         ],
     },
-    'reforestacion': {
+    'caminata': {
         titulo: 'Caminata Muévete por tu Corazóna',
         estado: 'Inscripciones abiertas',
         fecha: 'Jueves 15 octubre',
