@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=48" />
+    <link rel="stylesheet" href="style.css?v=50" />
 
 </head>
 
@@ -395,7 +395,7 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js"></script>
+    <script src="cuenta.js?v=3"></script>
     <script>
         // Validación de campos (mismos mensajes que la inscripción)
         function validarCampo(input) {
@@ -472,7 +472,7 @@
         // Si viene del enlace de confirmación del correo, se cierra esa sesión y se pide iniciar sesión.
         Cuenta.listo.then(async cuenta => {
             const vista = new URLSearchParams(window.location.search);
-            if (vista.get('confirmada')) {
+            if (vista.get('confirmada') || Cuenta.tipoEnlace === 'signup') {
                 if (cuenta) await Cuenta.cerrar();
                 history.replaceState(null, '', 'amigos');
                 volverAIngresar(cuenta ? cuenta.correo : '', '¡Tu cuenta está activada!',
@@ -541,6 +541,14 @@
 
         const params = new URLSearchParams(window.location.search);
         mostrarVista(['crear', 'nueva-clave'].includes(params.get('vista')) ? params.get('vista') : 'ingresar', false);
+
+        // Enlace del correo vencido o ya usado
+        if (params.get('enlace') === 'vencido') {
+            history.replaceState(null, '', 'amigos');
+            volverAIngresar('', 'El enlace ya no es válido',
+                'Puede que haya vencido o que ya lo hayas usado. Si tu cuenta ya está activada, inicia sesión; ' +
+                'si no, vuelve a crearla o usa "¿Olvidaste tu contraseña?".');
+        }
 
         // Si abre el enlace del correo en otra pestaña o sin "?vista=nueva-clave"
         Cuenta.alRecuperar(() => mostrarVista('nueva-clave', true));

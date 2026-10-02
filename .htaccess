@@ -3,6 +3,10 @@ ErrorDocument 404 /404.html
 Options -MultiViews
 RewriteEngine On
 
+# www.cerrosanfrancisco.cl -> cerrosanfrancisco.cl (una sola dirección para la web y los enlaces de los correos)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L,NE]
+
 # /index.html, /index y /home -> página de inicio (/)
 RewriteCond %{THE_REQUEST} \s/+(index(\.html)?|home)/?[\s?] [NC]
 RewriteRule ^ / [R=301,L]
@@ -22,3 +26,10 @@ RewriteRule ^([^/.]+)$ $1.html [L]
 
 # La carpeta supabase/ es solo para configurar, no se muestra en la web
 RedirectMatch 404 ^/supabase(/|$)
+
+# Las páginas siempre se revisan con el servidor, para que nadie vea una versión antigua guardada en su navegador
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|js)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>

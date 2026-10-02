@@ -3,6 +3,15 @@
 
 <head>
     <meta charset="utf-8" />
+    <script>
+        // Si un enlace de los correos de Amigos del Cerro llega a la portada, se reenvía a la página correcta
+        (function () {
+            var h = window.location.hash;
+            if (/(^#|&)type=signup(&|$)/.test(h)) window.location.replace('amigos?confirmada=1' + h);
+            else if (/(^#|&)type=recovery(&|$)/.test(h)) window.location.replace('amigos?vista=nueva-clave' + h);
+            else if (/(^#|&)error_code=/.test(h)) window.location.replace('amigos?enlace=vencido');
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cerro San Francisco de Curimón</title>
     <link rel="icon" href="favicon.ico" sizes="any">
@@ -25,7 +34,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=48" />
+    <link rel="stylesheet" href="style.css?v=50" />
 
 </head>
 

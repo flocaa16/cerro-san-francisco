@@ -14,6 +14,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_1o_DMrEfSrUKAhocMOuApQ_UdgH479N';
 const Cuenta = (function () {
     const CLAVE_MANTENER = 'amigosMantener';
 
+    // Dirección base para los enlaces de los correos, siempre sin "www." (así coincide con las
+    // Redirect URLs de Supabase y el enlace no termina en la portada)
+    const BASE = window.location.href.replace('://www.', '://');
+    const enlace = ruta => new URL(ruta, BASE).href;
+
+    // Tipo de enlace con el que se abrió la página (Supabase lo agrega al final de la dirección):
+    // 'signup' = confirmar cuenta, 'recovery' = nueva contraseña. Se lee antes de que Supabase lo borre.
+    const datosEnlace = new URLSearchParams(window.location.hash.slice(1));
+    const tipoEnlace = datosEnlace.get('type') || new URLSearchParams(window.location.search).get('type') || '';
+
     // Eventos que pueden aparecer en "Mis inscripciones"
     const eventos = {
         'aves': {
@@ -191,7 +201,7 @@ const Cuenta = (function () {
                     comuna: datos.comuna,
                     nacimiento: datos.nacimiento || ''
                 },
-                emailRedirectTo: new URL('amigos?confirmada=1', window.location.href).href
+                emailRedirectTo: enlace('amigos?confirmada=1')
             }
         });
         if (error) throw traducir(error);
@@ -210,7 +220,7 @@ const Cuenta = (function () {
         intentar(() => localStorage.setItem(CLAVE_MANTENER, 'si'));
         const { error } = await db.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: new URL('perfil', window.location.href).href }
+            options: { redirectTo: enlace('perfil') }
         });
         if (error) throw traducir(error);
     }
@@ -219,7 +229,7 @@ const Cuenta = (function () {
     async function recuperar(correo) {
         if (!db) throw sinConexion();
         const { error } = await db.auth.resetPasswordForEmail(correo, {
-            redirectTo: new URL('amigos?vista=nueva-clave', window.location.href).href
+            redirectTo: enlace('amigos?vista=nueva-clave')
         });
         if (error) throw traducir(error);
     }
@@ -231,11 +241,19 @@ const Cuenta = (function () {
         if (error) throw traducir(error);
     }
 
-    // Guarda una inscripción a un evento (Amigo del Cerro o invitado)
-    async function inscribir(idEvento, datos) {
+    // Guarda una inscripción a un evento (Amigo del Cerro o invitado).
+    // "evento" trae título, fecha, hora y lugar: se guardan para el correo de confirmación.
+    async function inscribir(idEvento, datos, evento) {
         if (!db) throw sinConexion();
+        evento = evento || {};
         const fila = {
             evento: idEvento,
+            evento_titulo: evento.titulo || null,
+            evento_fecha: evento.fechaLarga || evento.fecha || null,
+            evento_hora: evento.hora || null,
+            evento_lugar: evento.lugar || null,
+            evento_inicio: evento.inicio || null,
+            evento_fin: evento.fin || null,
             tipo: datos.tipo,
             nombre: datos.nombre,
             apellido: datos.apellido,
@@ -299,6 +317,7 @@ const Cuenta = (function () {
 
     return {
         eventos: eventos,
+        tipoEnlace: tipoEnlace,
         listo: listo,
         obtener: obtener,
         guardar: guardar,

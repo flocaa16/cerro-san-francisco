@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=48" />
+    <link rel="stylesheet" href="style.css?v=50" />
 
 </head>
 
@@ -388,8 +388,13 @@
             <div class="modal-evento"></div>
             <button type="button" class="btn-primary-medium btn-primary-medium--tall modal-btn"
                 data-cerrar>Aceptar</button>
-            <button type="button" class="btn-outline-medium modal-btn" id="btnCalendario">Agregar a mi
-                calendario</button>
+            <!-- Abre Google Calendar con el evento listo para guardar (no descarga archivos) -->
+            <a class="btn-outline-medium modal-btn" id="btnCalendario" href="#" target="_blank" rel="noopener">Agregar
+                a Google Calendar</a>
+            <p class="modal-calendarios">¿Usas otro calendario?
+                <a href="#" id="calOutlook" target="_blank" rel="noopener">Outlook</a> ·
+                <a href="#" id="calApple">Apple / otros</a>
+            </p>
         </section>
         <!-- Paso 4: Confirmación -->
     </dialog>
@@ -569,7 +574,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js"></script>
+    <script src="cuenta.js?v=3"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
@@ -693,7 +698,7 @@
             boton.textContent = 'Enviando...';
 
             try {
-                await Cuenta.inscribir(eventos[id] ? id : 'aves', datos);
+                await Cuenta.inscribir(eventos[id] ? id : 'aves', datos, eventoActual);
                 irA('confirmacion');
                 return true;
             } catch (e) {
@@ -982,31 +987,56 @@
             }
         });
 
-        // Paso 4: agregar a mi calendario (descarga un archivo .ics)
-        document.querySelector('#btnCalendario').addEventListener('click', () => {
-            const fecha = texto => texto.replace(/[-:]/g, '') + '00';
+        // Paso 4: agregar a mi calendario
+        // Google Calendar y Outlook se abren en una pestaña nueva con el evento listo para guardar.
+        // "Apple / otros" usa un archivo .ics (en iPhone y Mac se abre directo en Calendario).
+        function prepararCalendarios() {
+            const ev = eventoActual;
+            const pagina = window.location.href.split('#')[0];
+            const detalle = ev.titulo + ' en el Parque Natural Cerro San Francisco de Curimón.\nMás información: ' + pagina;
+            const lugar = ev.lugar + ', Curimón, San Felipe';
+            const compacta = texto => texto.replace(/[-:]/g, '') + '00';
+
+            document.querySelector('#btnCalendario').href = 'https://calendar.google.com/calendar/render?' +
+                new URLSearchParams({
+                    action: 'TEMPLATE',
+                    text: ev.titulo,
+                    dates: compacta(ev.inicio) + '/' + compacta(ev.fin),
+                    ctz: 'America/Santiago',
+                    details: detalle,
+                    location: lugar
+                });
+
+            document.querySelector('#calOutlook').href = 'https://outlook.live.com/calendar/0/deeplink/compose?' +
+                new URLSearchParams({
+                    path: '/calendar/action/compose',
+                    rru: 'addevent',
+                    subject: ev.titulo,
+                    startdt: ev.inicio + ':00',
+                    enddt: ev.fin + ':00',
+                    body: detalle,
+                    location: lugar
+                });
+
             const ics = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
                 'PRODID:-//Cerro San Francisco de Curimon//Eventos//ES',
                 'BEGIN:VEVENT',
-                'UID:' + (id || 'aves') + '@cerrosanfrancisco',
+                'UID:' + (id || 'aves') + '@cerrosanfrancisco.cl',
                 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
-                'DTSTART;TZID=America/Santiago:' + fecha(eventoActual.inicio),
-                'DTEND;TZID=America/Santiago:' + fecha(eventoActual.fin),
-                'SUMMARY:' + eventoActual.titulo,
-                'LOCATION:' + eventoActual.lugar + ', Curimón',
-                'URL:' + window.location.href.split('#')[0],
+                'DTSTART;TZID=America/Santiago:' + compacta(ev.inicio),
+                'DTEND;TZID=America/Santiago:' + compacta(ev.fin),
+                'SUMMARY:' + ev.titulo,
+                'LOCATION:' + lugar.replace(/,/g, '\\,'),
+                'URL:' + pagina,
                 'END:VEVENT',
                 'END:VCALENDAR'
             ].join('\r\n');
-
-            const enlace = document.createElement('a');
-            enlace.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
-            enlace.download = (id || 'aves') + '-cerro-san-francisco.ics';
-            enlace.click();
-            URL.revokeObjectURL(enlace.href);
-        });
+            document.querySelector('#calApple').href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+            document.querySelector('#calApple').download = (id || 'aves') + '-cerro-san-francisco.ics';
+        }
+        prepararCalendarios();
     </script>
 
 </body>

@@ -90,6 +90,14 @@ create table if not exists public.inscripciones (
     check (char_length(nombre) <= 100 and char_length(correo) <= 200)
 );
 
+-- Datos del evento (para el correo de confirmación y la lista de la fundación)
+alter table public.inscripciones add column if not exists evento_titulo text;
+alter table public.inscripciones add column if not exists evento_fecha  text;
+alter table public.inscripciones add column if not exists evento_hora   text;
+alter table public.inscripciones add column if not exists evento_lugar  text;
+alter table public.inscripciones add column if not exists evento_inicio text;  -- 2026-06-13T10:00
+alter table public.inscripciones add column if not exists evento_fin    text;
+
 create index if not exists inscripciones_evento on public.inscripciones (evento);
 create index if not exists inscripciones_usuario on public.inscripciones (user_id);
 

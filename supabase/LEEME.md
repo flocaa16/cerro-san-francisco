@@ -44,3 +44,25 @@ Para invitar a alguien de la fundación: **Project Settings → Team → Invite*
 ## Probar
 Prueba en `https://cerrosanfrancisco.cl/amigos` después de hacer el deploy: los links sin `.html`
 (`perfil`, `amigos`) solo funcionan en el servidor de cPanel.
+
+## 8. Correo de confirmación de inscripción
+Cuando alguien se inscribe a un evento, Supabase avisa a `api/confirmar-inscripcion.php` (en cPanel)
+y ese archivo envía el correo desde `no-responder@cerrosanfrancisco.cl`.
+
+1. **cPanel → Administrador de archivos**, en tu carpeta de inicio (`/home/USUARIO`, la que contiene
+   `public_html`, NO dentro de ella) crea el archivo `config-cerro.php` con:
+   ```php
+   <?php
+   return [
+       'webhook_clave' => 'PEGA-AQUI-LA-CLAVE-SECRETA',
+       'remitente'     => 'no-responder@cerrosanfrancisco.cl',
+       'responder_a'   => 'contacto@fundacionlepe.cl',
+   ];
+   ```
+   Este archivo nunca va al repositorio (es público).
+2. **Supabase → Database → Webhooks → Create a new hook**:
+   - Table: `inscripciones` · Events: **Insert**
+   - Type: **HTTP Request** · Method: **POST**
+   - URL: `https://cerrosanfrancisco.cl/api/confirmar-inscripcion.php`
+   - HTTP Headers → Add: `X-Webhook-Clave` = la misma clave secreta del paso 1
+3. Inscríbete a un evento de prueba y revisa tu correo.
