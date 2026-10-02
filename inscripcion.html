@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=52" />
+    <link rel="stylesheet" href="style.css?v=53" />
 
 </head>
 
@@ -289,6 +289,9 @@
                     </div>
                 </div>
                 <p class="modal-nota">Datos tomados de tu perfil de Amigo del Cerro. Puedes editarlos antes de confirmar.</p>
+                <p class="modal-legal">Al inscribir a otras personas declaras contar con su autorización (o ser su madre,
+                    padre o apoderado/a si son menores de edad), según los <a href="terminos" target="_blank"
+                        rel="noopener">términos y condiciones</a>.</p>
 
                 <p class="modal-error" role="alert"></p>
                 <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn"
@@ -361,15 +364,25 @@
                     </div>
                 </div>
 
+                <!-- Datos de cada acompañante (aparecen al subir la cantidad) -->
+                <div class="acompanantes" id="invAcompanantes"></div>
+
                 <label class="modal-check">
                     <input type="checkbox" class="checkbox" name="crearCuenta" id="invCrearCuenta">
                     <span>Quiero crear mi cuenta de Amigo del Cerro para guardar mis datos en próximas
                         inscripciones.</span>
                 </label>
 
-                <p class="modal-legal">Al inscribirte aceptas los <a href="terminos" target="_blank"
-
-                        rel="noopener">términos y condiciones</a> del sitio.</p>
+                <div class="campo">
+                    <label class="modal-check">
+                        <input type="checkbox" class="checkbox" id="invTerminos" required>
+                        <span>Acepto los <a href="terminos" target="_blank" rel="noopener">términos y condiciones</a>
+                            y el <a href="terminos#datos-personales" target="_blank" rel="noopener">tratamiento de los
+                                datos personales</a>. Si inscribo a otras personas, cuento con su autorización (o soy
+                            su madre, padre o apoderado/a si son menores de edad).</span>
+                    </label>
+                    <p class="campo-error" id="invTerminosError"></p>
+                </div>
 
                 <p class="modal-error" role="alert"></p>
                 <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn">Confirmar
@@ -624,8 +637,10 @@
             const error = document.querySelector('#' + input.id + 'Error');
             let mensaje = '';
 
-            if (input.validity.valueMissing) mensaje = 'Este campo es obligatorio.';
+            if (input.type === 'checkbox' && input.validity.valueMissing) mensaje = 'Debes aceptar para inscribirte.';
+            else if (input.validity.valueMissing) mensaje = input.tagName === 'SELECT' ? 'Elige una opción.' : 'Este campo es obligatorio.';
             else if (input.validity.typeMismatch) mensaje = 'Escribe un correo válido, por ejemplo nombre@email.com.';
+            else if (input.classList.contains('campo-fecha') && !fechaValida(input.value)) mensaje = 'Escribe la fecha como dd/mm/aaaa.';
             else if (input.validity.tooShort) mensaje = 'Debe tener al menos ' + input.minLength + ' caracteres.';
             else if (input.type === 'tel' && input.value.replace(/\D/g, '').length < 8) {
                 mensaje = 'Escribe un teléfono válido (al menos 8 dígitos).';
@@ -876,7 +891,9 @@
 
         formAmigo.addEventListener('submit', (event) => {
             event.preventDefault();
-            const elegidas = personasInscripcion.filter(persona => persona.elegida).map(persona => persona.nombre);
+            // "Flor Campos · Titular · 34 años", "Tomás González · Hijo · 10 años" (igual que en la inscripción como invitado)
+            const elegidas = personasInscripcion.filter(persona => persona.elegida)
+                .map(persona => persona.nombre + ' · ' + persona.detalle.replace(/^Tú/, 'Titular'));
             if (!elegidas.length) {
                 formAmigo.querySelector('.modal-error').textContent = 'Elige al menos una persona para inscribir.';
                 listaPersonas.querySelector('input').focus();
@@ -915,10 +932,77 @@
         const invCantidad = document.querySelector('#invCantidad');
         let cantidad = 1;
 
+        // Un bloque con nombre, apellido, relación y fecha de nacimiento por cada acompañante
+        const invAcompanantes = document.querySelector('#invAcompanantes');
+
+        function bloqueAcompanante(numero) {
+            const id = 'acomp' + numero;
+            const bloque = document.createElement('fieldset');
+            bloque.className = 'acompanante';
+            bloque.innerHTML =
+                '<legend class="modal-label">Persona ' + numero + '</legend>' +
+                '<div class="modal-row">' +
+                campoTexto(id + 'Nombre', 'Nombre') + campoTexto(id + 'Apellido', 'Apellido') +
+                '</div><div class="modal-row">' +
+                '<div class="campo"><div class="campo-box">' +
+                '<select class="campo-input campo-select" id="' + id + 'Relacion" required>' +
+                '<option value=""></option><option>Hijo</option><option>Hija</option><option>Pareja</option><option>Madre</option><option>Padre</option><option>Hermano</option><option>Hermana</option><option>Amigo</option><option>Amiga</option><option>Otro</option></select>' +
+                '<label class="campo-label" for="' + id + 'Relacion">Relación contigo</label>' +
+                '<svg class="campo-flecha" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">' +
+                '<path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>' +
+                '</div><p class="campo-error" id="' + id + 'RelacionError"></p></div>' +
+                '<div class="campo"><div class="campo-box">' +
+                '<input class="campo-input campo-fecha" id="' + id + 'Nacimiento" type="text" placeholder=" " ' +
+                'inputmode="numeric" maxlength="10" autocomplete="off" required>' +
+                '<label class="campo-label" for="' + id + 'Nacimiento">Fecha de nacimiento</label>' +
+                '</div><p class="campo-error" id="' + id + 'NacimientoError"></p></div>' +
+                '</div>';
+            return bloque;
+        }
+
+        function campoTexto(idCampo, etiqueta) {
+            return '<div class="campo"><div class="campo-box">' +
+                '<input class="campo-input" id="' + idCampo + '" type="text" placeholder=" " autocomplete="off" required>' +
+                '<label class="campo-label" for="' + idCampo + '">' + etiqueta + '</label>' +
+                '</div><p class="campo-error" id="' + idCampo + 'Error"></p></div>';
+        }
+
+        // Agrega o quita bloques sin borrar lo que ya se escribió
+        function actualizarAcompanantes() {
+            while (invAcompanantes.children.length < cantidad - 1) {
+                invAcompanantes.appendChild(bloqueAcompanante(invAcompanantes.children.length + 2));
+            }
+            while (invAcompanantes.children.length > cantidad - 1) {
+                invAcompanantes.lastElementChild.remove();
+            }
+        }
+
+        // Barras automáticas en las fechas y error que se borra al corregir
+        invAcompanantes.addEventListener('input', (event) => {
+            const input = event.target;
+            if (input.classList.contains('campo-fecha')) {
+                const numeros = input.value.replace(/\D/g, '').slice(0, 8);
+                input.value = [numeros.slice(0, 2), numeros.slice(2, 4), numeros.slice(4)].filter(Boolean).join('/');
+            }
+            if (input.getAttribute('aria-invalid') === 'true') validarCampo(input);
+        });
+        invAcompanantes.addEventListener('change', (event) => {
+            if (event.target.getAttribute('aria-invalid') === 'true') validarCampo(event.target);
+        });
+
+        // "Ana Pérez · Amiga · 29 años" (así queda en la inscripción y en el correo)
+        function listaAcompanantes() {
+            return [...invAcompanantes.children].map((bloque, i) => {
+                const valor = sufijo => bloque.querySelector('#acomp' + (i + 2) + sufijo).value.trim();
+                return valor('Nombre') + ' ' + valor('Apellido') + ' · ' + Cuenta.detalle(valor('Relacion'), valor('Nacimiento'));
+            });
+        }
+
         formInvitado.querySelectorAll('[data-paso-cantidad]').forEach(boton => {
             boton.addEventListener('click', () => {
                 cantidad = Math.min(MAX_PERSONAS, Math.max(1, cantidad + Number(boton.dataset.pasoCantidad)));
                 invCantidad.textContent = cantidad;
+                actualizarAcompanantes();
             });
         });
 
@@ -934,6 +1018,8 @@
                 telefono: document.querySelector('#invTelefono').value.trim(),
                 comuna: document.querySelector('#invComuna').value.trim(),
                 cantidad: cantidad,
+                listaPersonas: [document.querySelector('#invNombre').value.trim() + ' ' +
+                    document.querySelector('#invApellido').value.trim() + ' · Titular'].concat(listaAcompanantes()),
                 crearCuenta: document.querySelector('#invCrearCuenta').checked ? 'Sí' : 'No'
             });
 
@@ -954,6 +1040,7 @@
                 formInvitado.reset();
                 cantidad = 1;
                 invCantidad.textContent = cantidad;
+                actualizarAcompanantes();
             }
         });
 

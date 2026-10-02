@@ -5546,3 +5546,29 @@ a.publicacion-item:hover .publicacion-item-icono {
 .footer-aviso--error {
     color: #FFD8D3;
 }
+
+/* Acompañantes del invitado (inscripción) */
+.acompanantes {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.acompanantes:empty {
+    display: none;
+}
+
+.acompanante {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 20px;
+    border: none;
+    background-color: #F3F7F3;
+}
+
+.acompanante legend {
+    float: left;
+    padding: 0;
+}

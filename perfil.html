@@ -14,7 +14,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=52" />
+    <link rel="stylesheet" href="style.css?v=53" />
 
 </head>
 
@@ -523,7 +523,9 @@
             datos.appendChild(texto('p', 'cuenta-fila-title', evento.titulo));
             if (completa) {
                 datos.appendChild(texto('p', 'cuenta-fila-text', evento.fecha + ' · ' + evento.hora));
-                datos.appendChild(texto('p', 'cuenta-fila-caption', 'Inscritos: ' + inscripcion.personas.join(', ')));
+                // En el perfil solo se muestran los nombres (la inscripción guarda también relación y edad)
+                datos.appendChild(texto('p', 'cuenta-fila-caption', 'Inscritos: ' +
+                    inscripcion.personas.map(persona => persona.split(' · ')[0]).join(', ')));
             } else {
                 datos.appendChild(texto('p', 'cuenta-fila-caption', evento.fecha + ' · ' + evento.hora + ' · ' +
                     cantidad + (cantidad === 1 ? ' persona' : ' personas')));
