@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=45" />
+    <link rel="stylesheet" href="style.css?v=48" />
 
 </head>
 
@@ -81,6 +81,18 @@
 
             <!-- Iniciar sesión -->
             <section class="acceso-vista" id="vistaIngresar" aria-labelledby="ingresarTitulo">
+                <!-- Aviso destacado: cuenta creada / activada (se llena desde el script) -->
+                <div class="acceso-alerta" id="accesoAlerta" role="status" tabindex="-1" hidden>
+                    <svg class="acceso-alerta-icono" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor"
+                            d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                    </svg>
+                    <div>
+                        <p class="acceso-alerta-titulo" id="accesoAlertaTitulo"></p>
+                        <p class="acceso-alerta-texto" id="accesoAlertaTexto"></p>
+                    </div>
+                </div>
+
                 <div class="acceso-text">
                     <h2 class="acceso-title" id="ingresarTitulo">Iniciar Sesión</h2>
                     <p class="acceso-subtitle">Por favor inicia sesión para poder ingresar</p>
@@ -463,8 +475,8 @@
             if (vista.get('confirmada')) {
                 if (cuenta) await Cuenta.cerrar();
                 history.replaceState(null, '', 'amigos');
-                volverAIngresar(cuenta ? cuenta.correo : '',
-                    '¡Tu cuenta está activada! Inicia sesión con tu correo y contraseña.');
+                volverAIngresar(cuenta ? cuenta.correo : '', '¡Tu cuenta está activada!',
+                    'Ya puedes iniciar sesión con tu correo y contraseña.');
                 return;
             }
             if (cuenta && vista.get('vista') !== 'nueva-clave') {
@@ -604,13 +616,28 @@
         });
 
         // Vuelve a "Iniciar sesión" con el correo ya escrito y un aviso
-        function volverAIngresar(correo, aviso) {
+        // (el aviso se muestra en un recuadro destacado arriba del formulario)
+        function volverAIngresar(correo, titulo, texto) {
             history.replaceState(null, '', 'amigos');
             mostrarVista('ingresar', false);
             if (correo) document.querySelector('#ingCorreo').value = correo;
-            googleAviso.textContent = aviso;
-            document.querySelector('#ingClave').focus();
-            window.scrollTo(0, 0);
+            const alerta = document.querySelector('#accesoAlerta');
+            document.querySelector('#accesoAlertaTitulo').textContent = titulo;
+            const parrafo = document.querySelector('#accesoAlertaTexto');
+            parrafo.textContent = '';
+            // El correo va en negrita (se arma con nodos de texto para no insertar HTML)
+            texto.split(/(\{correo\})/).forEach(parte => {
+                if (parte === '{correo}') {
+                    const b = document.createElement('strong');
+                    b.textContent = correo;
+                    parrafo.appendChild(b);
+                } else {
+                    parrafo.appendChild(document.createTextNode(parte));
+                }
+            });
+            alerta.hidden = false;
+            alerta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            alerta.focus({ preventScroll: true });
         }
 
         // Crear cuenta: al terminar vuelve a "Iniciar sesión"
@@ -634,13 +661,14 @@
                 form.reset();
                 if (resultado.confirmar) {
                     // Supabase pide confirmar el correo: la cuenta se activa con el enlace del correo
-                    volverAIngresar(correo, '¡Cuenta creada! Te enviamos un correo a ' + correo +
-                        '. Abre el enlace para activarla y luego inicia sesión aquí (revisa también la carpeta de spam).');
+                    volverAIngresar(correo, '¡Cuenta creada! Revisa tu correo',
+                        'Te enviamos un correo a {correo}. Abre el enlace para activar tu cuenta y luego inicia ' +
+                        'sesión aquí. Si no lo ves, revisa la carpeta de spam o promociones.');
                     return;
                 }
                 // Sin confirmación por correo: se cierra la sesión automática para que la persona inicie sesión
                 await Cuenta.cerrar();
-                volverAIngresar(correo, '¡Cuenta creada! Ya puedes iniciar sesión.');
+                volverAIngresar(correo, '¡Cuenta creada!', 'Ya puedes iniciar sesión con {correo}.');
             });
         });
     </script>

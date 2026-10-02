@@ -85,7 +85,9 @@ const Cuenta = (function () {
         if (/session missing|not authenticated|expired/i.test(texto)) return new Error('El enlace expiró. Pide uno nuevo con "¿Olvidaste tu contraseña?".');
         if (/permission denied|42501|row-level security/i.test(texto)) return new Error('No pudimos acceder a tu cuenta en este momento. Inténtalo más tarde o escríbenos a contacto@fundacionlepe.cl.');
         if (/failed to fetch|network/i.test(texto)) return new Error('No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.');
-        return new Error('Ocurrió un error. Inténtalo de nuevo o escríbenos a contacto@fundacionlepe.cl.');
+        // Error no previsto: se muestra el detalle técnico para poder revisarlo
+        return new Error('Ocurrió un error. Inténtalo de nuevo o escríbenos a contacto@fundacionlepe.cl.' +
+            (texto ? ' (Detalle: ' + texto + ')' : ''));
     }
 
     // Carga el perfil y las inscripciones del usuario con sesión iniciada
@@ -100,19 +102,28 @@ const Cuenta = (function () {
             throw traducir(perfil.error);
         }
 
+        // Datos guardados en el perfil; si faltan, se usan los que la persona escribió al crear la cuenta
         const datos = perfil.data || {};
+        const registro = usuario.user_metadata || {};
         memoria = {
             id: usuario.id,
-            nombre: datos.nombre || '',
-            apellido: datos.apellido || '',
+            nombre: datos.nombre || registro.nombre || registro.given_name || '',
+            apellido: datos.apellido || registro.apellido || registro.family_name || '',
             correo: usuario.email,
-            telefono: datos.telefono || '',
-            comuna: datos.comuna || '',
-            nacimiento: datos.nacimiento || '',
+            telefono: datos.telefono || registro.telefono || '',
+            comuna: datos.comuna || registro.comuna || '',
+            nacimiento: datos.nacimiento || registro.nacimiento || '',
             personas: Array.isArray(datos.personas) ? datos.personas : [],
             inscripciones: (inscripciones.data || []).map(fila => ({ evento: fila.evento, personas: fila.personas || [] })),
             google: (usuario.app_metadata && usuario.app_metadata.provider) === 'google'
         };
+
+        // Si el perfil no existía o estaba incompleto, se guarda ahora con esos datos
+        const incompleto = ['nombre', 'apellido', 'telefono', 'comuna', 'nacimiento']
+            .some(clave => !datos[clave] && memoria[clave]);
+        if (!perfil.data || incompleto) {
+            guardar(memoria).catch(e => console.error('No se pudo completar el perfil', e));
+        }
         return memoria;
     }
 

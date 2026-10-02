@@ -4246,6 +4246,57 @@ button.cover:hover {
     display: none;
 }
 
+/* Aviso destacado arriba de "Iniciar sesión" (cuenta creada / activada) */
+.acceso-alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 20px 24px;
+    border-left: 6px solid #557458;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+    color: #303132;
+    animation: acceso-alerta-entrada 0.35s ease-out;
+}
+
+.acceso-alerta[hidden] {
+    display: none;
+}
+
+.acceso-alerta:focus {
+    outline: none;
+}
+
+.acceso-alerta-icono {
+    flex-shrink: 0;
+    color: #557458;
+}
+
+.acceso-alerta-titulo {
+    margin: 0 0 6px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #557458;
+}
+
+.acceso-alerta-texto {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+@keyframes acceso-alerta-entrada {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .acceso-alerta {
+        animation: none;
+    }
+}
+
 .acceso-cambio {
     font-size: 18px;
     line-height: 1.5;
@@ -5125,7 +5176,19 @@ button.cover:hover {
 
 .modal-nueva-persona {
     display: flex;
+    flex-direction: column;
     gap: 16px;
+    padding: 20px;
+    background-color: #F3F7F3;
+}
+
+.modal-nueva-persona .btn-outline-medium {
+    align-self: flex-start;
+}
+
+/* El fondo transparente de arriba no debe anular el fondo del hover */
+.modal-nueva-persona .btn-outline-medium:hover {
+    background-color: #557458;
 }
 
 .modal-nueva-persona[hidden] {

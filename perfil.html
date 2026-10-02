@@ -14,7 +14,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=45" />
+    <link rel="stylesheet" href="style.css?v=48" />
 
 </head>
 
@@ -262,6 +262,7 @@
                 <p class="campo-error" id="perCorreoError"></p>
             </div>
             <p class="modal-nota" id="personaNota">Usamos estos datos solo para agilizar tus inscripciones.</p>
+            <p class="modal-error" id="personaError" role="alert"></p>
 
             <button type="submit" class="btn-primary-medium btn-primary-medium--tall modal-btn"
                 id="btnGuardarPersona">Guardar persona</button>
@@ -635,6 +636,7 @@
                 input.removeAttribute('aria-describedby');
             });
             formPersona.querySelectorAll('.campo-error').forEach(error => error.textContent = '');
+            document.querySelector('#personaError').textContent = '';
 
             const editar = Boolean(persona);
             document.querySelector('#personaTitulo').textContent = editar ? 'Editar persona' : 'Agregar persona';
@@ -659,7 +661,7 @@
             boton.addEventListener('click', () => abrirPersona(null));
         });
 
-        formPersona.addEventListener('submit', (event) => {
+        formPersona.addEventListener('submit', async (event) => {
             event.preventDefault();
             if (!validarFormulario(formPersona)) return;
 
@@ -671,6 +673,8 @@
                 correo: document.querySelector('#perCorreo').value.trim()
             };
 
+            // Se guarda en Supabase y solo se cierra si funcionó (si falla, se deshace y se muestra el error)
+            const copia = JSON.parse(JSON.stringify(cuenta.personas));
             if (personaEditada) {
                 Object.assign(personaEditada, datos);
             } else {
@@ -679,9 +683,21 @@
                 cuenta.personas.push(datos);
             }
 
-            guardarCuenta();
-            dibujarPersonas();
-            modalPersona.close();
+            const boton = document.querySelector('#btnGuardarPersona');
+            const texto = boton.textContent;
+            boton.disabled = true;
+            boton.textContent = 'Guardando...';
+            try {
+                await Cuenta.guardar(cuenta);
+                dibujarPersonas();
+                modalPersona.close();
+            } catch (e) {
+                cuenta.personas = copia;
+                document.querySelector('#personaError').textContent = 'No se pudo guardar: ' + e.message;
+            } finally {
+                boton.disabled = false;
+                boton.textContent = texto;
+            }
         });
 
         btnEliminarPersona.addEventListener('click', () => {

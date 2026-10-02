@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=45" />
+    <link rel="stylesheet" href="style.css?v=48" />
 
 </head>
 
@@ -193,14 +193,62 @@
 
                 <button type="button" class="modal-agregar" id="btnAgregarPersona" aria-expanded="false">+ Agregar
                     otra persona</button>
+                <!-- Mismos datos que "Agregar persona" en el perfil -->
                 <div class="modal-nueva-persona" id="nuevaPersona" hidden>
-                    <div class="campo">
-                        <div class="campo-box">
-                            <input class="campo-input" id="nuevaPersonaNombre" autocomplete="off" type="text" placeholder=" ">
-                            <label class="campo-label" for="nuevaPersonaNombre">Nombre y apellido</label>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="nuevaPersonaNombre" autocomplete="off" type="text" placeholder=" ">
+                                <label class="campo-label" for="nuevaPersonaNombre">Nombre</label>
+                            </div>
+                            <p class="campo-error" id="nuevaPersonaNombreError"></p>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input" id="nuevaPersonaApellido" autocomplete="off" type="text" placeholder=" ">
+                                <label class="campo-label" for="nuevaPersonaApellido">Apellido</label>
+                            </div>
+                            <p class="campo-error" id="nuevaPersonaApellidoError"></p>
                         </div>
                     </div>
-                    <button type="button" class="btn-outline-medium" id="btnGuardarPersona">Agregar</button>
+                    <div class="modal-row">
+                        <div class="campo">
+                            <div class="campo-box">
+                                <select class="campo-input campo-select" id="nuevaPersonaRelacion" required>
+                                <option value=""></option>
+                                <option>Hijo</option>
+                                <option>Hija</option>
+                                <option>Pareja</option>
+                                <option>Madre</option>
+                                <option>Padre</option>
+                                <option>Hermano</option>
+                                <option>Hermana</option>
+                                <option>Amigo</option>
+                                <option>Amiga</option>
+                                <option>Otro</option>
+                                </select>
+                                <label class="campo-label" for="nuevaPersonaRelacion">Relación</label>
+                                <svg class="campo-flecha" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+                                </svg>
+                            </div>
+                            <p class="campo-error" id="nuevaPersonaRelacionError"></p>
+                        </div>
+                        <div class="campo">
+                            <div class="campo-box">
+                                <input class="campo-input campo-fecha" id="nuevaPersonaNacimiento" autocomplete="off" type="text"
+                                    placeholder=" " inputmode="numeric" maxlength="10">
+                                <label class="campo-label" for="nuevaPersonaNacimiento">Fecha de nacimiento</label>
+                            </div>
+                            <p class="campo-error" id="nuevaPersonaNacimientoError"></p>
+                        </div>
+                    </div>
+                    <label class="modal-check">
+                        <input type="checkbox" class="checkbox" id="nuevaPersonaGuardar" checked>
+                        <span>Guardar en mis personas guardadas para próximas inscripciones</span>
+                    </label>
+                    <p class="modal-error" id="nuevaPersonaError" role="alert"></p>
+                    <button type="button" class="btn-outline-medium" id="btnGuardarPersona">Agregar persona</button>
                 </div>
 
                 <p class="modal-label">Datos de contacto</p>
@@ -616,7 +664,8 @@
         }
 
         function validarFormulario(form) {
-            const campos = [...form.querySelectorAll('[required]')];
+            // Los campos de "Agregar otra persona" se validan aparte (al hacer clic en "Agregar persona")
+            const campos = [...form.querySelectorAll('[required]')].filter(input => !input.closest('#nuevaPersona'));
             const validos = campos.map(validarCampo);
             if (validos.includes(false)) {
                 campos[validos.indexOf(false)].focus();
@@ -754,26 +803,100 @@
             if (!nuevaPersona.hidden) nuevaPersonaNombre.focus();
         });
 
-        function guardarPersona() {
-            const nombre = nuevaPersonaNombre.value.trim();
-            if (!nombre) {
-                nuevaPersonaNombre.focus();
+        // Fecha dd/mm/aaaa que exista y no sea futura
+        function fechaValida(texto) {
+            const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto || '');
+            if (!m) return false;
+            const fecha = new Date(+m[3], +m[2] - 1, +m[1]);
+            return fecha.getDate() === +m[1] && fecha.getMonth() === +m[2] - 1 && fecha <= new Date() && +m[3] >= 1900;
+        }
+
+        const camposNuevaPersona = {
+            nombre: document.querySelector('#nuevaPersonaNombre'),
+            apellido: document.querySelector('#nuevaPersonaApellido'),
+            relacion: document.querySelector('#nuevaPersonaRelacion'),
+            nacimiento: document.querySelector('#nuevaPersonaNacimiento')
+        };
+
+        // Barras automáticas en la fecha
+        camposNuevaPersona.nacimiento.addEventListener('input', () => {
+            const numeros = camposNuevaPersona.nacimiento.value.replace(/\D/g, '').slice(0, 8);
+            camposNuevaPersona.nacimiento.value = [numeros.slice(0, 2), numeros.slice(2, 4), numeros.slice(4)].filter(Boolean).join('/');
+        });
+
+        function errorNuevaPersona(input, mensaje) {
+            document.querySelector('#' + input.id + 'Error').textContent = mensaje;
+            input.setAttribute('aria-invalid', mensaje ? 'true' : 'false');
+            return !mensaje;
+        }
+
+        async function guardarPersona() {
+            const c = camposNuevaPersona;
+            const validos = [
+                errorNuevaPersona(c.nombre, c.nombre.value.trim() ? '' : 'Este campo es obligatorio.'),
+                errorNuevaPersona(c.apellido, c.apellido.value.trim() ? '' : 'Este campo es obligatorio.'),
+                errorNuevaPersona(c.relacion, c.relacion.value ? '' : 'Elige la relación.'),
+                errorNuevaPersona(c.nacimiento, fechaValida(c.nacimiento.value) ? '' : 'Escribe la fecha como dd/mm/aaaa.')
+            ];
+            const primero = Object.values(c)[validos.indexOf(false)];
+            if (primero) {
+                primero.focus();
                 return;
             }
-            personasInscripcion.push({ nombre: nombre, detalle: 'Acompañante', elegida: true });
+
+            const persona = {
+                id: Date.now(),
+                nombre: c.nombre.value.trim(),
+                apellido: c.apellido.value.trim(),
+                relacion: c.relacion.value,
+                nacimiento: c.nacimiento.value.trim(),
+                correo: '',
+                elegida: true
+            };
+            const aviso = document.querySelector('#nuevaPersonaError');
+            aviso.textContent = '';
+
+            // Si se pidió, queda guardada en el perfil (Personas guardadas)
+            if (document.querySelector('#nuevaPersonaGuardar').checked && sesion) {
+                const boton = document.querySelector('#btnGuardarPersona');
+                boton.disabled = true;
+                sesion.personas.push(persona);
+                try {
+                    await Cuenta.guardar(sesion);
+                } catch (e) {
+                    sesion.personas.pop();
+                    aviso.textContent = 'No pudimos guardar a esta persona en tu perfil: ' + e.message;
+                    boton.disabled = false;
+                    return;
+                }
+                boton.disabled = false;
+            }
+
+            personasInscripcion.push({
+                nombre: persona.nombre + ' ' + persona.apellido,
+                detalle: Cuenta.detalle(persona.relacion, persona.nacimiento),
+                elegida: true,
+                guardada: document.querySelector('#nuevaPersonaGuardar').checked ? persona : null
+            });
             dibujarPersonas();
-            nuevaPersonaNombre.value = '';
+            Object.values(c).forEach(input => { input.value = ''; input.removeAttribute('aria-invalid'); });
             nuevaPersona.hidden = true;
             btnAgregarPersona.setAttribute('aria-expanded', 'false');
             btnAgregarPersona.focus();
         }
 
         document.querySelector('#btnGuardarPersona').addEventListener('click', guardarPersona);
-        nuevaPersonaNombre.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                guardarPersona();
-            }
+        Object.values(camposNuevaPersona).forEach(input => {
+            // El error se borra apenas la persona corrige el campo
+            ['input', 'change'].forEach(tipo => input.addEventListener(tipo, () => {
+                if (input.getAttribute('aria-invalid') === 'true') errorNuevaPersona(input, '');
+            }));
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    guardarPersona();
+                }
+            });
         });
 
         formAmigo.addEventListener('submit', (event) => {
