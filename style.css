@@ -727,8 +727,8 @@ h3 {
 }
 
 .banner-image {
-    /* La foto llega siempre hasta el borde derecho de la pantalla */
-    width: calc(50vw - 88px);
+    /* La foto ocupa el 60% del ancho de la pantalla y llega hasta el borde derecho */
+    width: 60vw;
     /* Se corta desde arriba para que en la primera vista se vea la silueta del cerro
        (alto de pantalla - header 80px - 150px de montañas), máximo 679px como en Figma */
     height: clamp(420px, calc(100vh - 230px), 679px);
