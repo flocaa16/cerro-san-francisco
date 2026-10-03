@@ -43,8 +43,16 @@ if (!empty($_POST['sitio_web'])) {
 $rutaConfig = dirname($_SERVER['DOCUMENT_ROOT']) . '/config-cerro.php';
 $config = is_readable($rutaConfig) ? require $rutaConfig : [];
 $destino = !empty($config['contacto_destino']) ? $config['contacto_destino'] : 'contacto@fundacionlepe.cl';
-// Cada formulario puede llegar a una persona distinta
-if (isset($_POST['formulario']) && $_POST['formulario'] === 'educacion' && !empty($config['educacion_destino'])) {
+// Cada formulario puede llegar a una persona distinta.
+// Se reconoce el de Educación por su marca, o (si la página está en una versión antigua guardada en el
+// navegador) porque trae asunto "Educación..." o el campo Institución, que solo existe en ese formulario.
+$formulario = isset($_POST['formulario']) ? $_POST['formulario'] : '';
+if ($formulario === '') {
+    $asuntoRecibido = isset($_POST['asunto']) ? (string) $_POST['asunto'] : '';
+    $formulario = (stripos($asuntoRecibido, 'educaci') !== false || isset($_POST['institucion'])) ? 'educacion' : 'contacto';
+}
+$_POST['formulario'] = $formulario;
+if ($formulario === 'educacion' && !empty($config['educacion_destino'])) {
     $destino = $config['educacion_destino'];
 }
 $remitente = !empty($config['remitente']) ? $config['remitente'] : 'no-responder@cerrosanfrancisco.cl';
