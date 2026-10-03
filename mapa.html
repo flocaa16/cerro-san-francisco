@@ -105,8 +105,9 @@
                     <p class="mapa-text">Sendero circular hasta la cima, con vista a todo el Valle del Aconcagua.</p>
                 </div>
 
+                <!-- Datos del sendero: SIN CONFIRMAR, ocultos hasta tener la información
                 <dl class="mapa-datos">
-<!--                     <div class="mapa-dato">
+                    <div class="mapa-dato">
                         <dt>Recorrido</dt>
                         <dd>3,67 km</dd>
                     </div>
@@ -117,8 +118,9 @@
                     <div class="mapa-dato">
                         <dt>Altitud máx.</dt>
                         <dd>761 m</dd>
-                    </div> -->
+                    </div>
                 </dl>
+                -->
 
                 <h2 class="mapa-subtitle">Puntos del recorrido</h2>
                 <ol class="mapa-puntos" id="mapaPuntos"></ol>
@@ -174,8 +176,10 @@
                         <span id="detalleNombre"></span>
                     </h2>
 
+                    <!-- Datos de cada punto: SIN CONFIRMAR, ocultos hasta tener la información.
+                         Para mostrarlos: quitar este comentario y descomentar tiempo/longitud/dificultad en "puntos".
                     <dl class="mapa-datos">
-                      <!--   <div class="mapa-dato">
+                        <div class="mapa-dato">
                             <dt>Duración</dt>
                             <dd id="detalleTiempo"></dd>
                         </div>
@@ -186,8 +190,9 @@
                         <div class="mapa-dato">
                             <dt>Dificultad</dt>
                             <dd id="detalleDificultad"></dd>
-                        </div> -->
+                        </div>
                     </dl>
+                    -->
 
                     <p class="mapa-detalle-text" id="detalleTexto"></p>
 
@@ -334,14 +339,14 @@
         // Puntos del recorrido (según el plano de zonificación de la Fundación)
         // coords: ubicación en el mapa
         // tiempo, longitud, dificultad, link y fotos son opcionales: si faltan, no se muestran.
-        // Mirador Sur, Parcelas, Mirador Norte y Acceso vehicular: ubicados según el plano de zonificación (aprox. 10-20 m)
+        // Mirador Sur, Parcelas y Mirador Norte: ubicados según el plano de zonificación (aprox. 10-20 m)
         const puntos = [
             {
                 id: 'acceso-peatonal',
                 tipo: 'Acceso',
                 nombre: 'Acceso peatonal',
                 coords: [-32.78572, -70.68424],
-                tiempo: '2 horas', longitud: '3,67 km', dificultad: 'Fácil',
+                // tiempo: '2 horas', longitud: '3,67 km', dificultad: 'Fácil', (sin confirmar)
                 resumen: 'Inicio del sendero',
                 // Texto provisorio
                 texto: 'Entrada a pie al parque, en la base del cerro. Desde aquí el sendero sube por la ladera poniente hasta la cima, con paneles informativos sobre la flora, la fauna y la historia del lugar.',
@@ -367,7 +372,7 @@
                 tipo: 'Mirador',
                 nombre: 'Mirador Cruz del Gallo',
                 coords: [-32.78428, -70.68276],
-                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
+                // tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil', (sin confirmar)
                 resumen: 'Vista al Valle del Aconcagua',
                 // Texto provisorio
                 texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
@@ -391,7 +396,7 @@
                 tipo: 'Punto de interés',
                 nombre: 'Catedral Verde',
                 coords: [-32.78286, -70.68226],
-                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
+                // tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil', (sin confirmar)
                 resumen: 'Bosque de cipreses en la cima',
                 // Texto del Figma
                 texto: 'La cima del cerro, conocida como Catedral Verde, es un bosque de cipreses que da sombra y refugio a quienes la visitan. Aquí se realizan actividades comunitarias, patrimoniales y educativas, y desde el sector norte se obtiene una vista de 360° del valle, el río y la cordillera.',
@@ -410,16 +415,6 @@
                 resumen: 'Vista al río Aconcagua',
                 // Texto provisorio
                 texto: 'Mirador del sector norte, con vista al río Aconcagua y a la cordillera.',
-                fotos: []
-            },
-            {
-                id: 'acceso-vehicular',
-                tipo: 'Acceso',
-                nombre: 'Acceso vehicular',
-                coords: [-32.78556, -70.68111],
-                resumen: 'Entrada en vehículo',
-                // Texto provisorio
-                texto: 'Entrada al parque para vehículos.',
                 fotos: []
             }
         ];
@@ -662,14 +657,19 @@
                 document.querySelector('#detalleTipo').textContent = punto.tipo;
                 document.querySelector('#detalleNumero').textContent = actual + 1;
                 document.querySelector('#detalleNombre').textContent = punto.nombre;
-                let hayDatos = false;
-                [['#detalleTiempo', punto.tiempo], ['#detalleLongitud', punto.longitud], ['#detalleDificultad', punto.dificultad]].forEach(([id, valor]) => {
-                    const dd = document.querySelector(id);
-                    dd.textContent = valor || '';
-                    dd.parentElement.style.display = valor ? '' : 'none';
-                    if (valor) hayDatos = true;
-                });
-                vistaDetalle.querySelector('.mapa-datos').style.display = hayDatos ? '' : 'none';
+                // Duración, recorrido y dificultad: solo si están en el HTML y en el punto
+                const datosPunto = vistaDetalle.querySelector('.mapa-datos');
+                if (datosPunto) {
+                    let hayDatos = false;
+                    [['#detalleTiempo', punto.tiempo], ['#detalleLongitud', punto.longitud], ['#detalleDificultad', punto.dificultad]].forEach(([id, valor]) => {
+                        const dd = document.querySelector(id);
+                        if (!dd) return;
+                        dd.textContent = valor || '';
+                        dd.parentElement.style.display = valor ? '' : 'none';
+                        if (valor) hayDatos = true;
+                    });
+                    datosPunto.style.display = hayDatos ? '' : 'none';
+                }
                 document.querySelector('#detalleTexto').textContent = punto.texto;
                 const link = document.querySelector('#detalleLink');
                 link.style.display = punto.link ? '' : 'none';
