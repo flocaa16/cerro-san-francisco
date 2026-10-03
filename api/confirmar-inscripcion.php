@@ -18,6 +18,13 @@ function responder($codigo, $mensaje)
     exit;
 }
 
+// Registro de envíos (fuera de public_html) para revisar si un correo salió: /home/USUARIO/cerro-correos.log
+function registrar($texto)
+{
+    $ruta = dirname($_SERVER['DOCUMENT_ROOT']) . '/cerro-correos.log';
+    @file_put_contents($ruta, date('Y-m-d H:i:s') . ' | ' . $texto . "\n", FILE_APPEND);
+}
+
 // 1. Configuración (fuera de public_html)
 $rutaConfig = dirname($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/config-cerro.php';
 if (!is_readable($rutaConfig)) {
@@ -138,6 +145,7 @@ $cabeceras = implode("\r\n", [
 $asuntoCodificado = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
 
 $enviado = mail($correo, $asuntoCodificado, $html, $cabeceras, '-f' . $remitente);
+registrar('inscripción (confirmación) | para: ' . $correo . ' | ' . ($enviado ? 'ENVIADO' : 'FALLÓ'));
 
 // 5. Aviso a la persona que gestiona las inscripciones ('inscripciones_destino' en config-cerro.php;
 //    si no está, se usa 'contacto_destino')
@@ -187,6 +195,7 @@ if ($gestor !== '') {
     $asuntoGestor = '=?UTF-8?B?' . base64_encode('Nueva inscripción: ' . $titulo . ' · ' . trim($nombre . ' ' . $apellido)
         . ($cantidad > 1 ? ' (' . $cantidad . ' personas)' : '')) . '?=';
     $avisoEnviado = mail($gestor, $asuntoGestor, $htmlGestor, $cabecerasGestor, '-f' . $remitente);
+    registrar('inscripción (aviso equipo) | para: ' . $gestor . ' | ' . ($avisoEnviado ? 'ENVIADO' : 'FALLÓ'));
 }
 
 if (!$enviado) {

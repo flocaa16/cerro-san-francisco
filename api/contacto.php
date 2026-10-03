@@ -16,6 +16,13 @@ function responder($codigo, $mensaje)
     exit;
 }
 
+// Registro de envíos (fuera de public_html) para revisar si un correo salió: /home/USUARIO/cerro-correos.log
+function registrar($texto)
+{
+    $ruta = dirname($_SERVER['DOCUMENT_ROOT']) . '/cerro-correos.log';
+    @file_put_contents($ruta, date('Y-m-d H:i:s') . ' | ' . $texto . "\n", FILE_APPEND);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     responder(405, 'Método no permitido');
 }
@@ -113,7 +120,9 @@ $cabeceras = implode("\r\n", [
 ]);
 $asuntoCorreo = '=?UTF-8?B?' . base64_encode($asunto . ' · ' . $nombre) . '?=';
 
-if (!mail($destino, $asuntoCorreo, $html, $cabeceras, '-f' . $remitente)) {
+$okDestino = mail($destino, $asuntoCorreo, $html, $cabeceras, '-f' . $remitente);
+registrar('contacto | formulario: ' . (isset($_POST['formulario']) ? $_POST['formulario'] : '?') . ' | para: ' . $destino . ' | de: ' . $correo . ' | ' . ($okDestino ? 'ENVIADO' : 'FALLÓ'));
+if (!$okDestino) {
     responder(500, 'No pudimos enviar tu mensaje. Inténtalo más tarde o escríbenos a contacto@fundacionlepe.cl.');
 }
 
