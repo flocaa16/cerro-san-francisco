@@ -139,7 +139,57 @@ $asuntoCodificado = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
 
 $enviado = mail($correo, $asuntoCodificado, $html, $cabeceras, '-f' . $remitente);
 
+// 5. Aviso a la persona que gestiona las inscripciones ('inscripciones_destino' en config-cerro.php;
+//    si no está, se usa 'contacto_destino')
+$gestor = !empty($config['inscripciones_destino']) ? $config['inscripciones_destino']
+    : (!empty($config['contacto_destino']) ? $config['contacto_destino'] : '');
+$avisoEnviado = false;
+if ($gestor !== '') {
+    $filaDato = function ($etiqueta, $valor) use ($e) {
+        if ($valor === '' || $valor === null) return '';
+        return '<tr><td style="padding: 6px 16px 6px 0; color: #727376; vertical-align: top; white-space: nowrap;">'
+            . $e($etiqueta) . '</td><td style="padding: 6px 0;">' . $valor . '</td></tr>';
+    };
+    $apellido = isset($fila['apellido']) ? $fila['apellido'] : '';
+    $tipo = isset($fila['tipo']) ? $fila['tipo'] : '';
+    $telefono = isset($fila['telefono']) ? $fila['telefono'] : '';
+    $comuna = isset($fila['comuna']) ? $fila['comuna'] : '';
+    $crearCuenta = !empty($fila['crear_cuenta']);
+
+    $htmlGestor = '<!doctype html><html lang="es"><body style="margin: 0; padding: 24px; background-color: #F2F7F2;">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px; background-color: #FFFFFF; color: #333333;">
+  <h2 style="color: #557458; margin: 0 0 8px 0;">Nueva inscripción</h2>
+  <p style="font-size: 16px; margin: 0 0 16px 0;"><strong>' . $e($titulo) . '</strong><br>'
+      . $e($fecha) . ($hora ? ' · ' . $e($hora) : '') . '</p>
+  <table style="font-size: 15px; border-collapse: collapse;">'
+      . $filaDato('Nombre', $e(trim($nombre . ' ' . $apellido)))
+      . $filaDato('Tipo', $e($tipo))
+      . $filaDato('Correo', '<a href="mailto:' . $e($correo) . '" style="color: #557458;">' . $e($correo) . '</a>')
+      . $filaDato('Teléfono', $e($telefono))
+      . $filaDato('Comuna', $e($comuna))
+      . $filaDato('Cantidad', $e($cantidad . ($cantidad === 1 ? ' persona' : ' personas')))
+      . $filaDato('Personas', count($personas) ? $listaPersonas : '')
+      . $filaDato('Quiere crear cuenta', $crearCuenta ? 'Sí' : '') . '
+  </table>
+  <p style="font-size: 13px; color: #727376; margin: 24px 0 0 0;">
+    Para escribirle, responde este correo: la respuesta le llega a ' . $e($correo) . '.<br>
+    La lista completa de inscritos está en Supabase → Table Editor → inscritos_por_evento.
+  </p>
+</div>
+</body></html>';
+
+    $cabecerasGestor = implode("\r\n", [
+        'MIME-Version: 1.0',
+        'Content-Type: text/html; charset=UTF-8',
+        'From: =?UTF-8?B?' . base64_encode('Web Cerro San Francisco') . '?= <' . $remitente . '>',
+        'Reply-To: ' . $correo,
+    ]);
+    $asuntoGestor = '=?UTF-8?B?' . base64_encode('Nueva inscripción: ' . $titulo . ' · ' . trim($nombre . ' ' . $apellido)
+        . ($cantidad > 1 ? ' (' . $cantidad . ' personas)' : '')) . '?=';
+    $avisoEnviado = mail($gestor, $asuntoGestor, $htmlGestor, $cabecerasGestor, '-f' . $remitente);
+}
+
 if (!$enviado) {
     responder(500, 'No se pudo enviar el correo');
 }
-responder(200, 'Correo enviado');
+responder(200, $avisoEnviado ? 'Correo enviado (y aviso al equipo)' : 'Correo enviado');
