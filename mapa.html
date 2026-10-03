@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=53" />
+    <link rel="stylesheet" href="style.css?v=56" />
 
 </head>
 
@@ -76,9 +76,22 @@
         <div class="mapa-area">
             <div class="mapa-leaflet" id="mapaLeaflet" role="region" aria-label="Mapa interactivo del sendero"></div>
 
-            <div class="mapa-capas" role="group" aria-label="Tipo de mapa">
-                <button type="button" class="mapa-capa is-active" data-capa="satelite" aria-pressed="true">Satélite</button>
-                <button type="button" class="mapa-capa" data-capa="relieve" aria-pressed="false">Relieve</button>
+            <div class="mapa-controles">
+                <div class="mapa-capas" role="group" aria-label="Tipo de mapa">
+                    <button type="button" class="mapa-capa is-active" data-capa="satelite" aria-pressed="true">Satélite</button>
+                    <button type="button" class="mapa-capa" data-capa="relieve" aria-pressed="false">Relieve</button>
+                </div>
+                <!-- Capas de información: se prende una a la vez; al apretarla de nuevo se apaga -->
+                <div class="mapa-capas" role="group" aria-label="Capas de información">
+                    <button type="button" class="mapa-capa" data-tema="zonificacion" aria-pressed="false">Zonificación</button>
+                    <button type="button" class="mapa-capa" data-tema="vegetacion" aria-pressed="false">Vegetación</button>
+                </div>
+                <!-- En celular parte cerrada para no tapar el mapa -->
+                <details class="mapa-leyenda" id="mapaLeyenda" open hidden>
+                    <summary class="mapa-leyenda-titulo" id="mapaLeyendaTitulo"></summary>
+                    <ul class="mapa-leyenda-lista" id="mapaLeyendaLista"></ul>
+                    <p class="mapa-leyenda-nota">Límites aproximados</p>
+                </details>
             </div>
         </div>
 
@@ -92,14 +105,8 @@
                     <p class="mapa-text">Sendero circular hasta la cima, con vista a todo el Valle del Aconcagua.</p>
                 </div>
 
-                <!-- Perfil del cerro (Figma) con los mismos números del mapa -->
-                <div class="mapa-perfil">
-                    <img src="img/mapa-cerro.svg" alt="" class="mapa-perfil-img">
-                    <div id="perfilMarcadores"></div>
-                </div>
-
                 <dl class="mapa-datos">
-                    <div class="mapa-dato">
+<!--                     <div class="mapa-dato">
                         <dt>Recorrido</dt>
                         <dd>3,67 km</dd>
                     </div>
@@ -110,7 +117,7 @@
                     <div class="mapa-dato">
                         <dt>Altitud máx.</dt>
                         <dd>761 m</dd>
-                    </div>
+                    </div> -->
                 </dl>
 
                 <h2 class="mapa-subtitle">Puntos del recorrido</h2>
@@ -168,7 +175,7 @@
                     </h2>
 
                     <dl class="mapa-datos">
-                        <div class="mapa-dato">
+                      <!--   <div class="mapa-dato">
                             <dt>Duración</dt>
                             <dd id="detalleTiempo"></dd>
                         </div>
@@ -179,7 +186,7 @@
                         <div class="mapa-dato">
                             <dt>Dificultad</dt>
                             <dd id="detalleDificultad"></dd>
-                        </div>
+                        </div> -->
                     </dl>
 
                     <p class="mapa-detalle-text" id="detalleTexto"></p>
@@ -312,6 +319,7 @@
     </script>
     <script src="contacto.js?v=2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="mapa-capas.js?v=1"></script>
     <script>
         // Mapa del cerro
         // Recorrido: senderos del cerro en OpenStreetMap (© colaboradores de OpenStreetMap, licencia ODbL)
@@ -323,20 +331,20 @@
             [[-32.7827, -70.68247], [-32.78252, -70.68203], [-32.78225, -70.68148], [-32.7822, -70.68133], [-32.78215, -70.68121], [-32.7821, -70.68111], [-32.78206, -70.68091], [-32.78205, -70.68082], [-32.78207, -70.68075], [-32.7821, -70.68068], [-32.78214, -70.68066], [-32.78218, -70.6807], [-32.78227, -70.68066], [-32.78243, -70.68063], [-32.78264, -70.68055], [-32.78271, -70.6805], [-32.78275, -70.68044], [-32.78276, -70.68027], [-32.78279, -70.68012], [-32.7828, -70.68005], [-32.78283, -70.68], [-32.78289, -70.67992], [-32.78293, -70.67986], [-32.78296, -70.67982], [-32.78299, -70.67978], [-32.78309, -70.67973], [-32.78314, -70.67973], [-32.78318, -70.67974], [-32.78324, -70.67979], [-32.78329, -70.67987], [-32.78339, -70.67998], [-32.78344, -70.68005], [-32.78351, -70.68012], [-32.78356, -70.68015], [-32.78359, -70.68018], [-32.78362, -70.68019], [-32.78364, -70.68016], [-32.78364, -70.68009], [-32.78363, -70.67992], [-32.78362, -70.67977], [-32.78362, -70.67971], [-32.78364, -70.67955], [-32.78366, -70.67948], [-32.78366, -70.67944], [-32.78363, -70.67938], [-32.78354, -70.67924], [-32.78345, -70.67914], [-32.78339, -70.6791], [-32.78333, -70.67905], [-32.78325, -70.67903], [-32.78316, -70.67903], [-32.78305, -70.67906], [-32.78294, -70.67909], [-32.78287, -70.67911], [-32.78281, -70.67911], [-32.78276, -70.67908], [-32.78273, -70.67906], [-32.7827, -70.67904], [-32.78269, -70.67902], [-32.78269, -70.67898], [-32.78271, -70.67893], [-32.78274, -70.6789], [-32.78278, -70.67887]]
         ];
 
-        // Puntos del recorrido
-        // coords: ubicación en el mapa. perfil: % dentro de img/mapa-cerro.svg
-        // Ubicaciones corregidas según indicación de la Fundación. Los datos repiten "3,67 km / fácil" como en el Figma (revisar)
+        // Puntos del recorrido (según el plano de zonificación de la Fundación)
+        // coords: ubicación en el mapa
+        // tiempo, longitud, dificultad, link y fotos son opcionales: si faltan, no se muestran.
+        // Mirador Sur, Parcelas, Mirador Norte y Acceso vehicular: ubicados según el plano de zonificación (aprox. 10-20 m)
         const puntos = [
             {
-                id: 'sendero-principal',
-                tipo: 'Sendero',
-                nombre: 'Sendero Principal',
+                id: 'acceso-peatonal',
+                tipo: 'Acceso',
+                nombre: 'Acceso peatonal',
                 coords: [-32.78572, -70.68424],
-                perfil: [7.9, 64.8],
                 tiempo: '2 horas', longitud: '3,67 km', dificultad: 'Fácil',
-                resumen: 'Inicio del recorrido',
+                resumen: 'Inicio del sendero',
                 // Texto provisorio
-                texto: 'Comienza en la base del cerro y sube por la ladera poniente hasta la cima. A lo largo del camino hay paneles informativos sobre la flora, la fauna y la historia del lugar.',
+                texto: 'Entrada a pie al parque, en la base del cerro. Desde aquí el sendero sube por la ladera poniente hasta la cima, con paneles informativos sobre la flora, la fauna y la historia del lugar.',
                 link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada' },
                 fotos: [
                     { src: 'img/sendero-principal.jpg', alt: 'Panel de bienvenida al inicio del sendero' },
@@ -345,11 +353,44 @@
                 ]
             },
             {
+                id: 'mirador-sur',
+                tipo: 'Mirador',
+                nombre: 'Mirador Sur',
+                coords: [-32.78504, -70.6831],
+                resumen: 'Vista hacia el sur del valle',
+                // Texto provisorio
+                texto: 'Primer mirador del recorrido, con vista hacia el sur del Valle del Aconcagua.',
+                fotos: []
+            },
+            {
+                id: 'mirador-cruz-del-gallo',
+                tipo: 'Mirador',
+                nombre: 'Mirador Cruz del Gallo',
+                coords: [-32.78428, -70.68276],
+                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
+                resumen: 'Vista al Valle del Aconcagua',
+                // Texto provisorio
+                texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
+                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada' },
+                fotos: [
+                    { src: 'img/mirador.jpg', alt: 'Cruz del mirador y dos visitantes sentados en la baranda, con la cordillera de fondo' }
+                ]
+            },
+            {
+                id: 'parcelas-experimentales',
+                tipo: 'Punto de interés',
+                nombre: 'Parcelas experimentales',
+                coords: [-32.78363, -70.68202],
+                resumen: 'Restauración del bosque nativo',
+                // Texto provisorio
+                texto: 'Parcelas donde la Fundación ensaya técnicas de restauración ecológica con especies nativas, en la zona de manejo activo, restauración y educación.',
+                fotos: []
+            },
+            {
                 id: 'catedral-verde',
                 tipo: 'Punto de interés',
                 nombre: 'Catedral Verde',
                 coords: [-32.78286, -70.68226],
-                perfil: [34.9, 26.2],
                 tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
                 resumen: 'Bosque de cipreses en la cima',
                 // Texto del Figma
@@ -362,21 +403,29 @@
                 ]
             },
             {
-                id: 'mirador',
-                tipo: 'Punto de interés',
-                nombre: 'Mirador',
-                coords: [-32.78428, -70.68276],
-                perfil: [22, 47],
-                tiempo: '1 hora', longitud: '3,67 km', dificultad: 'Fácil',
-                resumen: 'Vista al Valle del Aconcagua',
+                id: 'mirador-norte',
+                tipo: 'Mirador',
+                nombre: 'Mirador Norte',
+                coords: [-32.78161, -70.68018],
+                resumen: 'Vista al río Aconcagua',
                 // Texto provisorio
-                texto: 'Junto a la cruz, el mirador ofrece una de las mejores vistas del Valle del Aconcagua y de la cordillera de los Andes.',
-                link: { texto: 'Ver visita autoguiada', href: 'visita-autoguiada' },
-                fotos: [
-                    { src: 'img/mirador.jpg', alt: 'Cruz del mirador y dos visitantes sentados en la baranda, con la cordillera de fondo' }
-                ]
+                texto: 'Mirador del sector norte, con vista al río Aconcagua y a la cordillera.',
+                fotos: []
+            },
+            {
+                id: 'acceso-vehicular',
+                tipo: 'Acceso',
+                nombre: 'Acceso vehicular',
+                coords: [-32.78556, -70.68111],
+                resumen: 'Entrada en vehículo',
+                // Texto provisorio
+                texto: 'Entrada al parque para vehículos.',
+                fotos: []
             }
         ];
+
+        // Direcciones antiguas (mapa#sendero-principal, mapa#mirador) siguen funcionando
+        const idsAntiguos = { 'sendero-principal': 'acceso-peatonal', 'mirador': 'mirador-cruz-del-gallo' };
 
         const celular = window.matchMedia('(max-width: 991.98px)').matches;
         const lateral = document.querySelector('#mapaLateral');
@@ -420,6 +469,53 @@
             });
         });
 
+        // Capas de información (zonificación y vegetación, datos en mapa-capas.js)
+        const leyenda = document.querySelector('#mapaLeyenda');
+        const temas = {};
+        Object.keys(CAPAS_CERRO).forEach(clave => {
+            const grupo = L.featureGroup();
+            CAPAS_CERRO[clave].clases.forEach(clase => {
+                clase.poligonos.forEach(poligono => {
+                    L.polygon(poligono, { color: clase.color, weight: 1, opacity: 0.9, fillColor: clase.color, fillOpacity: 0.45 })
+                        .bindTooltip(clase.nombre, { sticky: true, className: 'mapa-tooltip' })
+                        .addTo(grupo);
+                });
+            });
+            temas[clave] = grupo;
+        });
+        let temaActual = null;
+
+        function mostrarTema(clave) {
+            if (temaActual) mapa.removeLayer(temas[temaActual]);
+            temaActual = clave === temaActual ? null : clave;
+            if (temaActual) {
+                temas[temaActual].addTo(mapa);
+                sendero.bringToFront();
+                const datos = CAPAS_CERRO[temaActual];
+                document.querySelector('#mapaLeyendaTitulo').textContent = datos.titulo;
+                const lista = document.querySelector('#mapaLeyendaLista');
+                lista.innerHTML = '';
+                datos.clases.forEach(clase => {
+                    const li = document.createElement('li');
+                    li.innerHTML = '<span class="mapa-leyenda-color"></span><span></span>';
+                    li.firstChild.style.backgroundColor = clase.color;
+                    li.lastChild.textContent = clase.nombre;
+                    lista.appendChild(li);
+                });
+            }
+            if (temaActual && leyenda.hidden) leyenda.open = !celular;
+            leyenda.hidden = !temaActual;
+            document.querySelectorAll('[data-tema]').forEach(boton => {
+                const activo = boton.dataset.tema === temaActual;
+                boton.classList.toggle('is-active', activo);
+                boton.setAttribute('aria-pressed', activo);
+            });
+        }
+
+        document.querySelectorAll('[data-tema]').forEach(boton => {
+            boton.addEventListener('click', () => mostrarTema(boton.dataset.tema));
+        });
+
         // Sendero: borde oscuro + línea clara para que se lea sobre la foto satelital
         const sendero = L.featureGroup();
         recorrido.forEach(tramo => {
@@ -433,9 +529,8 @@
         }
         mapa.fitBounds(sendero.getBounds(), { padding: [48, 48], maxZoom: 17 });
 
-        // Marcadores, puntos del perfil y tarjetas
+        // Marcadores y tarjetas
         const marcadores = [];
-        const perfilMarcadores = document.querySelector('#perfilMarcadores');
         const listaPuntos = document.querySelector('#mapaPuntos');
 
         puntos.forEach((punto, i) => {
@@ -450,15 +545,6 @@
             marcador.on('click', () => elegir(i));
             marcadores.push(marcador);
 
-            const enPerfil = document.createElement('button');
-            enPerfil.type = 'button';
-            enPerfil.className = 'mapa-perfil-marcador';
-            enPerfil.style.left = punto.perfil[0] + '%';
-            enPerfil.style.top = punto.perfil[1] + '%';
-            enPerfil.textContent = i + 1;
-            enPerfil.setAttribute('aria-label', (i + 1) + '. ' + punto.nombre);
-            enPerfil.addEventListener('click', () => elegir(i));
-            perfilMarcadores.appendChild(enPerfil);
 
             const li = document.createElement('li');
             li.innerHTML =
@@ -498,6 +584,7 @@
             });
             fotoActual = 0;
             vistaDetalle.classList.toggle('mapa-vista-detalle--una-foto', punto.fotos.length < 2);
+            document.querySelector('.mapa-galeria').style.display = punto.fotos.length ? '' : 'none';
         }
 
         function mostrarFoto(indice) {
@@ -575,13 +662,21 @@
                 document.querySelector('#detalleTipo').textContent = punto.tipo;
                 document.querySelector('#detalleNumero').textContent = actual + 1;
                 document.querySelector('#detalleNombre').textContent = punto.nombre;
-                document.querySelector('#detalleTiempo').textContent = punto.tiempo;
-                document.querySelector('#detalleLongitud').textContent = punto.longitud;
-                document.querySelector('#detalleDificultad').textContent = punto.dificultad;
+                let hayDatos = false;
+                [['#detalleTiempo', punto.tiempo], ['#detalleLongitud', punto.longitud], ['#detalleDificultad', punto.dificultad]].forEach(([id, valor]) => {
+                    const dd = document.querySelector(id);
+                    dd.textContent = valor || '';
+                    dd.parentElement.style.display = valor ? '' : 'none';
+                    if (valor) hayDatos = true;
+                });
+                vistaDetalle.querySelector('.mapa-datos').style.display = hayDatos ? '' : 'none';
                 document.querySelector('#detalleTexto').textContent = punto.texto;
                 const link = document.querySelector('#detalleLink');
-                link.textContent = punto.link.texto;
-                link.href = punto.link.href;
+                link.style.display = punto.link ? '' : 'none';
+                if (punto.link) {
+                    link.textContent = punto.link.texto;
+                    link.href = punto.link.href;
+                }
                 document.querySelector('#detalleContador').textContent = (actual + 1) + ' de ' + puntos.length;
                 document.querySelector('#detalleAnterior').setAttribute('aria-label', 'Anterior: ' + anterior.nombre);
                 document.querySelector('#detalleSiguiente').setAttribute('aria-label', 'Siguiente: ' + siguiente.nombre);
@@ -612,7 +707,8 @@
 
         // Si se llega con un punto en la dirección (por ejemplo mapa#mirador), se abre ese punto
         function abrirDesdeDireccion() {
-            const indice = puntos.findIndex(punto => '#' + punto.id === window.location.hash);
+            const id = decodeURIComponent(window.location.hash.slice(1));
+            const indice = puntos.findIndex(punto => punto.id === (idsAntiguos[id] || id));
             elegir(indice, true);
         }
 

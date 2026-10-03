@@ -10,9 +10,10 @@
 // cámbiale el nombre corto (ej. 'otono') y sus datos. El nombre corto va en el link:
 //   inscripcion?evento=otono
 //
-// CÓMO TERMINAR UN EVENTO: cambia  finalizado: false  por  finalizado: true
-// y  estado  por 'Finalizado'. Deja de aparecer en "Próximos eventos", pero se
-// mantiene en "Mis inscripciones" de quienes se inscribieron.
+// LOS EVENTOS TERMINAN SOLOS: cuando pasa la fecha y hora de "fin", el evento
+// deja de aparecer en "Próximos eventos", su etiqueta cambia a 'Finalizado' y ya
+// no se puede inscribir. Se mantiene en "Mis inscripciones" de quienes se inscribieron.
+// Para terminar uno antes de su fecha (ej. si se suspende), pon  finalizado: true.
 //
 // Campos:
 //   titulo       nombre del evento
@@ -76,6 +77,14 @@ const EVENTOS = {
         texto: []
     }
 };
+
+// Marca como finalizados los eventos cuya hora de término ya pasó (hora de Chile del visitante)
+Object.keys(EVENTOS).forEach(id => {
+    const ev = EVENTOS[id];
+    const fin = new Date(ev.fin);
+    if (!ev.finalizado && !isNaN(fin) && fin < new Date()) ev.finalizado = true;
+    if (ev.finalizado) ev.estado = 'Finalizado';
+});
 
 // ----------------------------------------------------------------------------
 // "Próximos eventos": se dibujan solos en cualquier página que tenga

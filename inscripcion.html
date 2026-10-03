@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=53" />
+    <link rel="stylesheet" href="style.css?v=56" />
 
 </head>
 
@@ -505,7 +505,7 @@
         });
     </script>
     <script src="contacto.js?v=2"></script>
-    <script src="eventos.js?v=1"></script>
+    <script src="eventos.js?v=2"></script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
         // La página se abre con inscripcion?evento=aves (o nubes, etc.)
@@ -541,6 +541,12 @@
             document.querySelector('#eventoMigas').textContent = evento.titulo;
             document.querySelector('#eventoTitulo').textContent = evento.titulo;
             document.querySelector('#eventoEstado').textContent = evento.estado;
+            // Evento terminado: no se puede inscribir
+            if (evento.finalizado) {
+                const boton = document.querySelector('#btnInscribirme');
+                boton.disabled = true;
+                boton.textContent = 'Evento finalizado';
+            }
             document.querySelector('#eventoFecha').textContent = evento.fecha;
             document.querySelector('#eventoHora').textContent = evento.hora;
             document.querySelector('#eventoImg').src = evento.img;
@@ -557,7 +563,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js?v=5"></script>
+    <script src="cuenta.js?v=6"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion

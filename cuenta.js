@@ -85,13 +85,28 @@ const Cuenta = (function () {
     async function cargar(usuario) {
         const [perfil, inscripciones] = await Promise.all([
             db.from('perfiles').select('*').eq('id', usuario.id).maybeSingle(),
-            db.from('inscripciones').select('evento, personas, creado')
+            db.from('inscripciones').select('evento, personas, creado, evento_titulo, evento_fecha, evento_hora')
                 .eq('user_id', usuario.id).order('creado', { ascending: false })
         ]);
         if (perfil.error) {
             console.error(perfil.error);
             throw traducir(perfil.error);
         }
+
+        // Inscripciones a eventos que ya no están en eventos.js (se borraron o cambiaron de nombre):
+        // se muestran como finalizados con los datos guardados al inscribirse
+        (inscripciones.data || []).forEach(fila => {
+            if (fila.evento && !eventos[fila.evento]) {
+                eventos[fila.evento] = {
+                    titulo: fila.evento_titulo || 'Evento anterior',
+                    fecha: fila.evento_fecha || '',
+                    fechaLarga: fila.evento_fecha || '',
+                    hora: fila.evento_hora || '',
+                    estado: 'Finalizado',
+                    finalizado: true
+                };
+            }
+        });
 
         // Datos guardados en el perfil; si faltan, se usan los que la persona escribió al crear la cuenta
         const datos = perfil.data || {};

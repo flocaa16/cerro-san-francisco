@@ -3182,7 +3182,7 @@ button.cover:hover {
 
 /*-----------------------MAPA-----------------------*/
 /* Mapa interactivo: foto satelital + sendero de OpenStreetMap + panel lateral.
-   Los números, colores y el perfil del cerro vienen del Figma ("03 Mapa"). */
+   Los números y colores vienen del Figma ("03 Mapa"). */
 
 .mapa {
     display: grid;
@@ -3205,12 +3205,20 @@ button.cover:hover {
     font-family: inherit;
 }
 
-/* Satélite / Relieve */
-.mapa-capas {
+/* Satélite / Relieve y capas de información */
+.mapa-controles {
     position: absolute;
     top: 16px;
     left: 16px;
     z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: calc(100% - 32px);
+}
+
+.mapa-capas {
     display: flex;
     padding: 4px;
     border-radius: 4px;
@@ -3238,6 +3246,94 @@ button.cover:hover {
 .mapa-capa.is-active {
     background-color: #557458;
     color: #FFFFFF;
+}
+
+/* Leyenda de la capa activa */
+.mapa-leyenda {
+    max-width: 280px;
+    padding: 12px 16px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mapa-leyenda[hidden] {
+    display: none;
+}
+
+.mapa-leyenda-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: #557458;
+    font-size: 14px;
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+}
+
+.mapa-leyenda-titulo::-webkit-details-marker {
+    display: none;
+}
+
+/* Flecha: abajo cuando está cerrada, arriba cuando está abierta */
+.mapa-leyenda-titulo::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.mapa-leyenda[open] .mapa-leyenda-titulo {
+    margin-bottom: 8px;
+}
+
+.mapa-leyenda[open] .mapa-leyenda-titulo::after {
+    margin-top: 4px;
+    transform: rotate(-135deg);
+}
+
+.mapa-leyenda-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mapa-leyenda-lista li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #303132;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.mapa-leyenda-color {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    margin-top: 1px;
+    border-radius: 2px;
+    opacity: 0.85;
+}
+
+.mapa-leyenda-nota {
+    margin: 8px 0 0 0;
+    color: #727376;
+    font-size: 12px;
+}
+
+.mapa .mapa-tooltip {
+    font-family: inherit;
+    font-size: 13px;
 }
 
 /* Botones de zoom con el estilo del sitio */
@@ -3380,52 +3476,6 @@ button.cover:hover {
     font-size: 16px;
     line-height: 1.5;
     color: #303132;
-}
-
-/* Perfil del cerro (Figma) */
-.mapa-perfil {
-    position: relative;
-    flex-shrink: 0;
-    padding: 20px 8px 8px 8px;
-    background-color: #F2F7F2;
-}
-
-.mapa-perfil-img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-#perfilMarcadores {
-    position: absolute;
-    top: 20px;
-    right: 8px;
-    bottom: 8px;
-    left: 8px;
-}
-
-.mapa-perfil-marcador {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 2px solid #FFFFFF;
-    border-radius: 50%;
-    background-color: #557458;
-    color: #FFFFFF;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transform: translate(-50%, -50%);
-    transition: background-color 0.3s ease;
-}
-
-.mapa-perfil-marcador:hover {
-    background-color: #314533;
 }
 
 /* Datos en fila, como los números del inicio */
@@ -3985,12 +4035,8 @@ button.cover:hover {
     }
 }
 
-/* Pantallas de notebook más bajas: se quita el perfil y se achica la galería para que todo quepa */
+/* Pantallas de notebook más bajas: se achica la galería para que todo quepa */
 @media (min-width: 992px) and (max-height: 820px) {
-    .mapa-perfil {
-        display: none;
-    }
-
     .mapa-vista-detalle .mapa-galeria {
         min-height: 140px;
     }
@@ -4011,6 +4057,28 @@ button.cover:hover {
     .mapa-area {
         height: 55vh;
         min-height: 340px;
+    }
+
+    .mapa-controles {
+        top: 12px;
+        left: 12px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: calc(100% - 24px);
+    }
+
+    .mapa-capa {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .mapa-leyenda {
+        max-width: 220px;
+        padding: 10px 12px;
+    }
+
+    .mapa-leyenda-lista li {
+        font-size: 12px;
     }
 
     .mapa-lateral {
@@ -5571,4 +5639,13 @@ a.publicacion-item:hover .publicacion-item-icono {
 .acompanante legend {
     float: left;
     padding: 0;
+}
+
+/* Botón deshabilitado (ej. "Evento finalizado") */
+.btn-primary-medium:disabled,
+.btn-primary-medium:disabled:hover {
+    background-color: #C9CDC9;
+    border-color: #C9CDC9;
+    color: #4F5052;
+    cursor: not-allowed;
 }
