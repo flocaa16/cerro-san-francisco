@@ -119,4 +119,43 @@ if (!mail($destino, $asuntoCorreo, $html, $cabeceras, '-f' . $remitente)) {
 
 $envios[] = time();
 @file_put_contents($archivoLimite, json_encode($envios));
+
+// Respuesta automática a quien escribió.
+// No repite el mensaje original, para que nadie pueda usar el formulario para enviar spam a terceros.
+$plazo = !empty($config['plazo_respuesta']) ? $config['plazo_respuesta'] : 'a la brevedad';
+$plazoTexto = $plazo === 'a la brevedad' ? 'a la brevedad' : 'en un plazo de ' . $plazo;
+$esEducacion = isset($_POST['formulario']) && $_POST['formulario'] === 'educacion';
+$primerNombre = $campo('nombre');
+$detalleTema = $esEducacion
+    ? '<p style="font-size: 16px; line-height: 1.5;">Recibimos tu solicitud para <strong>Educación en la Naturaleza</strong>'
+      . ($institucion !== '' ? ' de parte de <strong>' . $e($institucion) . '</strong>' : '') . '.</p>'
+    : '<p style="font-size: 16px; line-height: 1.5;">Recibimos tu mensaje enviado desde nuestra página web.</p>';
+
+$htmlRespuesta = '<!doctype html><html lang="es"><body style="margin: 0; padding: 24px; background-color: #F2F7F2;">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px; background-color: #FFFFFF; color: #333333;">
+  <h2 style="color: #557458; margin: 0 0 16px 0;">¡Gracias por escribirnos!</h2>
+  <p style="font-size: 16px; line-height: 1.5;">Hola ' . $e($primerNombre) . ',</p>
+  ' . $detalleTema . '
+  <p style="font-size: 16px; line-height: 1.5;">Te responderemos ' . $e($plazoTexto) . ' a este mismo correo.</p>
+  <p style="font-size: 14px; line-height: 1.5; color: #727376;">
+    Si necesitas agregar algo, puedes responder este correo.
+  </p>
+  <hr style="border: none; border-top: 1px solid #DDDDDD; margin: 24px 0;">
+  <p style="font-size: 13px; color: #727376; margin: 0;">
+    Cerro San Francisco de Curimón · Una iniciativa de Fundación Lepe<br>
+    <a href="https://cerrosanfrancisco.cl" style="color: #557458;">cerrosanfrancisco.cl</a>
+  </p>
+</div>
+</body></html>';
+
+$cabecerasRespuesta = implode("\r\n", [
+    'MIME-Version: 1.0',
+    'Content-Type: text/html; charset=UTF-8',
+    'From: =?UTF-8?B?' . base64_encode('Cerro San Francisco de Curimón') . '?= <' . $remitente . '>',
+    'Reply-To: ' . $destino, // si responde, le llega a la persona que gestiona ese formulario
+    'Auto-Submitted: auto-replied',
+]);
+$asuntoRespuesta = '=?UTF-8?B?' . base64_encode(($esEducacion ? 'Recibimos tu solicitud de Educación en la Naturaleza' : 'Recibimos tu mensaje') . ' · Cerro San Francisco') . '?=';
+@mail($correo, $asuntoRespuesta, $htmlRespuesta, $cabecerasRespuesta, '-f' . $remitente);
+
 responder(200, 'Mensaje enviado');
