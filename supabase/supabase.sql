@@ -187,7 +187,7 @@ $$;
 comment on table  public.eventos is 'Eventos del sitio. Una fila por evento. Los cambios se ven en la web en 1 minuto. El estado (abiertas, pocos cupos, cerradas, finalizado) es automático.';
 comment on column public.eventos.evento is 'Nombre corto para el link (minúsculas, números y guiones). Ej: taller-otono → cerrosanfrancisco.cl/inscripcion?evento=taller-otono. No cambiarlo después de publicar.';
 comment on column public.eventos.cupos is 'Máximo de personas. 0 = sin límite. Con 80% ocupado aparece "Quedan pocos cupos"; lleno, "Inscripciones cerradas". El número no se muestra en la web.';
-comment on column public.eventos.encargado is 'Etiqueta de quien recibe el aviso de cada inscripción (definida en config-cerro.php). Vacío = inscripciones_destino.';
+comment on column public.eventos.encargado is 'Quién recibe el aviso de cada inscripción (su correo está en config-cerro.php). Vacío = inscripciones_destino.';
 comment on column public.eventos.titulo is 'Nombre del evento.';
 comment on column public.eventos.fecha is 'Día del evento. Ej: 2026-10-08. El día de la semana y el mes en español se escriben solos.';
 comment on column public.eventos.hora_inicio is 'Hora de inicio (hora de Chile). Ej: 18:30. Vacío = "Por confirmar". Las inscripciones se cierran solas a esta hora.';
@@ -205,8 +205,23 @@ comment on column public.eventos.finalizado is 'Marcado = se termina antes de ti
 alter table public.eventos drop constraint if exists eventos_evento_check;
 alter table public.eventos add constraint eventos_evento_check check (evento ~ '^[a-z0-9-]{1,60}$');
 
-alter table public.eventos drop constraint if exists eventos_encargado_check;
-alter table public.eventos add constraint eventos_encargado_check check (encargado ~ '^[a-z0-9_-]{1,40}$');
+-- Encargado: lista de opciones (en Table Editor aparece como menú desplegable).
+-- Para agregar otra opción, correr en SQL Editor:  alter type public.encargado_evento add value 'encargado-tres';
+-- y definir su correo en config-cerro.php → 'encargados'.
+do $$
+begin
+    if not exists (select 1 from pg_type where typname = 'encargado_evento' and typnamespace = 'public'::regnamespace) then
+        create type public.encargado_evento as enum ('encargado-uno', 'encargado-dos');
+    end if;
+    if (select data_type from information_schema.columns
+        where table_schema = 'public' and table_name = 'eventos' and column_name = 'encargado') = 'text' then
+        alter table public.eventos drop constraint if exists eventos_encargado_check;
+        -- Valores que no estén en la lista quedan vacíos (el aviso va a inscripciones_destino)
+        alter table public.eventos alter column encargado type public.encargado_evento using (
+            case when encargado in ('encargado-uno', 'encargado-dos') then encargado::public.encargado_evento end);
+    end if;
+end;
+$$;
 
 alter table public.eventos enable row level security;  -- sin reglas: la web no tiene acceso
 revoke all on public.eventos from anon, authenticated;
@@ -315,7 +330,7 @@ begin
 
     select * into ev from public.eventos e where e.evento = new.evento;
     new.evento_cupos := nullif(ev.cupos, 0);
-    new.evento_encargado := ev.encargado;
+    new.evento_encargado := ev.encargado::text;
 
     if ev.evento is not null and (not ev.publicado or ev.finalizado or ev.fecha is null
         or (now() at time zone 'America/Santiago') >= public.evento_inicio(ev)) then

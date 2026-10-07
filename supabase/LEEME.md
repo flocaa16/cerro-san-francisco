@@ -90,7 +90,7 @@ estaban en `eventos.js` a la tabla). Ambos se pueden correr de nuevo sin perder 
 | `texto` | Descripción. Cada línea es un párrafo. |
 | `inscripcion_externa` | Opcional: link a un formulario de otro sitio. El botón "Inscribirme" abre ese link (esas inscripciones no pasan por Supabase). |
 | `cupos` | Máximo de personas (0 = sin límite). No se muestra en la web; al llenarse aparece "Inscripciones cerradas". |
-| `encargado` | Etiqueta de quien recibe los avisos (definida en `config-cerro.php`, ver abajo). Vacío = `inscripciones_destino`. |
+| `encargado` | Se elige de la lista: `encargado-uno` o `encargado-dos` (sus correos están en `config-cerro.php`, ver abajo). Vacío = `inscripciones_destino`. Para agregar otra opción, en SQL Editor: `alter type public.encargado_evento add value 'encargado-tres';` |
 | `publicado` | Desmarcado = borrador (no se ve en la web). |
 | `finalizado` | Marcado = se termina antes de tiempo (ej. si se suspende). |
 
