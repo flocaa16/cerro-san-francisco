@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=58" />
+    <link rel="stylesheet" href="style.css?v=59" />
 
 </head>
 
@@ -510,7 +510,7 @@
         });
     </script>
     <script src="contacto.js?v=2"></script>
-    <script src="eventos.js?v=6"></script>
+    <script src="eventos.js?v=7"></script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
         // La página se abre con inscripcion?evento=aves (o nubes, etc.)
@@ -521,8 +521,13 @@
         function mostrarCerrado() {
             const ev = eventos[id] || Object.values(eventos)[0];
             cerrarInscripciones(ev);
-            document.querySelector('#eventoEstado').textContent = ev.estado;
-            document.querySelectorAll('.modal-evento .chip').forEach(chip => { chip.textContent = ev.estado; });
+            const chipEstado = document.querySelector('#eventoEstado');
+            chipEstado.textContent = ev.estado;
+            chipEstado.className = claseEstado(ev.estado);
+            document.querySelectorAll('.modal-evento .chip').forEach(chip => {
+                chip.textContent = ev.estado;
+                chip.className = claseEstado(ev.estado);
+            });
             const boton = document.querySelector('#btnInscribirme');
             boton.disabled = true;
             boton.textContent = 'Inscripciones cerradas';
@@ -559,6 +564,7 @@
             document.querySelector('#eventoMigas').textContent = evento.titulo;
             document.querySelector('#eventoTitulo').textContent = evento.titulo;
             document.querySelector('#eventoEstado').textContent = evento.estado;
+            document.querySelector('#eventoEstado').className = claseEstado(evento.estado);
             // Evento terminado: no se puede inscribir
             if (evento.finalizado) {
                 const boton = document.querySelector('#btnInscribirme');
@@ -624,6 +630,7 @@
                 '<p class="modal-evento-title"></p>' +
                 '<p class="modal-evento-text"></p>';
             caja.querySelector('.chip').textContent = eventoActual.estado;
+            caja.querySelector('.chip').className = claseEstado(eventoActual.estado);
             caja.querySelector('.modal-evento-title').textContent = eventoActual.titulo;
             caja.querySelector('.modal-evento-text').textContent =
                 eventoActual.fechaLarga + ' · ' + eventoActual.hora + ' · ' + eventoActual.lugar;

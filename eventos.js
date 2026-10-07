@@ -17,7 +17,8 @@
 //
 // Campos:
 //   titulo       nombre del evento
-//   estado       texto de la etiqueta (ej. 'Inscripciones abiertas', 'Últimos cupos')
+//   estado       texto de la etiqueta: 'Inscripciones abiertas' (verde), 'Quedan pocos cupos' (amarillo)
+//                o 'Inscripciones cerradas' (rojo). El color se elige solo según el texto.
 //   fecha        fecha corta para las tarjetas (ej. 'Sábado 13 junio')
 //   fechaLarga   fecha con "de" para la página del evento (ej. 'Sábado 13 de junio')
 //   hora         ej. '10 a 13 horas'
@@ -183,6 +184,14 @@ const EVENTOS_CUPOS = (function () {
     return Promise.race([consulta, new Promise(listo => setTimeout(listo, 3000))]);
 })();
 
+// Color de la etiqueta según el texto (Figma "Chip"):
+//   verde = abiertas · rojo = cerradas/agotados · amarillo = pocos/últimos cupos
+function claseEstado(estado) {
+    if (/cerrad|agotad/i.test(estado || '')) return 'chip chip--cerrado';
+    if (/pocos|últimos|ultimos/i.test(estado || '')) return 'chip chip--pocos';
+    return 'chip';
+}
+
 function cerrarInscripciones(ev) {
     ev.agotado = true;
     ev.estado = 'Inscripciones cerradas';
@@ -233,7 +242,7 @@ function cerrarInscripciones(ev) {
                 info.append(dato('calendar.svg', ev.fecha), dato('clock.svg', ev.hora), dato('lugar.svg', ev.lugar));
                 const link = crear('a', 'btn-primary-medium', 'Ver más');
                 link.href = 'inscripcion?evento=' + encodeURIComponent(id) + '&desde=' + desde;
-                tarjeta.append(crear('span', 'chip', ev.estado), crear('h3', 'evento-title', ev.titulo), info, link);
+                tarjeta.append(crear('span', claseEstado(ev.estado), ev.estado), crear('h3', 'evento-title', ev.titulo), info, link);
 
                 const foto = crear('div', 'evento-image');
                 const img = crear('img');

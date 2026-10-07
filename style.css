@@ -148,6 +148,17 @@ h3 {
     font-size: 14px;
 }
 
+/* Estados de inscripción (Figma "Chip") */
+.chip--cerrado {
+    background-color: rgba(214, 102, 79, 0.12);
+    color: #D6664F;
+}
+
+.chip--pocos {
+    background-color: rgba(213, 162, 75, 0.12);
+    color: #D5A24B;
+}
+
 .chip-claro {
     display: inline-flex;
     align-items: center;
