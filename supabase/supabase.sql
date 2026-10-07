@@ -387,13 +387,53 @@ create trigger inscripciones_reemplazar after insert on public.inscripciones
     for each row execute function public.reemplazar_inscripcion();
 
 
--- 3. VISTA PARA LA FUNDACIÓN -------------------------------------------------
--- Lista de inscritos por evento. Se ve en Table Editor (no es pública: solo el panel de Supabase la lee).
-create or replace view public.inscritos_por_evento
+-- 3. LISTAS PARA LA FUNDACIÓN ------------------------------------------------
+-- Se ven en Supabase → Table Editor (no son públicas: solo el panel de Supabase las lee).
+-- Para Excel: abrir la lista → botón "Export" → "Export to CSV".
+
+-- Una fila por PERSONA inscrita (titular y cada acompañante por separado), ordenadas por evento.
+-- Para ver un solo evento: filtro (Filter) por la columna "Evento".
+drop view if exists public.inscritos_por_evento;
+create view public.inscritos_por_evento
 with (security_invoker = true) as
-select evento, tipo, nombre, apellido, correo, telefono, comuna,
-       array_to_string(personas, ', ') as personas, cantidad, creado
-from public.inscripciones
-order by evento, creado;
+select
+    coalesce(e.titulo, i.evento_titulo, i.evento)                       as "Evento",
+    coalesce(to_char(e.fecha, 'DD-MM-YYYY'), i.evento_fecha)            as "Fecha",
+    n.numero                                                            as "N°",
+    coalesce(nullif(split_part(i.personas[n.numero], ' · ', 1), ''),
+             case when n.numero = 1 then trim(i.nombre || ' ' || i.apellido)
+                  else 'Acompañante ' || n.numero end)                  as "Nombre",
+    nullif(split_part(i.personas[n.numero], ' · ', 2), '')              as "Relación",
+    nullif(split_part(i.personas[n.numero], ' · ', 3), '')              as "Edad",
+    trim(i.nombre || ' ' || i.apellido)                                 as "Inscrito por",
+    i.correo                                                            as "Correo",
+    i.telefono                                                          as "Teléfono",
+    i.comuna                                                            as "Comuna",
+    i.tipo                                                              as "Tipo",
+    to_char(i.creado at time zone 'America/Santiago', 'DD-MM-YYYY HH24:MI') as "Inscrito el"
+from public.inscripciones i
+left join public.eventos e on e.evento = i.evento
+cross join lateral generate_series(1, greatest(i.cantidad, coalesce(cardinality(i.personas), 0))) as n (numero)
+order by e.fecha nulls last, i.evento, i.creado, n.numero;
 
 revoke all on public.inscritos_por_evento from anon, authenticated;
+
+-- Resumen: una fila por evento, con cuántas personas van y cuántos cupos quedan
+drop view if exists public.resumen_eventos;
+create view public.resumen_eventos
+with (security_invoker = true) as
+select
+    e.titulo                                                  as "Evento",
+    to_char(e.fecha, 'DD-MM-YYYY')                            as "Fecha",
+    public.evento_estado(e)                                   as "Estado",
+    count(i.id)                                               as "Inscripciones",
+    coalesce(sum(i.cantidad), 0)                              as "Personas",
+    nullif(e.cupos, 0)                                        as "Cupos",
+    case when e.cupos > 0 then greatest(e.cupos - coalesce(sum(i.cantidad), 0), 0) end as "Quedan",
+    e.encargado::text                                         as "Encargado"
+from public.eventos e
+left join public.inscripciones i on i.evento = e.evento
+group by e.evento
+order by e.fecha;
+
+revoke all on public.resumen_eventos from anon, authenticated;

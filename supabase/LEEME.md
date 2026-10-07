@@ -120,3 +120,12 @@ En el Inicio se ven los 3 próximos eventos; en Actividades, todos.
 - Un Amigo del Cerro que cambia su inscripción reemplaza la anterior (no ocupa cupos dos veces).
 - Al cancelar una inscripción, o borrarla en Table Editor, el cupo se libera.
 La web solo sabe si cada evento está abierto o cerrado; nunca cuántos cupos quedan ni quién es el encargado.
+
+## 10. Lista de inscritos
+En **Supabase → Table Editor** (sección *Views*):
+- **`inscritos_por_evento`**: una fila por persona (titular y cada acompañante por separado), con
+  evento, fecha, N°, nombre, relación, edad, quién la inscribió, correo, teléfono, comuna y tipo.
+  Para un solo evento: **Filter** → columna `Evento`.
+- **`resumen_eventos`**: una fila por evento, con estado, inscripciones, personas, cupos y cuántos quedan.
+
+Para Excel: abrir la lista → **Export → Export to CSV**. Estas listas no son públicas: solo se ven en el panel de Supabase.
