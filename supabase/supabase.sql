@@ -139,14 +139,18 @@ grant usage, select on all sequences in schema public to anon, authenticated;
 -- Se configuran SOLO aquí, en Supabase → Table Editor → tabla "eventos" (una fila por evento):
 --   evento     el mismo nombre corto de eventos.js (ej. 'aves')
 --   cupos      máximo de personas (0 = sin límite)
---   encargado  a quién avisar: nombre corto definido en config-cerro.php como 'NOMBRE_destino'
+--   encargado  a quién avisar: una etiqueta definida una sola vez en config-cerro.php, en 'encargados'
+--              (ej. 'encargado-uno'). Solo minúsculas, números, - y _.
 -- La web no puede leer ni cambiar esta tabla, así que nadie puede saltarse los cupos.
 -- Un evento que no está en la tabla no tiene límite y avisa a 'inscripciones_destino'.
 create table if not exists public.eventos (
     evento    text primary key,
     cupos     int not null default 0 check (cupos >= 0),
-    encargado text check (encargado ~ '^[a-z0-9_]{1,40}$')
+    encargado text
 );
+
+alter table public.eventos drop constraint if exists eventos_encargado_check;
+alter table public.eventos add constraint eventos_encargado_check check (encargado ~ '^[a-z0-9_-]{1,40}$');
 
 alter table public.eventos enable row level security;  -- sin reglas: la web no tiene acceso
 revoke all on public.eventos from anon, authenticated;

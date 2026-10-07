@@ -77,12 +77,17 @@ se arma con la dirección).
 2. **Table Editor → eventos → Insert row**, una fila por evento:
    - `evento`: el mismo nombre corto de `eventos.js` (ej. `aves`)
    - `cupos`: máximo de personas (0 = sin límite)
-   - `encargado`: nombre corto (solo minúsculas, números y _), ej. `aves`. Vacío = `inscripciones_destino`.
-3. En cPanel, `config-cerro.php`, agrega el correo de cada encargado (varios: separados por coma):
+   - `encargado`: la etiqueta de quien recibe los avisos, ej. `encargado-uno` (solo minúsculas,
+     números, - y _). Vacío = `inscripciones_destino`.
+3. En cPanel, `config-cerro.php`, define a los encargados UNA sola vez (varios correos: separados por coma):
    ```php
-   'aves_destino'      => 'persona.aves@fundacionlepe.cl',
-   'educacion_destino' => 'educacion@fundacionlepe.cl, otra@fundacionlepe.cl',
+   'encargados' => [
+       'encargado-uno' => 'persona.uno@fundacionlepe.cl',
+       'encargado-dos' => 'persona.dos@fundacionlepe.cl, otra@fundacionlepe.cl',
+   ],
    ```
+   Después, para cada evento solo eliges la etiqueta en la tabla `eventos`; no hay que volver a
+   tocar `config-cerro.php` salvo que cambie el correo de un encargado o se sume uno nuevo.
 
 Qué hace Supabase al recibir una inscripción (aunque dos lleguen al mismo tiempo):
 - Toma cupos y encargado de la tabla `eventos` (lo que mande la web se ignora).

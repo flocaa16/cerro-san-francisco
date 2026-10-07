@@ -151,12 +151,17 @@ $enviado = mail($correo, $asuntoCodificado, $html, $cabeceras, '-f' . $remitente
 registrar('inscripción (confirmación) | para: ' . $correo . ' | ' . ($enviado ? 'ENVIADO' : 'FALLÓ'));
 
 // 5. Aviso a la persona que gestiona las inscripciones de ESTE evento:
-//    - si el evento tiene  encargado: 'aves'  (eventos.js), se usa 'aves_destino' de config-cerro.php
+//    - si el evento tiene un encargado (tabla "eventos" de Supabase, ej. 'encargado-uno'), se busca en
+//      config-cerro.php →  'encargados' => ['encargado-uno' => 'correo@...', ...]
+//      (también sirve el formato antiguo 'encargado-uno_destino' => 'correo@...')
 //    - si no, 'inscripciones_destino'; y si tampoco está, 'contacto_destino'
-//    (cada destino puede tener varios correos separados por coma)
+//    (cada encargado puede tener varios correos separados por coma)
 $encargado = isset($fila['evento_encargado']) ? strtolower(trim((string) $fila['evento_encargado'])) : '';
-if (!preg_match('/^[a-z0-9_]{1,40}$/', $encargado)) $encargado = '';
-if ($encargado !== '' && !empty($config[$encargado . '_destino'])) {
+if (!preg_match('/^[a-z0-9_-]{1,40}$/', $encargado)) $encargado = '';
+$encargados = isset($config['encargados']) && is_array($config['encargados']) ? $config['encargados'] : [];
+if ($encargado !== '' && !empty($encargados[$encargado])) {
+    $gestor = $encargados[$encargado];
+} elseif ($encargado !== '' && !empty($config[$encargado . '_destino'])) {
     $gestor = $config[$encargado . '_destino'];
 } else {
     $gestor = !empty($config['inscripciones_destino']) ? $config['inscripciones_destino']

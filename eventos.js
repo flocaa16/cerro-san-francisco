@@ -31,7 +31,7 @@
 // CUPOS Y ENCARGADO: no van aquí (este archivo es público y cualquiera podría cambiarlo).
 // Se configuran en Supabase → Table Editor → tabla "eventos", una fila por evento:
 //   evento = el nombre corto de aquí (ej. 'aves') · cupos = máximo de personas (0 = sin límite)
-//   encargado = nombre corto definido en config-cerro.php como 'NOMBRE_destino' (ej. 'aves')
+//   encargado = etiqueta de quien recibe los avisos (ej. 'encargado-uno'), definida una vez en config-cerro.php
 // Cuando se llenan los cupos, la etiqueta cambia sola a "Inscripciones cerradas" y no se puede
 // inscribir. No se muestra cuántos cupos quedan. Ver supabase/LEEME.md (sección 9).
 //   inicio, fin  fecha y hora exactas para el calendario: 'AAAA-MM-DDTHH:MM'
@@ -47,7 +47,7 @@ const EVENTOS = {
         fecha: 'Jueves 8 octubre',
         fechaLarga: 'Jueves 8 de octubre',
         hora: '18:30',
-        lugar: 'Sede Fundación Lepe (ex Casa López) Curimón',
+        lugar: 'Sede Fundación Lepe (ex Casa López)',
         direccion: 'Coronel Santiago Bueras 826, Curimón, San Felipe',
         mapa: '',
         inicio: '2026-10-08T18:30',
@@ -104,7 +104,7 @@ const EVENTOS = {
         fecha: 'Jueves 21 octubre',
         fechaLarga: 'Jueves 21 de octubre',
         hora: '18:30',
-        lugar: 'Sede Fundación Lepe (ex Casa López) Curimón',
+        lugar: 'Sede Fundación Lepe (ex Casa López)',
         direccion: 'Coronel Santiago Bueras 826, Curimón, San Felipe',
         mapa: '',
         inicio: '2026-10-21T18:30',
@@ -191,6 +191,7 @@ function cerrarInscripciones(ev) {
 // ----------------------------------------------------------------------------
 // "Próximos eventos": se dibujan solos en cualquier página que tenga
 // <div class="eventos-list" data-lista-eventos="inicio">  (o "actividades")
+// Se ordenan por fecha. Con data-limite="3" se muestran solo los 3 próximos (así está en el Inicio).
 // ----------------------------------------------------------------------------
 (function () {
     function crear(etiqueta, clase, texto) {
@@ -215,7 +216,13 @@ function cerrarInscripciones(ev) {
         document.querySelectorAll('[data-lista-eventos]').forEach(lista => {
             const desde = lista.dataset.listaEventos;
             const antesDe = lista.querySelector('.eventos-more');
-            const proximos = Object.keys(EVENTOS).filter(id => !EVENTOS[id].finalizado);
+            // Ordenados por fecha (el más cercano primero). Con data-limite="3" se muestran solo esos
+            const limite = Number(lista.dataset.limite) || Infinity;
+            const fecha = id => { const t = new Date(EVENTOS[id].inicio).getTime(); return isNaN(t) ? Infinity : t; };
+            const proximos = Object.keys(EVENTOS)
+                .filter(id => !EVENTOS[id].finalizado)
+                .sort((a, b) => fecha(a) - fecha(b))
+                .slice(0, limite);
 
             proximos.forEach((id, i) => {
                 const ev = EVENTOS[id];
