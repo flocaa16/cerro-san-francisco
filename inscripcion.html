@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=59" />
+    <link rel="stylesheet" href="style.css?v=60" />
 
 </head>
 
@@ -511,7 +511,7 @@
     </script>
     <script src="contacto.js?v=2"></script>
     <script src="api/eventos.php"></script>
-    <script src="eventos.js?v=8"></script>
+    <script src="eventos.js?v=9"></script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
         // La página se abre con inscripcion?evento=aves (o nubes, etc.)
@@ -581,7 +581,7 @@
             document.querySelector('#eventoImg').alt = evento.titulo;
 
             // Inscripción en otro sitio: el botón se cambia por un link a ese formulario
-            if (evento.inscripcionExterna && !evento.finalizado) {
+            if (evento.inscripcionExterna && !evento.finalizado && !evento.agotado) {
                 const boton = document.querySelector('#btnInscribirme');
                 const link = document.createElement('a');
                 link.className = boton.className;
@@ -609,7 +609,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js?v=8"></script>
+    <script src="cuenta.js?v=9"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
@@ -1114,12 +1114,19 @@
             const detalle = ev.titulo + ' · ' + ev.lugar + '.\nCómo llegar: ' + ev.mapa + '\nMás información: ' + pagina;
             const lugar = ev.direccion;
             const compacta = texto => texto.replace(/[-:]/g, '') + '00';
+            // Evento sin hora ("Por confirmar"): se agrega como evento de todo el día
+            const dia = ev.inicio.slice(0, 10);
+            const diaSiguiente = new Date(dia + 'T12:00');
+            diaSiguiente.setDate(diaSiguiente.getDate() + 1);
+            const diaFin = diaSiguiente.getFullYear() + '-' + String(diaSiguiente.getMonth() + 1).padStart(2, '0') + '-' +
+                String(diaSiguiente.getDate()).padStart(2, '0');
+            const sinGuiones = texto => texto.replace(/-/g, '');
 
             document.querySelector('#btnCalendario').href = 'https://calendar.google.com/calendar/render?' +
                 new URLSearchParams({
                     action: 'TEMPLATE',
                     text: ev.titulo,
-                    dates: compacta(ev.inicio) + '/' + compacta(ev.fin),
+                    dates: ev.todoElDia ? sinGuiones(dia) + '/' + sinGuiones(diaFin) : compacta(ev.inicio) + '/' + compacta(ev.fin),
                     ctz: 'America/Santiago',
                     details: detalle,
                     location: lugar
@@ -1130,8 +1137,9 @@
                     path: '/calendar/action/compose',
                     rru: 'addevent',
                     subject: ev.titulo,
-                    startdt: ev.inicio + ':00',
-                    enddt: ev.fin + ':00',
+                    startdt: ev.todoElDia ? dia : ev.inicio + ':00',
+                    enddt: ev.todoElDia ? diaFin : ev.fin + ':00',
+                    allday: ev.todoElDia ? 'true' : 'false',
                     body: detalle,
                     location: lugar
                 });
@@ -1143,8 +1151,8 @@
                 'BEGIN:VEVENT',
                 'UID:' + id + '@cerrosanfrancisco.cl',
                 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
-                'DTSTART;TZID=America/Santiago:' + compacta(ev.inicio),
-                'DTEND;TZID=America/Santiago:' + compacta(ev.fin),
+                ev.todoElDia ? 'DTSTART;VALUE=DATE:' + sinGuiones(dia) : 'DTSTART;TZID=America/Santiago:' + compacta(ev.inicio),
+                ev.todoElDia ? 'DTEND;VALUE=DATE:' + sinGuiones(diaFin) : 'DTEND;TZID=America/Santiago:' + compacta(ev.fin),
                 'SUMMARY:' + ev.titulo,
                 'LOCATION:' + lugar.replace(/,/g, '\\,'),
                 'URL:' + pagina,

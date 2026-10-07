@@ -80,9 +80,9 @@ estaban en `eventos.js` a la tabla). Ambos se pueden correr de nuevo sin perder 
 |---|---|
 | `evento` | Nombre corto para el link, solo minúsculas, números y guiones (ej. `taller-otono` → `inscripcion?evento=taller-otono`). No cambiarlo después de publicar. |
 | `titulo` | Nombre del evento. |
-| `estado` | `Inscripciones abiertas` (verde), `Quedan pocos cupos` (amarillo) o `Inscripciones cerradas` (rojo). |
-| `inicio` / `fin` | Fecha y hora en hora de Chile, ej. `2026-10-08 18:30`. La fecha en español ("Jueves 8 de octubre") se arma sola. Al pasar `fin`, el evento se oculta solo. Sin `fin` = 2 horas. |
-| `hora` | Opcional. Vacío = se arma sola ("18:30 a 20:00 horas"). Para otro texto, ej. `Por confirmar`. |
+| `fecha` | Día del evento, ej. `2026-10-08`. "Jueves 8 de octubre" se escribe solo. |
+| `hora_inicio` | Hora de inicio (hora de Chile), ej. `18:30`. Vacío = "Por confirmar". |
+| `hora_fin` | Opcional, ej. `20:00`. Vacío = 2 horas después del inicio. Si es menor que el inicio (ej. 22:00 a 01:00), termina al día siguiente. |
 | `lugar` / `direccion` | Nombre del lugar y dirección (para el mapa y el calendario). |
 | `mapa` | Opcional: link de Google Maps. Vacío = se arma con la dirección. |
 | `imagen` | Foto: sube el archivo en **Storage → eventos** y escribe aquí su nombre (ej. `taller.jpg`). También sirve un link completo. Vacío = foto del cerro. |
@@ -93,6 +93,14 @@ estaban en `eventos.js` a la tabla). Ambos se pueden correr de nuevo sin perder 
 | `encargado` | Etiqueta de quien recibe los avisos (definida en `config-cerro.php`, ver abajo). Vacío = `inscripciones_destino`. |
 | `publicado` | Desmarcado = borrador (no se ve en la web). |
 | `finalizado` | Marcado = se termina antes de tiempo (ej. si se suspende). |
+
+**El estado es automático** (no se escribe):
+- **Inscripciones abiertas** (verde): en los demás casos.
+- **Quedan pocos cupos** (amarillo): con el 80% de los cupos ocupados.
+- **Inscripciones cerradas** (rojo): se llenaron los cupos, o el evento ya empezó (a la `hora_inicio`;
+  sin hora, al terminar ese día).
+- **Finalizado**: pasó la hora de término (o se marcó `finalizado`). Deja de verse en la web.
+Supabase rechaza las inscripciones de eventos cerrados o finalizados, aunque alguien tenga la página abierta.
 
 En el Inicio se ven los 3 próximos eventos; en Actividades, todos.
 

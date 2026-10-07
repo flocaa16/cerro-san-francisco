@@ -139,7 +139,8 @@ grant usage, select on all sequences in schema public to anon, authenticated;
 -- Los eventos se crean y editan en Supabase → Table Editor → tabla "eventos" (una fila por evento).
 -- La web muestra solo los datos públicos (función eventos_publicos, más abajo); los cupos y el
 -- encargado NUNCA salen de Supabase, así que nadie puede verlos ni saltárselos desde la web.
--- Ver supabase/LEEME.md (sección 9) para la explicación de cada columna.
+-- El estado ("Inscripciones abiertas", "Quedan pocos cupos", "Inscripciones cerradas", "Finalizado")
+-- se calcula solo. Ver supabase/LEEME.md (sección 9) para la explicación de cada columna.
 create table if not exists public.eventos (
     evento    text primary key,
     cupos     int not null default 0 check (cupos >= 0),
@@ -148,10 +149,9 @@ create table if not exists public.eventos (
 
 -- Contenido del evento (lo que se ve en la web)
 alter table public.eventos add column if not exists titulo              text;
-alter table public.eventos add column if not exists estado              text default 'Inscripciones abiertas';
-alter table public.eventos add column if not exists inicio              timestamp;  -- hora de Chile
-alter table public.eventos add column if not exists fin                 timestamp;  -- hora de Chile
-alter table public.eventos add column if not exists hora                text;
+alter table public.eventos add column if not exists fecha               date;
+alter table public.eventos add column if not exists hora_inicio         time;   -- hora de Chile
+alter table public.eventos add column if not exists hora_fin            time;   -- hora de Chile
 alter table public.eventos add column if not exists lugar               text;
 alter table public.eventos add column if not exists direccion           text;
 alter table public.eventos add column if not exists mapa                text;
@@ -162,16 +162,36 @@ alter table public.eventos add column if not exists inscripcion_externa text;
 alter table public.eventos add column if not exists publicado           boolean not null default true;
 alter table public.eventos add column if not exists finalizado          boolean not null default false;
 
+-- Versión anterior (inicio/fin con fecha y hora, hora y estado escritos a mano): se pasan los datos
+-- a fecha / hora_inicio / hora_fin y se quitan esas columnas. El estado ahora es automático.
+do $$
+begin
+    if exists (select 1 from information_schema.columns
+               where table_schema = 'public' and table_name = 'eventos' and column_name = 'inicio') then
+        drop function if exists public.eventos_publicos();
+        update public.eventos set
+            fecha = coalesce(fecha, inicio::date),
+            hora_inicio = coalesce(hora_inicio, case when hora ilike '%confirmar%' then null else inicio::time end),
+            hora_fin = coalesce(hora_fin, case when hora ilike '%confirmar%' then null else fin::time end);
+        alter table public.eventos drop column inicio, drop column fin, drop column hora;
+    end if;
+    if exists (select 1 from information_schema.columns
+               where table_schema = 'public' and table_name = 'eventos' and column_name = 'estado') then
+        drop function if exists public.eventos_publicos();
+        alter table public.eventos drop column estado;
+    end if;
+end;
+$$;
+
 -- Ayuda que se ve en Table Editor al pasar sobre cada columna
-comment on table  public.eventos is 'Eventos del sitio. Una fila por evento. Los cambios se ven en la web en 1 minuto.';
+comment on table  public.eventos is 'Eventos del sitio. Una fila por evento. Los cambios se ven en la web en 1 minuto. El estado (abiertas, pocos cupos, cerradas, finalizado) es automático.';
 comment on column public.eventos.evento is 'Nombre corto para el link (minúsculas, números y guiones). Ej: taller-otono → cerrosanfrancisco.cl/inscripcion?evento=taller-otono. No cambiarlo después de publicar.';
-comment on column public.eventos.cupos is 'Máximo de personas. 0 = sin límite. Al llenarse aparece "Inscripciones cerradas". No se muestra en la web.';
+comment on column public.eventos.cupos is 'Máximo de personas. 0 = sin límite. Con 80% ocupado aparece "Quedan pocos cupos"; lleno, "Inscripciones cerradas". El número no se muestra en la web.';
 comment on column public.eventos.encargado is 'Etiqueta de quien recibe el aviso de cada inscripción (definida en config-cerro.php). Vacío = inscripciones_destino.';
 comment on column public.eventos.titulo is 'Nombre del evento.';
-comment on column public.eventos.estado is 'Etiqueta: Inscripciones abiertas (verde), Quedan pocos cupos (amarillo) o Inscripciones cerradas (rojo).';
-comment on column public.eventos.inicio is 'Fecha y hora de inicio, hora de Chile. Ej: 2026-10-08 18:30';
-comment on column public.eventos.fin is 'Fecha y hora de término, hora de Chile. Al pasar, el evento se oculta solo. Vacío = 2 horas después del inicio.';
-comment on column public.eventos.hora is 'Opcional. Texto de la hora (ej. Por confirmar). Vacío = se arma con inicio y fin (ej. 18:30 a 20:00 horas).';
+comment on column public.eventos.fecha is 'Día del evento. Ej: 2026-10-08. El día de la semana y el mes en español se escriben solos.';
+comment on column public.eventos.hora_inicio is 'Hora de inicio (hora de Chile). Ej: 18:30. Vacío = "Por confirmar". Las inscripciones se cierran solas a esta hora.';
+comment on column public.eventos.hora_fin is 'Opcional. Hora de término. Ej: 20:00. Vacío = 2 horas después del inicio. Después de esta hora el evento se oculta solo.';
 comment on column public.eventos.lugar is 'Nombre del lugar. Ej: Parque Natural Cerro San Francisco';
 comment on column public.eventos.direccion is 'Dirección para el mapa y el calendario. Ej: Coronel Santiago Bueras 826, Curimón, San Felipe';
 comment on column public.eventos.mapa is 'Opcional. Link de Google Maps. Vacío = se arma con la dirección.';
@@ -191,39 +211,79 @@ alter table public.eventos add constraint eventos_encargado_check check (encarga
 alter table public.eventos enable row level security;  -- sin reglas: la web no tiene acceso
 revoke all on public.eventos from anon, authenticated;
 
--- La web solo puede preguntar si cada evento tiene las inscripciones cerradas (no cuántos cupos quedan)
-drop function if exists public.cupos_ocupados(text[]);
-drop function if exists public.eventos_cerrados(text[], int[]);
-create or replace function public.eventos_cerrados(ids text[])
-returns table (evento text, cerrado boolean)
-language sql stable security definer set search_path = '' as $$
-    select e.evento,
-           coalesce((select sum(i.cantidad) from public.inscripciones i where i.evento = e.evento), 0) >= e.cupos
-    from public.eventos e
-    where e.evento = any (ids) and e.cupos > 0;
+-- Momento en que empieza y termina cada evento (hora de Chile)
+--   inicio: fecha + hora_inicio (sin hora: fin del día, para poder inscribirse ese día)
+--   fin:    fecha + hora_fin (si es menor que el inicio, al día siguiente); sin hora_fin: inicio + 2 horas
+create or replace function public.evento_inicio(e public.eventos)
+returns timestamp language sql immutable set search_path = '' as $$
+    select e.fecha + coalesce(e.hora_inicio, time '23:59');
 $$;
 
-revoke all on function public.eventos_cerrados(text[]) from public;
-grant execute on function public.eventos_cerrados(text[]) to anon, authenticated;
+create or replace function public.evento_fin(e public.eventos)
+returns timestamp language sql immutable set search_path = '' as $$
+    select case
+        when e.hora_inicio is null then e.fecha + time '23:59'
+        when e.hora_fin is null then e.fecha + e.hora_inicio + interval '2 hours'
+        when e.hora_fin <= e.hora_inicio then e.fecha + 1 + e.hora_fin
+        else e.fecha + e.hora_fin
+    end;
+$$;
 
--- Datos públicos de los eventos para la web (sin cupos ni encargado; "cerrado" = se llenaron los cupos).
+-- Estado automático de un evento:
+--   Finalizado              ya terminó o se marcó "finalizado"
+--   Inscripciones cerradas  ya empezó, o se llenaron los cupos
+--   Quedan pocos cupos      ocupado el 80% o más de los cupos
+--   Inscripciones abiertas  en los demás casos
+create or replace function public.evento_estado(e public.eventos)
+returns text language sql stable security definer set search_path = '' as $$
+    with datos as (
+        select now() at time zone 'America/Santiago' as ahora,
+               coalesce((select sum(i.cantidad) from public.inscripciones i where i.evento = e.evento), 0) as ocupados
+    )
+    select case
+        when e.finalizado or d.ahora >= public.evento_fin(e) then 'Finalizado'
+        when d.ahora >= public.evento_inicio(e) then 'Inscripciones cerradas'
+        when e.cupos > 0 and d.ocupados >= e.cupos then 'Inscripciones cerradas'
+        when e.cupos > 0 and d.ocupados >= ceil(e.cupos * 0.8) then 'Quedan pocos cupos'
+        else 'Inscripciones abiertas'
+    end
+    from datos d;
+$$;
+
+revoke all on function public.evento_estado(public.eventos) from public;
+
+-- La web pregunta el estado de cada evento (nunca cuántos cupos quedan)
+drop function if exists public.cupos_ocupados(text[]);
+drop function if exists public.eventos_cerrados(text[], int[]);
+drop function if exists public.eventos_cerrados(text[]);
+create or replace function public.eventos_estados(ids text[])
+returns table (evento text, estado text)
+language sql stable security definer set search_path = '' as $$
+    select e.evento, public.evento_estado(e)
+    from public.eventos e
+    where e.evento = any (ids) and e.publicado;
+$$;
+
+revoke all on function public.eventos_estados(text[]) from public;
+grant execute on function public.eventos_estados(text[]) to anon, authenticated;
+
+-- Datos públicos de los eventos para la web (sin cupos ni encargado).
 -- Incluye eventos terminados hace menos de 120 días (para "Mis inscripciones").
+drop function if exists public.eventos_publicos();
 create or replace function public.eventos_publicos()
 returns table (
-    evento text, titulo text, estado text, inicio timestamp, fin timestamp, hora text,
+    evento text, titulo text, estado text, fecha date, hora_inicio time, hora_fin time,
     lugar text, direccion text, mapa text, imagen text, imagen_alt text, texto text,
-    inscripcion_externa text, finalizado boolean, cerrado boolean
+    inscripcion_externa text
 )
 language sql stable security definer set search_path = '' as $$
-    select e.evento, e.titulo, e.estado, e.inicio, e.fin, e.hora,
+    select e.evento, e.titulo, public.evento_estado(e), e.fecha, e.hora_inicio, e.hora_fin,
            e.lugar, e.direccion, e.mapa, e.imagen, e.imagen_alt, e.texto,
-           e.inscripcion_externa, e.finalizado,
-           e.cupos > 0 and coalesce((select sum(i.cantidad) from public.inscripciones i
-                                     where i.evento = e.evento), 0) >= e.cupos
+           e.inscripcion_externa
     from public.eventos e
-    where e.publicado and e.titulo is not null and e.inicio is not null
-      and coalesce(e.fin, e.inicio) > (now() at time zone 'America/Santiago') - interval '120 days'
-    order by e.inicio;
+    where e.publicado and e.titulo is not null and e.fecha is not null
+      and public.evento_fin(e) > (now() at time zone 'America/Santiago') - interval '120 days'
+    order by public.evento_inicio(e);
 $$;
 
 revoke all on function public.eventos_publicos() from public;
@@ -242,19 +302,25 @@ $$;
 -- Antes de guardar una inscripción (aunque dos personas se inscriban al mismo tiempo):
 --   · la cantidad nunca es menor que el número de personas inscritas
 --   · cupos y encargado se toman de la tabla "eventos" (lo que mande la web se ignora)
+--   · si el evento ya empezó, terminó o no está publicado: INSCRIPCIONES_CERRADAS
 --   · un invitado no puede inscribirse dos veces con el mismo correo al mismo evento (YA_INSCRITO)
 --   · si no hay cupos se rechaza: CUPOS_AGOTADOS (lleno) o CUPOS_INSUFICIENTES (no caben todos)
 create or replace function public.revisar_cupos()
 returns trigger language plpgsql security definer set search_path = '' as $$
 declare
-    ajustes  record;
+    ev       public.eventos;
     ocupados int;
 begin
     new.cantidad := greatest(new.cantidad, coalesce(cardinality(new.personas), 0));
 
-    select e.cupos, e.encargado into ajustes from public.eventos e where e.evento = new.evento;
-    new.evento_cupos := nullif(ajustes.cupos, 0);
-    new.evento_encargado := ajustes.encargado;
+    select * into ev from public.eventos e where e.evento = new.evento;
+    new.evento_cupos := nullif(ev.cupos, 0);
+    new.evento_encargado := ev.encargado;
+
+    if ev.evento is not null and (not ev.publicado or ev.finalizado or ev.fecha is null
+        or (now() at time zone 'America/Santiago') >= public.evento_inicio(ev)) then
+        raise exception 'INSCRIPCIONES_CERRADAS';
+    end if;
 
     perform pg_advisory_xact_lock(hashtext('cupos:' || new.evento));
 

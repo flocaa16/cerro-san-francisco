@@ -69,7 +69,7 @@ const Cuenta = (function () {
     function traducir(error) {
         const texto = (error && (error.message || error.code)) || '';
         // Sin cupos (lo revisa Supabase al guardar). No se dice cuántos quedan.
-        if (/CUPOS_AGOTADOS/.test(texto)) {
+        if (/CUPOS_AGOTADOS|INSCRIPCIONES_CERRADAS/.test(texto)) {
             const aviso = new Error('Lo sentimos, las inscripciones para este evento están cerradas.');
             aviso.cupos = 'agotado';
             return aviso;

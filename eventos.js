@@ -15,14 +15,20 @@
 
 var EVENTOS = window.EVENTOS || {};
 
-// Marca como finalizados los eventos cuya hora de término ya pasó (hora de Chile del visitante)
-Object.keys(EVENTOS).forEach(id => {
-    const ev = EVENTOS[id];
+// El estado viene calculado desde Supabase. Aquí solo se aplica, y además se revisa la hora
+// (por si el evento empezó o terminó mientras la página estaba abierta o en el último minuto)
+function aplicarEstado(ev, estado) {
+    ev.estado = estado || 'Inscripciones abiertas';
+    const ahora = new Date();
+    const inicio = new Date(ev.inicio);
     const fin = new Date(ev.fin);
-    if (!ev.finalizado && !isNaN(fin) && fin < new Date()) ev.finalizado = true;
-    if (ev.finalizado) ev.estado = 'Finalizado';
-    else if (ev.cerrado) cerrarInscripciones(ev); // cupos llenos (según Supabase)
-});
+    if (!isNaN(fin) && fin < ahora) ev.estado = 'Finalizado';
+    else if (!isNaN(inicio) && inicio <= ahora && !ev.todoElDia) ev.estado = 'Inscripciones cerradas';
+    ev.finalizado = ev.estado === 'Finalizado';
+    ev.agotado = ev.estado === 'Inscripciones cerradas';
+}
+
+Object.keys(EVENTOS).forEach(id => aplicarEstado(EVENTOS[id], EVENTOS[id].estado));
 
 // Dirección y link al mapa de cada evento
 Object.keys(EVENTOS).forEach(id => {
@@ -32,8 +38,8 @@ Object.keys(EVENTOS).forEach(id => {
 });
 
 // ----------------------------------------------------------------------------
-// CUPOS: se pregunta a Supabase si cada evento ya llenó sus cupos (tabla "eventos").
-// Si se llenó: ev.agotado = true y la etiqueta pasa a "Inscripciones cerradas".
+// ESTADO AL DÍA: se pregunta a Supabase el estado de cada evento en este momento
+// (api/eventos.php guarda una copia de hasta 1 minuto; así un evento que se llena se cierra al tiro).
 // EVENTOS_CUPOS es una promesa: las páginas esperan a que termine antes de usar los cupos.
 // ----------------------------------------------------------------------------
 const EVENTOS_CUPOS = (function () {
@@ -42,7 +48,7 @@ const EVENTOS_CUPOS = (function () {
     const ids = Object.keys(EVENTOS).filter(id => !EVENTOS[id].finalizado);
     if (!ids.length) return Promise.resolve();
 
-    const consulta = fetch(URL_SUPABASE + '/rest/v1/rpc/eventos_cerrados', {
+    const consulta = fetch(URL_SUPABASE + '/rest/v1/rpc/eventos_estados', {
         method: 'POST',
         headers: { 'apikey': CLAVE_PUBLICA, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: ids })
@@ -50,10 +56,10 @@ const EVENTOS_CUPOS = (function () {
         .then(respuesta => respuesta.ok ? respuesta.json() : [])
         .then(filas => {
             (filas || []).forEach(fila => {
-                if (fila.cerrado && EVENTOS[fila.evento]) cerrarInscripciones(EVENTOS[fila.evento]);
+                if (EVENTOS[fila.evento]) aplicarEstado(EVENTOS[fila.evento], fila.estado);
             });
         })
-        .catch(() => { }); // sin conexión: se muestra abierto y Supabase igual revisa los cupos al inscribir
+        .catch(() => { }); // sin conexión: queda el estado de api/eventos.php y Supabase igual revisa al inscribir
 
     // Si Supabase tarda, la página no se queda esperando
     return Promise.race([consulta, new Promise(listo => setTimeout(listo, 3000))]);

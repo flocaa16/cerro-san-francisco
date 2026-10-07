@@ -87,10 +87,18 @@ if (!empty($fila['evento_inicio']) && !empty($fila['evento_fin'])) {
     $compacta = function ($t) {
         return str_replace(['-', ':'], '', $t) . '00';
     };
+    // Evento sin hora ("Por confirmar", de 00:00 a 23:59): se agrega como evento de todo el día
+    $todoElDia = substr($fila['evento_inicio'], 11, 5) === '00:00' && substr($fila['evento_fin'], 11, 5) === '23:59';
+    if ($todoElDia) {
+        $dia = substr($fila['evento_inicio'], 0, 10);
+        $fechasCalendario = str_replace('-', '', $dia) . '/' . date('Ymd', strtotime($dia . ' +1 day'));
+    } else {
+        $fechasCalendario = $compacta($fila['evento_inicio']) . '/' . $compacta($fila['evento_fin']);
+    }
     $urlCalendario = 'https://calendar.google.com/calendar/render?' . http_build_query([
         'action' => 'TEMPLATE',
         'text' => $titulo,
-        'dates' => $compacta($fila['evento_inicio']) . '/' . $compacta($fila['evento_fin']),
+        'dates' => $fechasCalendario,
         'ctz' => 'America/Santiago',
         'details' => $titulo . ' · ' . $lugar . '. Cómo llegar: ' . $urlMapa . ' · https://cerrosanfrancisco.cl/actividades',
         'location' => $direccion,

@@ -74,12 +74,10 @@ if (!is_array($filas)) $filas = [];
 $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 $meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
-function fechaLocal($texto)
+// "2026-10-08" + "18:30:00" → DateTime (hora de Chile, sin conversiones)
+function momento($fecha, $hora)
 {
-    if (!$texto) return null;
-    $f = DateTime::createFromFormat('Y-m-d\TH:i:s', substr($texto, 0, 19));
-    if (!$f) $f = DateTime::createFromFormat('Y-m-d H:i:s', substr($texto, 0, 19));
-    if (!$f) $f = DateTime::createFromFormat('Y-m-d\TH:i', substr($texto, 0, 16));
+    $f = DateTime::createFromFormat('Y-m-d H:i', substr($fecha, 0, 10) . ' ' . substr($hora, 0, 5));
     return $f ?: null;
 }
 
@@ -91,21 +89,35 @@ function textoLimpio($valor)
 $eventos = [];
 foreach ($filas as $fila) {
     $id = isset($fila['evento']) ? $fila['evento'] : '';
-    $inicio = fechaLocal(isset($fila['inicio']) ? $fila['inicio'] : null);
-    if (!preg_match('/^[a-z0-9-]{1,60}$/', $id) || !$inicio) continue;
-    $fin = fechaLocal(isset($fila['fin']) ? $fila['fin'] : null);
-    if (!$fin || $fin <= $inicio) {
-        $fin = clone $inicio;
-        $fin->modify('+2 hours');
+    $fecha = isset($fila['fecha']) ? (string) $fila['fecha'] : '';
+    if (!preg_match('/^[a-z0-9-]{1,60}$/', $id) || !preg_match('/^\d{4}-\d{2}-\d{2}/', $fecha)) continue;
+
+    // Inicio y término (igual que en Supabase): sin hora = todo el día; sin hora de término = 2 horas;
+    // si la hora de término es menor que la de inicio, termina al día siguiente
+    $horaInicio = isset($fila['hora_inicio']) ? (string) $fila['hora_inicio'] : '';
+    $horaFin = isset($fila['hora_fin']) ? (string) $fila['hora_fin'] : '';
+    $todoElDia = $horaInicio === '';
+    if ($todoElDia) {
+        $inicio = momento($fecha, '00:00');
+        $fin = momento($fecha, '23:59');
+        $hora = 'Por confirmar';
+    } else {
+        $inicio = momento($fecha, $horaInicio);
+        if ($horaFin !== '') {
+            $fin = momento($fecha, $horaFin);
+            if ($fin && $fin <= $inicio) $fin->modify('+1 day');
+            $hora = $inicio->format('H:i') . ' a ' . $fin->format('H:i') . ' horas';
+        } else {
+            $fin = clone $inicio;
+            $fin->modify('+2 hours');
+            $hora = $inicio->format('H:i') . ' horas';
+        }
     }
+    if (!$inicio || !$fin) continue;
 
     $dia = $dias[(int) $inicio->format('w')] . ' ' . (int) $inicio->format('j');
     $mes = $meses[(int) $inicio->format('n') - 1];
-
-    $hora = textoLimpio(isset($fila['hora']) ? $fila['hora'] : '');
-    if ($hora === '') {
-        $hora = $inicio->format('H:i') . ' a ' . $fin->format('H:i') . ' horas';
-    }
+    $estado = textoLimpio(isset($fila['estado']) ? $fila['estado'] : '') ?: 'Inscripciones abiertas';
 
     $lugar = textoLimpio(isset($fila['lugar']) ? $fila['lugar'] : '') ?: 'Parque Natural Cerro San Francisco';
     $titulo = textoLimpio($fila['titulo']);
@@ -125,7 +137,7 @@ foreach ($filas as $fila) {
 
     $ev = [
         'titulo' => $titulo,
-        'estado' => textoLimpio(isset($fila['estado']) ? $fila['estado'] : '') ?: 'Inscripciones abiertas',
+        'estado' => $estado,
         'fecha' => $dia . ' ' . $mes,
         'fechaLarga' => $dia . ' de ' . $mes,
         'hora' => $hora,
@@ -134,10 +146,10 @@ foreach ($filas as $fila) {
         'mapa' => textoLimpio(isset($fila['mapa']) ? $fila['mapa'] : ''),
         'inicio' => $inicio->format('Y-m-d\TH:i'),
         'fin' => $fin->format('Y-m-d\TH:i'),
+        'todoElDia' => $todoElDia,
         'img' => $imagen,
         'alt' => textoLimpio(isset($fila['imagen_alt']) ? $fila['imagen_alt'] : '') ?: $titulo,
-        'finalizado' => !empty($fila['finalizado']),
-        'cerrado' => !empty($fila['cerrado']),
+        'finalizado' => $estado === 'Finalizado',
         'texto' => $parrafos,
     ];
     $externa = textoLimpio(isset($fila['inscripcion_externa']) ? $fila['inscripcion_externa'] : '');
