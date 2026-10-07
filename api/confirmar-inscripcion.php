@@ -67,6 +67,8 @@ $hora = isset($fila['evento_hora']) ? $fila['evento_hora'] : '';
 $lugar = !empty($fila['evento_lugar']) ? $fila['evento_lugar'] : 'Parque Natural Cerro San Francisco';
 $personas = isset($fila['personas']) && is_array($fila['personas']) ? $fila['personas'] : [];
 $cantidad = isset($fila['cantidad']) ? (int) $fila['cantidad'] : 1;
+$direccion = !empty($fila['evento_direccion']) ? $fila['evento_direccion'] : $lugar . ', Curimón, San Felipe';
+$urlMapa = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($direccion);
 
 // Personas inscritas: nombres (Amigo del Cerro) o cantidad (invitado)
 if (count($personas) > 0) {
@@ -90,8 +92,8 @@ if (!empty($fila['evento_inicio']) && !empty($fila['evento_fin'])) {
         'text' => $titulo,
         'dates' => $compacta($fila['evento_inicio']) . '/' . $compacta($fila['evento_fin']),
         'ctz' => 'America/Santiago',
-        'details' => $titulo . ' en el Parque Natural Cerro San Francisco de Curimón. https://cerrosanfrancisco.cl/actividades',
-        'location' => $lugar . ', Curimón, San Felipe',
+        'details' => $titulo . ' · ' . $lugar . '. Cómo llegar: ' . $urlMapa . ' · https://cerrosanfrancisco.cl/actividades',
+        'location' => $direccion,
     ]);
     $botonCalendario = '<p style="margin: 28px 0;"><a href="' . $e($urlCalendario) . '" '
         . 'style="background-color: #557458; color: #FFFFFF; padding: 14px 28px; text-decoration: none; '
@@ -108,8 +110,9 @@ $html = '<!doctype html><html lang="es"><body style="margin: 0; padding: 24px; b
   <div style="padding: 16px; background-color: #F2F7F2; margin: 16px 0;">
     <p style="margin: 0 0 8px 0; font-size: 18px; font-weight: bold;">' . $e($titulo) . '</p>
     <p style="margin: 0; font-size: 15px; line-height: 1.6;">
-      ' . $e($fecha) . ($hora ? ' · ' . $e($hora) : '') . '<br>' . $e($lugar) . ', Curimón, San Felipe
+      ' . $e($fecha) . ($hora ? ' · ' . $e($hora) : '') . '<br>' . $e($lugar) . '<br>' . $e($direccion) . '
     </p>
+    <p style="margin: 8px 0 0 0; font-size: 15px;"><a href="' . $e($urlMapa) . '" style="color: #557458; font-weight: bold;">Ver cómo llegar en Google Maps</a></p>
   </div>
 
   <p style="font-size: 16px; line-height: 1.5; margin-bottom: 0;"><strong>Personas inscritas:</strong></p>
@@ -147,10 +150,18 @@ $asuntoCodificado = '=?UTF-8?B?' . base64_encode($asunto) . '?=';
 $enviado = mail($correo, $asuntoCodificado, $html, $cabeceras, '-f' . $remitente);
 registrar('inscripción (confirmación) | para: ' . $correo . ' | ' . ($enviado ? 'ENVIADO' : 'FALLÓ'));
 
-// 5. Aviso a la persona que gestiona las inscripciones ('inscripciones_destino' en config-cerro.php;
-//    si no está, se usa 'contacto_destino')
-$gestor = !empty($config['inscripciones_destino']) ? $config['inscripciones_destino']
-    : (!empty($config['contacto_destino']) ? $config['contacto_destino'] : '');
+// 5. Aviso a la persona que gestiona las inscripciones de ESTE evento:
+//    - si el evento tiene  encargado: 'aves'  (eventos.js), se usa 'aves_destino' de config-cerro.php
+//    - si no, 'inscripciones_destino'; y si tampoco está, 'contacto_destino'
+//    (cada destino puede tener varios correos separados por coma)
+$encargado = isset($fila['evento_encargado']) ? strtolower(trim((string) $fila['evento_encargado'])) : '';
+if (!preg_match('/^[a-z0-9_]{1,40}$/', $encargado)) $encargado = '';
+if ($encargado !== '' && !empty($config[$encargado . '_destino'])) {
+    $gestor = $config[$encargado . '_destino'];
+} else {
+    $gestor = !empty($config['inscripciones_destino']) ? $config['inscripciones_destino']
+        : (!empty($config['contacto_destino']) ? $config['contacto_destino'] : '');
+}
 $avisoEnviado = false;
 if ($gestor !== '') {
     $filaDato = function ($etiqueta, $valor) use ($e) {
@@ -168,7 +179,7 @@ if ($gestor !== '') {
 <div style="font-family: Arial, Helvetica, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px; background-color: #FFFFFF; color: #333333;">
   <h2 style="color: #557458; margin: 0 0 8px 0;">Nueva inscripción</h2>
   <p style="font-size: 16px; margin: 0 0 16px 0;"><strong>' . $e($titulo) . '</strong><br>'
-      . $e($fecha) . ($hora ? ' · ' . $e($hora) : '') . '</p>
+      . $e($fecha) . ($hora ? ' · ' . $e($hora) : '') . '<br>' . $e($lugar) . '</p>
   <table style="font-size: 15px; border-collapse: collapse;">'
       . $filaDato('Nombre', $e(trim($nombre . ' ' . $apellido)))
       . $filaDato('Tipo', $e($tipo))
@@ -195,7 +206,7 @@ if ($gestor !== '') {
     $asuntoGestor = '=?UTF-8?B?' . base64_encode('Nueva inscripción: ' . $titulo . ' · ' . trim($nombre . ' ' . $apellido)
         . ($cantidad > 1 ? ' (' . $cantidad . ' personas)' : '')) . '?=';
     $avisoEnviado = mail($gestor, $asuntoGestor, $htmlGestor, $cabecerasGestor, '-f' . $remitente);
-    registrar('inscripción (aviso equipo) | para: ' . $gestor . ' | ' . ($avisoEnviado ? 'ENVIADO' : 'FALLÓ'));
+    registrar('inscripción (aviso equipo' . ($encargado !== '' ? ': ' . $encargado : '') . ') | para: ' . $gestor . ' | ' . ($avisoEnviado ? 'ENVIADO' : 'FALLÓ'));
 }
 
 if (!$enviado) {

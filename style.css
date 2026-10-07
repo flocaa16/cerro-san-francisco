@@ -3058,6 +3058,19 @@ button.cover:hover {
     max-width: 100%;
 }
 
+/* Dirección del evento, bajo fecha/hora/lugar */
+.evento-direccion {
+    margin: 12px 0 0 0;
+    color: #727376;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.evento-direccion a {
+    color: #557458;
+    font-weight: 500;
+}
+
 @media (max-width: 991.98px) {
     .evento-detalle {
         grid-template-columns: 1fr;

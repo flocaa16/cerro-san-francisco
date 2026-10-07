@@ -66,3 +66,30 @@ y ese archivo envía el correo desde `no-responder@cerrosanfrancisco.cl`.
    - URL: `https://cerrosanfrancisco.cl/api/confirmar-inscripcion.php`
    - HTTP Headers → Add: `X-Webhook-Clave` = la misma clave secreta del paso 1
 3. Inscríbete a un evento de prueba y revisa tu correo.
+
+## 9. Ubicación, cupos y encargado de cada evento
+**Ubicación** (en `eventos.js`, en cada evento): `lugar` y `direccion` se muestran en la página del
+evento, en el correo y en el calendario. `mapa` es opcional (si se deja vacío, el link a Google Maps
+se arma con la dirección).
+
+**Cupos y encargado** (en Supabase, NO en `eventos.js`, para que nadie pueda alterarlos desde la web):
+1. Corre de nuevo `supabase.sql` completo una vez (crea la tabla `eventos` y las reglas de cupos).
+2. **Table Editor → eventos → Insert row**, una fila por evento:
+   - `evento`: el mismo nombre corto de `eventos.js` (ej. `aves`)
+   - `cupos`: máximo de personas (0 = sin límite)
+   - `encargado`: nombre corto (solo minúsculas, números y _), ej. `aves`. Vacío = `inscripciones_destino`.
+3. En cPanel, `config-cerro.php`, agrega el correo de cada encargado (varios: separados por coma):
+   ```php
+   'aves_destino'      => 'persona.aves@fundacionlepe.cl',
+   'educacion_destino' => 'educacion@fundacionlepe.cl, otra@fundacionlepe.cl',
+   ```
+
+Qué hace Supabase al recibir una inscripción (aunque dos lleguen al mismo tiempo):
+- Toma cupos y encargado de la tabla `eventos` (lo que mande la web se ignora).
+- Cuenta a todas las personas inscritas (la cantidad nunca puede ser menor que los nombres enviados).
+- Si no caben, la rechaza: la web muestra "Inscripciones cerradas" o pide inscribir a menos personas.
+- Un invitado no puede inscribirse dos veces con el mismo correo al mismo evento.
+- Un Amigo del Cerro que cambia su inscripción reemplaza la anterior (no ocupa cupos dos veces).
+- Al cancelar una inscripción, o borrarla en Table Editor, el cupo se libera.
+La web solo sabe si cada evento está abierto o cerrado; nunca cuántos cupos quedan.
+Un evento que no está en la tabla `eventos` no tiene límite de cupos.

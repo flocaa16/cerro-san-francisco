@@ -22,7 +22,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=56" />
+    <link rel="stylesheet" href="style.css?v=58" />
 
 </head>
 
@@ -87,7 +87,12 @@
                                 id="eventoFecha">Sábado 13 junio</span></p>
                         <p class="evento-dato"><img src="icons/clock.svg" alt="" width="24" height="24"><span
                                 id="eventoHora">10 a 13 horas</span></p>
+                        <p class="evento-dato"><img src="icons/lugar.svg" alt="" width="24" height="24"><span
+                                id="eventoLugar">Parque Natural Cerro San Francisco</span></p>
                     </div>
+                    <p class="evento-direccion"><span id="eventoDireccion">Coronel Santiago Bueras 826, Curimón, San Felipe</span>
+                        · <a href="https://www.google.com/maps/search/?api=1&amp;query=Coronel%20Santiago%20Bueras%20826%2C%20Curim%C3%B3n%2C%20San%20Felipe"
+                            target="_blank" rel="noopener" id="eventoMapa">Ver en Google Maps<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a></p>
                     <div class="evento-detalle-text" id="eventoTexto">
                         <p>¿Te gustaría aprender a reconocer las aves que habitan cerca nuestro?</p>
                         <p>Este sábado 13 de junio te invitamos a una caminata guiada por el Parque Natural Cerro San
@@ -505,12 +510,23 @@
         });
     </script>
     <script src="contacto.js?v=2"></script>
-    <script src="eventos.js?v=2"></script>
+    <script src="eventos.js?v=5"></script>
     <script>
         // Datos de cada evento. Para agregar uno nuevo, copia un bloque y cambia los textos.
         // La página se abre con inscripcion?evento=aves (o nubes, etc.)
         // Los eventos están en eventos.js (un solo lugar para todo el sitio)
         const eventos = EVENTOS;
+
+        // Inscripciones cerradas (se llenaron los cupos)
+        function mostrarCerrado() {
+            const ev = eventos[id] || Object.values(eventos)[0];
+            cerrarInscripciones(ev);
+            document.querySelector('#eventoEstado').textContent = ev.estado;
+            document.querySelectorAll('.modal-evento .chip').forEach(chip => { chip.textContent = ev.estado; });
+            const boton = document.querySelector('#btnInscribirme');
+            boton.disabled = true;
+            boton.textContent = 'Inscripciones cerradas';
+        }
 
         const params = new URLSearchParams(window.location.search);
         const id = params.get('evento');
@@ -535,7 +551,9 @@
         migaOrigen.href = origen.href;
         const evento = eventos[id];
 
-        // Si el evento existe, se muestran sus datos (si no, queda la Ruta de las Aves)
+        // Si el evento no existe (link viejo o mal escrito), se vuelve a Actividades
+        if (!evento) window.location.replace('actividades');
+
         if (evento) {
             document.title = evento.titulo + ' | Cerro San Francisco de Curimón';
             document.querySelector('#eventoMigas').textContent = evento.titulo;
@@ -549,8 +567,29 @@
             }
             document.querySelector('#eventoFecha').textContent = evento.fecha;
             document.querySelector('#eventoHora').textContent = evento.hora;
+            document.querySelector('#eventoLugar').textContent = evento.lugar;
+            document.querySelector('#eventoDireccion').textContent = evento.direccion;
+            document.querySelector('#eventoMapa').href = evento.mapa;
             document.querySelector('#eventoImg').src = evento.img;
             document.querySelector('#eventoImg').alt = evento.titulo;
+
+            // Inscripción en otro sitio: el botón se cambia por un link a ese formulario
+            if (evento.inscripcionExterna && !evento.finalizado) {
+                const boton = document.querySelector('#btnInscribirme');
+                const link = document.createElement('a');
+                link.className = boton.className;
+                link.href = evento.inscripcionExterna;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.id = 'btnInscribirmeExterno';
+                link.innerHTML = 'Inscribirme<span class="visually-hidden"> (se abre en una pestaña nueva)</span>';
+                boton.replaceWith(link);
+            } else {
+                // Cupos: cuando se llenan, las inscripciones se cierran
+                EVENTOS_CUPOS.then(() => {
+                    if (evento.agotado && !evento.finalizado) mostrarCerrado();
+                });
+            }
 
             const texto = document.querySelector('#eventoTexto');
             texto.innerHTML = '';
@@ -563,7 +602,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cuenta.js?v=6"></script>
+    <script src="cuenta.js?v=8"></script>
     <script>
         // Inscripción al evento (Figma: "Flujo - Inscripción a evento")
         // Pasos: tipo → login → amigo → confirmacion  /  tipo → invitado → confirmacion
@@ -574,7 +613,7 @@
         Cuenta.listo.then(cuenta => { sesion = cuenta; });
         let personasInscripcion = []; // personas que se pueden elegir en el paso 3A
         let irACrearCuenta = false;
-        const eventoActual = eventos[id] || eventos['aves'];
+        const eventoActual = eventos[id] || Object.values(eventos)[0];
         const modal = document.querySelector('#modalInscripcion');
         const pasos = modal.querySelectorAll('.modal-paso');
 
@@ -616,7 +655,8 @@
         });
 
         // Abrir
-        document.querySelector('#btnInscribirme').addEventListener('click', () => {
+        // (si la inscripción es en otro sitio, el botón ya no existe y no se abre el formulario)
+        document.querySelector('#btnInscribirme')?.addEventListener('click', () => {
             irACrearCuenta = false;
             modal.showModal();
             if (sesion) {
@@ -689,10 +729,16 @@
             boton.textContent = 'Enviando...';
 
             try {
-                await Cuenta.inscribir(eventos[id] ? id : 'aves', datos, eventoActual);
+                await Cuenta.inscribir(id, datos, eventoActual);
                 irA('confirmacion');
                 return true;
             } catch (e) {
+                if (e.cupos) {
+                    // Supabase rechazó por cupos
+                    error.textContent = e.message;
+                    if (e.cupos === 'agotado') mostrarCerrado();
+                    return false;
+                }
                 error.textContent = 'No pudimos enviar tu inscripción. Revisa tu conexión e inténtalo de nuevo, o escríbenos a contacto@fundacionlepe.cl.';
                 return false;
             } finally {
@@ -787,6 +833,7 @@
             const total = personasInscripcion.filter(persona => persona.elegida).length;
             btnConfirmarAmigo.textContent = 'Confirmar inscripción (' + total + (total === 1 ? ' persona)' : ' personas)');
         }
+
 
         // "+ Agregar otra persona"
         const btnAgregarPersona = document.querySelector('#btnAgregarPersona');
@@ -922,7 +969,7 @@
                 if (!enviado) return;
 
                 // Se guarda en "Mis inscripciones" y se recuerda a quién se eligió
-                const idEvento = eventos[id] ? id : 'aves';
+                const idEvento = id;
                 sesion.telefono = datosAmigo.telefono;
                 sesion.inscripciones = sesion.inscripciones.filter(otra => otra.evento !== idEvento);
                 sesion.inscripciones.unshift({ evento: idEvento, personas: elegidas });
@@ -1056,8 +1103,8 @@
         function prepararCalendarios() {
             const ev = eventoActual;
             const pagina = window.location.href.split('#')[0];
-            const detalle = ev.titulo + ' en el Parque Natural Cerro San Francisco de Curimón.\nMás información: ' + pagina;
-            const lugar = ev.lugar + ', Curimón, San Felipe';
+            const detalle = ev.titulo + ' · ' + ev.lugar + '.\nCómo llegar: ' + ev.mapa + '\nMás información: ' + pagina;
+            const lugar = ev.direccion;
             const compacta = texto => texto.replace(/[-:]/g, '') + '00';
 
             document.querySelector('#btnCalendario').href = 'https://calendar.google.com/calendar/render?' +
@@ -1086,7 +1133,7 @@
                 'VERSION:2.0',
                 'PRODID:-//Cerro San Francisco de Curimon//Eventos//ES',
                 'BEGIN:VEVENT',
-                'UID:' + (id || 'aves') + '@cerrosanfrancisco.cl',
+                'UID:' + id + '@cerrosanfrancisco.cl',
                 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
                 'DTSTART;TZID=America/Santiago:' + compacta(ev.inicio),
                 'DTEND;TZID=America/Santiago:' + compacta(ev.fin),
@@ -1097,7 +1144,7 @@
                 'END:VCALENDAR'
             ].join('\r\n');
             document.querySelector('#calApple').href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-            document.querySelector('#calApple').download = (id || 'aves') + '-cerro-san-francisco.ics';
+            document.querySelector('#calApple').download = id + '-cerro-san-francisco.ics';
         }
         prepararCalendarios();
     </script>

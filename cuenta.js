@@ -68,6 +68,22 @@ const Cuenta = (function () {
     // Traduce los errores de Supabase a mensajes para el usuario
     function traducir(error) {
         const texto = (error && (error.message || error.code)) || '';
+        // Sin cupos (lo revisa Supabase al guardar). No se dice cuántos quedan.
+        if (/CUPOS_AGOTADOS/.test(texto)) {
+            const aviso = new Error('Lo sentimos, las inscripciones para este evento están cerradas.');
+            aviso.cupos = 'agotado';
+            return aviso;
+        }
+        if (/YA_INSCRITO/.test(texto)) {
+            const aviso = new Error('Ya hay una inscripción con este correo para este evento. Si necesitas cambiarla, escríbenos a contacto@fundacionlepe.cl.');
+            aviso.cupos = 'repetido';
+            return aviso;
+        }
+        if (/CUPOS_INSUFICIENTES/.test(texto)) {
+            const aviso = new Error('No hay cupos para todas las personas que quieres inscribir. Intenta con menos personas.');
+            aviso.cupos = 'insuficiente';
+            return aviso;
+        }
         if (/invalid login credentials/i.test(texto)) return new Error('El correo o la contraseña no son correctos.');
         if (/email not confirmed/i.test(texto)) return new Error('Primero confirma tu cuenta con el enlace que te enviamos por correo.');
         if (/already registered|already exists/i.test(texto)) return new Error('Ya existe una cuenta con ese correo. Inicia sesión.');
@@ -250,6 +266,8 @@ const Cuenta = (function () {
             evento_lugar: evento.lugar || null,
             evento_inicio: evento.inicio || null,
             evento_fin: evento.fin || null,
+            evento_direccion: evento.direccion || null,
+            // Cupos y encargado los pone Supabase (tabla "eventos"), no la web
             tipo: datos.tipo,
             nombre: datos.nombre,
             apellido: datos.apellido,
@@ -261,11 +279,9 @@ const Cuenta = (function () {
             crear_cuenta: datos.crearCuenta === 'Sí'
         };
 
-        if (memoria) {
-            // Un Amigo del Cerro tiene una sola inscripción por evento: se reemplaza la anterior
-            fila.user_id = memoria.id;
-            await db.from('inscripciones').delete().eq('user_id', memoria.id).eq('evento', idEvento);
-        }
+        // Un Amigo del Cerro tiene una sola inscripción por evento: Supabase borra la anterior
+        // al guardar la nueva (si no hay cupos, se rechaza y conserva la que tenía)
+        if (memoria) fila.user_id = memoria.id;
 
         // Sin .select(): los invitados pueden inscribirse pero no leer la tabla
         const { error } = await db.from('inscripciones').insert(fila);
