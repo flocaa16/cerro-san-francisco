@@ -67,34 +67,48 @@ y ese archivo envía el correo desde `no-responder@cerrosanfrancisco.cl`.
    - HTTP Headers → Add: `X-Webhook-Clave` = la misma clave secreta del paso 1
 3. Inscríbete a un evento de prueba y revisa tu correo.
 
-## 9. Ubicación, cupos y encargado de cada evento
-**Ubicación** (en `eventos.js`, en cada evento): `lugar` y `direccion` se muestran en la página del
-evento, en el correo y en el calendario. `mapa` es opcional (si se deja vacío, el link a Google Maps
-se arma con la dirección).
+## 9. Eventos (se crean y editan en Supabase, sin tocar código)
+Los eventos están en **Supabase → Table Editor → tabla `eventos`**, una fila por evento.
+La web los lee con `api/eventos.php` (guarda una copia por 1 minuto: los cambios tardan hasta 1 minuto en verse).
 
-**Cupos y encargado** (en Supabase, NO en `eventos.js`, para que nadie pueda alterarlos desde la web):
-1. Corre de nuevo `supabase.sql` completo una vez (crea la tabla `eventos` y las reglas de cupos).
-2. **Table Editor → eventos → Insert row**, una fila por evento:
-   - `evento`: el mismo nombre corto de `eventos.js` (ej. `aves`)
-   - `cupos`: máximo de personas (0 = sin límite)
-   - `encargado`: la etiqueta de quien recibe los avisos, ej. `encargado-uno` (solo minúsculas,
-     números, - y _). Vacío = `inscripciones_destino`.
-3. En cPanel, `config-cerro.php`, define a los encargados UNA sola vez (varios correos: separados por coma):
-   ```php
-   'encargados' => [
-       'encargado-uno' => 'persona.uno@fundacionlepe.cl',
-       'encargado-dos' => 'persona.dos@fundacionlepe.cl, otra@fundacionlepe.cl',
-   ],
-   ```
-   Después, para cada evento solo eliges la etiqueta en la tabla `eventos`; no hay que volver a
-   tocar `config-cerro.php` salvo que cambie el correo de un encargado o se sume uno nuevo.
+**Primera vez:** correr `supabase.sql` completo y después `eventos-iniciales.sql` (pasa los eventos que
+estaban en `eventos.js` a la tabla). Ambos se pueden correr de nuevo sin perder datos.
 
-Qué hace Supabase al recibir una inscripción (aunque dos lleguen al mismo tiempo):
+**Crear un evento:** Table Editor → `eventos` → **Insert row**:
+
+| Columna | Qué poner |
+|---|---|
+| `evento` | Nombre corto para el link, solo minúsculas, números y guiones (ej. `taller-otono` → `inscripcion?evento=taller-otono`). No cambiarlo después de publicar. |
+| `titulo` | Nombre del evento. |
+| `estado` | `Inscripciones abiertas` (verde), `Quedan pocos cupos` (amarillo) o `Inscripciones cerradas` (rojo). |
+| `inicio` / `fin` | Fecha y hora en hora de Chile, ej. `2026-10-08 18:30`. La fecha en español ("Jueves 8 de octubre") se arma sola. Al pasar `fin`, el evento se oculta solo. Sin `fin` = 2 horas. |
+| `hora` | Opcional. Vacío = se arma sola ("18:30 a 20:00 horas"). Para otro texto, ej. `Por confirmar`. |
+| `lugar` / `direccion` | Nombre del lugar y dirección (para el mapa y el calendario). |
+| `mapa` | Opcional: link de Google Maps. Vacío = se arma con la dirección. |
+| `imagen` | Foto: sube el archivo en **Storage → eventos** y escribe aquí su nombre (ej. `taller.jpg`). También sirve un link completo. Vacío = foto del cerro. |
+| `imagen_alt` | Descripción de la foto para personas ciegas. Vacío = el título. |
+| `texto` | Descripción. Cada línea es un párrafo. |
+| `inscripcion_externa` | Opcional: link a un formulario de otro sitio. El botón "Inscribirme" abre ese link (esas inscripciones no pasan por Supabase). |
+| `cupos` | Máximo de personas (0 = sin límite). No se muestra en la web; al llenarse aparece "Inscripciones cerradas". |
+| `encargado` | Etiqueta de quien recibe los avisos (definida en `config-cerro.php`, ver abajo). Vacío = `inscripciones_destino`. |
+| `publicado` | Desmarcado = borrador (no se ve en la web). |
+| `finalizado` | Marcado = se termina antes de tiempo (ej. si se suspende). |
+
+En el Inicio se ven los 3 próximos eventos; en Actividades, todos.
+
+**Encargados** (cPanel, `config-cerro.php`, una sola vez; varios correos separados por coma):
+```php
+'encargados' => [
+    'encargado-uno' => 'persona.uno@fundacionlepe.cl',
+    'encargado-dos' => 'persona.dos@fundacionlepe.cl, otra@fundacionlepe.cl',
+],
+```
+
+**Qué hace Supabase al recibir una inscripción** (aunque dos lleguen al mismo tiempo):
 - Toma cupos y encargado de la tabla `eventos` (lo que mande la web se ignora).
 - Cuenta a todas las personas inscritas (la cantidad nunca puede ser menor que los nombres enviados).
 - Si no caben, la rechaza: la web muestra "Inscripciones cerradas" o pide inscribir a menos personas.
 - Un invitado no puede inscribirse dos veces con el mismo correo al mismo evento.
 - Un Amigo del Cerro que cambia su inscripción reemplaza la anterior (no ocupa cupos dos veces).
 - Al cancelar una inscripción, o borrarla en Table Editor, el cupo se libera.
-La web solo sabe si cada evento está abierto o cerrado; nunca cuántos cupos quedan.
-Un evento que no está en la tabla `eventos` no tiene límite de cupos.
+La web solo sabe si cada evento está abierto o cerrado; nunca cuántos cupos quedan ni quién es el encargado.

@@ -135,19 +135,55 @@ grant select, delete on public.inscripciones to authenticated;
 grant usage, select on all sequences in schema public to anon, authenticated;
 
 
--- 2c. CUPOS Y ENCARGADO DE CADA EVENTO -------------------------------------------
--- Se configuran SOLO aquí, en Supabase → Table Editor → tabla "eventos" (una fila por evento):
---   evento     el mismo nombre corto de eventos.js (ej. 'aves')
---   cupos      máximo de personas (0 = sin límite)
---   encargado  a quién avisar: una etiqueta definida una sola vez en config-cerro.php, en 'encargados'
---              (ej. 'encargado-uno'). Solo minúsculas, números, - y _.
--- La web no puede leer ni cambiar esta tabla, así que nadie puede saltarse los cupos.
--- Un evento que no está en la tabla no tiene límite y avisa a 'inscripciones_destino'.
+-- 2c. EVENTOS (contenido, cupos y encargado) -------------------------------------
+-- Los eventos se crean y editan en Supabase → Table Editor → tabla "eventos" (una fila por evento).
+-- La web muestra solo los datos públicos (función eventos_publicos, más abajo); los cupos y el
+-- encargado NUNCA salen de Supabase, así que nadie puede verlos ni saltárselos desde la web.
+-- Ver supabase/LEEME.md (sección 9) para la explicación de cada columna.
 create table if not exists public.eventos (
     evento    text primary key,
     cupos     int not null default 0 check (cupos >= 0),
     encargado text
 );
+
+-- Contenido del evento (lo que se ve en la web)
+alter table public.eventos add column if not exists titulo              text;
+alter table public.eventos add column if not exists estado              text default 'Inscripciones abiertas';
+alter table public.eventos add column if not exists inicio              timestamp;  -- hora de Chile
+alter table public.eventos add column if not exists fin                 timestamp;  -- hora de Chile
+alter table public.eventos add column if not exists hora                text;
+alter table public.eventos add column if not exists lugar               text;
+alter table public.eventos add column if not exists direccion           text;
+alter table public.eventos add column if not exists mapa                text;
+alter table public.eventos add column if not exists imagen              text;
+alter table public.eventos add column if not exists imagen_alt          text;
+alter table public.eventos add column if not exists texto               text;
+alter table public.eventos add column if not exists inscripcion_externa text;
+alter table public.eventos add column if not exists publicado           boolean not null default true;
+alter table public.eventos add column if not exists finalizado          boolean not null default false;
+
+-- Ayuda que se ve en Table Editor al pasar sobre cada columna
+comment on table  public.eventos is 'Eventos del sitio. Una fila por evento. Los cambios se ven en la web en 1 minuto.';
+comment on column public.eventos.evento is 'Nombre corto para el link (minúsculas, números y guiones). Ej: taller-otono → cerrosanfrancisco.cl/inscripcion?evento=taller-otono. No cambiarlo después de publicar.';
+comment on column public.eventos.cupos is 'Máximo de personas. 0 = sin límite. Al llenarse aparece "Inscripciones cerradas". No se muestra en la web.';
+comment on column public.eventos.encargado is 'Etiqueta de quien recibe el aviso de cada inscripción (definida en config-cerro.php). Vacío = inscripciones_destino.';
+comment on column public.eventos.titulo is 'Nombre del evento.';
+comment on column public.eventos.estado is 'Etiqueta: Inscripciones abiertas (verde), Quedan pocos cupos (amarillo) o Inscripciones cerradas (rojo).';
+comment on column public.eventos.inicio is 'Fecha y hora de inicio, hora de Chile. Ej: 2026-10-08 18:30';
+comment on column public.eventos.fin is 'Fecha y hora de término, hora de Chile. Al pasar, el evento se oculta solo. Vacío = 2 horas después del inicio.';
+comment on column public.eventos.hora is 'Opcional. Texto de la hora (ej. Por confirmar). Vacío = se arma con inicio y fin (ej. 18:30 a 20:00 horas).';
+comment on column public.eventos.lugar is 'Nombre del lugar. Ej: Parque Natural Cerro San Francisco';
+comment on column public.eventos.direccion is 'Dirección para el mapa y el calendario. Ej: Coronel Santiago Bueras 826, Curimón, San Felipe';
+comment on column public.eventos.mapa is 'Opcional. Link de Google Maps. Vacío = se arma con la dirección.';
+comment on column public.eventos.imagen is 'Foto: nombre del archivo subido a Storage → eventos (ej. taller.jpg), o un link completo.';
+comment on column public.eventos.imagen_alt is 'Descripción de la foto para personas ciegas. Vacío = el título.';
+comment on column public.eventos.texto is 'Descripción. Cada línea es un párrafo.';
+comment on column public.eventos.inscripcion_externa is 'Opcional. Link a un formulario de otro sitio: el botón Inscribirme abre ese link.';
+comment on column public.eventos.publicado is 'Desmarcado = borrador (no se ve en la web).';
+comment on column public.eventos.finalizado is 'Marcado = se termina antes de tiempo (ej. si se suspende).';
+
+alter table public.eventos drop constraint if exists eventos_evento_check;
+alter table public.eventos add constraint eventos_evento_check check (evento ~ '^[a-z0-9-]{1,60}$');
 
 alter table public.eventos drop constraint if exists eventos_encargado_check;
 alter table public.eventos add constraint eventos_encargado_check check (encargado ~ '^[a-z0-9_-]{1,40}$');
@@ -169,6 +205,39 @@ $$;
 
 revoke all on function public.eventos_cerrados(text[]) from public;
 grant execute on function public.eventos_cerrados(text[]) to anon, authenticated;
+
+-- Datos públicos de los eventos para la web (sin cupos ni encargado; "cerrado" = se llenaron los cupos).
+-- Incluye eventos terminados hace menos de 120 días (para "Mis inscripciones").
+create or replace function public.eventos_publicos()
+returns table (
+    evento text, titulo text, estado text, inicio timestamp, fin timestamp, hora text,
+    lugar text, direccion text, mapa text, imagen text, imagen_alt text, texto text,
+    inscripcion_externa text, finalizado boolean, cerrado boolean
+)
+language sql stable security definer set search_path = '' as $$
+    select e.evento, e.titulo, e.estado, e.inicio, e.fin, e.hora,
+           e.lugar, e.direccion, e.mapa, e.imagen, e.imagen_alt, e.texto,
+           e.inscripcion_externa, e.finalizado,
+           e.cupos > 0 and coalesce((select sum(i.cantidad) from public.inscripciones i
+                                     where i.evento = e.evento), 0) >= e.cupos
+    from public.eventos e
+    where e.publicado and e.titulo is not null and e.inicio is not null
+      and coalesce(e.fin, e.inicio) > (now() at time zone 'America/Santiago') - interval '120 days'
+    order by e.inicio;
+$$;
+
+revoke all on function public.eventos_publicos() from public;
+grant execute on function public.eventos_publicos() to anon, authenticated;
+
+-- Carpeta pública para las fotos de los eventos (Storage → eventos)
+do $$
+begin
+    if exists (select 1 from information_schema.tables where table_schema = 'storage' and table_name = 'buckets') then
+        insert into storage.buckets (id, name, public) values ('eventos', 'eventos', true)
+        on conflict (id) do update set public = true;
+    end if;
+end;
+$$;
 
 -- Antes de guardar una inscripción (aunque dos personas se inscriban al mismo tiempo):
 --   · la cantidad nunca es menor que el número de personas inscritas

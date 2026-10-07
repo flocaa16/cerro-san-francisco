@@ -24,7 +24,7 @@ const Cuenta = (function () {
     const datosEnlace = new URLSearchParams(window.location.hash.slice(1));
     const tipoEnlace = datosEnlace.get('type') || new URLSearchParams(window.location.search).get('type') || '';
 
-    // Eventos: están en eventos.js (la página debe cargarlo antes que cuenta.js)
+    // Eventos: vienen de api/eventos.php + eventos.js (la página los carga antes que cuenta.js)
     const eventos = typeof EVENTOS !== 'undefined' ? EVENTOS : {};
 
     // Lectura y escritura segura (el navegador puede bloquear el almacenamiento)
