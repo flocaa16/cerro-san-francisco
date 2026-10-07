@@ -32,4 +32,9 @@ RedirectMatch 404 ^/supabase(/|$)
     <FilesMatch "\.(html|js)$">
         Header set Cache-Control "no-cache"
     </FilesMatch>
+
+    # Las publicaciones (PDF) se abren en el navegador en vez de descargarse
+    <FilesMatch "\.pdf$">
+        Header set Content-Disposition "inline"
+    </FilesMatch>
 </IfModule>
