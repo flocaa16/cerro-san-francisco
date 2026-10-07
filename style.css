@@ -151,12 +151,12 @@ h3 {
 /* Estados de inscripción (Figma "Chip") */
 .chip--cerrado {
     background-color: rgba(214, 102, 79, 0.12);
-    color: #D6664F;
+    color: #B5412A; /* más oscuro que el Figma (#D6664F) para que se lea bien: contraste 4.8:1 */
 }
 
 .chip--pocos {
     background-color: rgba(213, 162, 75, 0.12);
-    color: #D5A24B;
+    color: #8A631F; /* más oscuro que el Figma (#D5A24B) para que se lea bien: contraste 4.9:1 */
 }
 
 .chip-claro {
