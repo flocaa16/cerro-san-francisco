@@ -161,6 +161,12 @@ alter table public.eventos add column if not exists texto               text;
 alter table public.eventos add column if not exists inscripcion_externa text;
 alter table public.eventos add column if not exists publicado           boolean not null default true;
 alter table public.eventos add column if not exists finalizado          boolean not null default false;
+alter table public.eventos add column if not exists sin_limite          boolean not null default false;
+
+-- Cupos: vacío o "sin_limite" marcado = sin límite (antes se usaba 0)
+alter table public.eventos alter column cupos drop not null;
+alter table public.eventos alter column cupos drop default;
+update public.eventos set cupos = null where cupos = 0;
 
 -- Versión anterior (inicio/fin con fecha y hora, hora y estado escritos a mano): se pasan los datos
 -- a fecha / hora_inicio / hora_fin y se quitan esas columnas. El estado ahora es automático.
@@ -186,7 +192,8 @@ $$;
 -- Ayuda que se ve en Table Editor al pasar sobre cada columna
 comment on table  public.eventos is 'Eventos del sitio. Una fila por evento. Los cambios se ven en la web en 1 minuto. El estado (abiertas, pocos cupos, cerradas, finalizado) es automático.';
 comment on column public.eventos.evento is 'Nombre corto para el link (minúsculas, números y guiones). Ej: taller-otono → cerrosanfrancisco.cl/inscripcion?evento=taller-otono. No cambiarlo después de publicar.';
-comment on column public.eventos.cupos is 'Máximo de personas. 0 = sin límite. Con 80% ocupado aparece "Quedan pocos cupos"; lleno, "Inscripciones cerradas". El número no se muestra en la web.';
+comment on column public.eventos.cupos is 'Máximo de personas. Con 80% ocupado aparece "Quedan pocos cupos"; lleno, "Inscripciones cerradas". El número no se muestra en la web. Vacío = sin límite.';
+comment on column public.eventos.sin_limite is 'Marcado = el evento no tiene límite de cupos (se ignora la columna cupos).';
 comment on column public.eventos.encargado is 'Quién recibe el aviso de cada inscripción (su correo está en config-cerro.php). Vacío = inscripciones_destino.';
 comment on column public.eventos.titulo is 'Nombre del evento.';
 comment on column public.eventos.fecha is 'Día del evento. Ej: 2026-10-08. El día de la semana y el mes en español se escriben solos.';
@@ -244,6 +251,12 @@ returns timestamp language sql immutable set search_path = '' as $$
     end;
 $$;
 
+-- Cupos de un evento: null = sin límite ("sin_limite" marcado, o cupos vacío o 0)
+create or replace function public.evento_cupos(e public.eventos)
+returns int language sql immutable set search_path = '' as $$
+    select case when e.sin_limite then null else nullif(e.cupos, 0) end;
+$$;
+
 -- Estado automático de un evento:
 --   Finalizado              ya terminó o se marcó "finalizado"
 --   Inscripciones cerradas  ya empezó, o se llenaron los cupos
@@ -258,8 +271,8 @@ returns text language sql stable security definer set search_path = '' as $$
     select case
         when e.finalizado or d.ahora >= public.evento_fin(e) then 'Finalizado'
         when d.ahora >= public.evento_inicio(e) then 'Inscripciones cerradas'
-        when e.cupos > 0 and d.ocupados >= e.cupos then 'Inscripciones cerradas'
-        when e.cupos > 0 and d.ocupados >= ceil(e.cupos * 0.8) then 'Quedan pocos cupos'
+        when public.evento_cupos(e) is not null and d.ocupados >= public.evento_cupos(e) then 'Inscripciones cerradas'
+        when public.evento_cupos(e) is not null and d.ocupados >= ceil(public.evento_cupos(e) * 0.8) then 'Quedan pocos cupos'
         else 'Inscripciones abiertas'
     end
     from datos d;
@@ -329,7 +342,7 @@ begin
     new.cantidad := greatest(new.cantidad, coalesce(cardinality(new.personas), 0));
 
     select * into ev from public.eventos e where e.evento = new.evento;
-    new.evento_cupos := nullif(ev.cupos, 0);
+    new.evento_cupos := public.evento_cupos(ev);
     new.evento_encargado := ev.encargado::text;
 
     if ev.evento is not null and (not ev.publicado or ev.finalizado or ev.fecha is null
@@ -428,8 +441,9 @@ select
     public.evento_estado(e)                                   as "Estado",
     count(i.id)                                               as "Inscripciones",
     coalesce(sum(i.cantidad), 0)                              as "Personas",
-    nullif(e.cupos, 0)                                        as "Cupos",
-    case when e.cupos > 0 then greatest(e.cupos - coalesce(sum(i.cantidad), 0), 0) end as "Quedan",
+    coalesce(public.evento_cupos(e)::text, 'Sin límite')      as "Cupos",
+    case when public.evento_cupos(e) is not null
+         then greatest(public.evento_cupos(e) - coalesce(sum(i.cantidad), 0), 0) end as "Quedan",
     e.encargado::text                                         as "Encargado"
 from public.eventos e
 left join public.inscripciones i on i.evento = e.evento
