@@ -34,7 +34,7 @@
         rel="stylesheet">
 
     <!-- Cambiar el número de v cada vez que se actualice style.css -->
-    <link rel="stylesheet" href="style.css?v=61" />
+    <link rel="stylesheet" href="style.css?v=67" />
 
 </head>
 
@@ -80,14 +80,17 @@
 
     <!-- BANNER -->
     <section class="banner">
+        <!-- Video de fondo a todo el ancho (la foto se ve mientras carga) -->
+        <video class="banner-video" autoplay muted loop playsinline poster="img/video-hero-poster.jpg" aria-hidden="true">
+            <source src="video/video hero.mp4" type="video/mp4">
+        </video>
+
         <div class="wrapper banner-content">
             <div class="banner-text">
-                <p class="banner-subtitle">Bienvenido a</p>
+                <p class="banner-subtitle">Bienvenidos al</p>
                 <h1 class="banner-title">Cerro San&nbsp;Francisco</h1>
-            </div>
-            <div class="banner-image">
-                <!-- Foto provisoria: reemplazar por fotografía de la sesión con Diego Sandoval -->
-                <img src="img/banner-cerro.jpg" alt="Vista del Cerro San Francisco">
+                <h1 class="banner-title">de Curimón</h1>
+                
             </div>
         </div>
     </section>
@@ -235,7 +238,9 @@
         <div class="wrapper eventos-list" data-lista-eventos="inicio" data-limite="3">
             <!-- Los eventos se dibujan desde eventos.js -->
             <div class="eventos-more" style="padding-top: 4rem;">
+                <!-- Apagado por ahora: para volver a mostrarlo, quitar el comentario
                 <a href="actividades" class="btn-underline">Ver más Eventos</a>
+                -->
             </div>
         </div>
     </section>
@@ -333,7 +338,7 @@
                             aria-label="Instagram de Fundación Lepe"><span class="red-icono red-icono--instagram"></span></a></li>
                 </ul>
                     <address class="footer-direccion">
-                        Parque Natural Cerro San Francisco<br>Curimón, San Felipe
+                        Cerro San Francisco<br>Curimón, San Felipe
                     </address>
                 </div>
 
@@ -546,10 +551,18 @@
         iniciarAutoplay();
     </script>
     <script src="contacto.js?v=2"></script>
+    <script>
+        // Si la persona prefiere menos movimiento, el video del banner queda detenido
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const bannerVideo = document.querySelector('.banner-video');
+            bannerVideo.removeAttribute('autoplay');
+            bannerVideo.pause();
+        }
+    </script>
 
     <script src="api/eventos.php"></script>
 
-    <script src="eventos.js?v=9"></script>
+    <script src="eventos.js?v=11"></script>
 </body>
 
 </html>

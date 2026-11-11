@@ -707,80 +707,70 @@ h3 {
 /*-----------------------INDEX-----------------------*/
 
 /*BANNER*/
+/* Video a todo el ancho con el texto encima */
 .banner {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: clamp(480px, calc(100vh - 80px), 820px);
     overflow: hidden;
+    background-color: #314533;
+}
+
+.banner-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Degradado oscuro abajo a la izquierda, para que el texto blanco se lea sobre cualquier cuadro del video */
+.banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(0deg, rgba(38, 46, 47, 0.75) 0%, rgba(38, 46, 47, 0.25) 45%, rgba(38, 46, 47, 0) 70%),
+        linear-gradient(90deg, rgba(38, 46, 47, 0.45) 0%, rgba(38, 46, 47, 0) 60%);
 }
 
 .banner-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 48px;
+    position: relative;
+    z-index: 1;
 }
 
 .banner-text {
-    flex: 1;
-    padding-bottom: 46px;
+    /* Espacio abajo para que la silueta de montañas de la sección siguiente no tape el texto */
+    padding-bottom: calc(4.5vw + 56px);
+    color: #FFFFFF;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
 }
 
 .banner-subtitle {
     font-size: 32px;
     font-weight: 700;
-    color: #557458;
+    color: #F2F7F2;
 }
 
 .banner-title {
-    font-size: 48px;
+    font-size: 72px;
     font-weight: 700;
-    letter-spacing: -0.3px;
-    color: #557458;
-    margin-bottom: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: #F2F7F2;
 }
 
 /* "de Curimón" en su propia línea, del mismo tamaño que "Bienvenido a" */
 .banner-title-lugar {
     display: block;
-    font-size: 0.667em;
+    font-size: 0.444em;
     letter-spacing: 0;
 }
 
-.banner-image {
-    /* La foto llega hasta el borde derecho y usa todo el ancho que deja libre el título
-       (se reservan 400px: ~350px para "San Francisco" + 48px de separación) */
-    width: calc(100vw - max(20px, 50vw - 580px) - 400px);
-    /* Se corta desde arriba para que en la primera vista se vea la silueta del cerro
-       (alto de pantalla - header 80px - 150px de montañas), máximo 679px como en Figma */
-    height: clamp(420px, calc(100vh - 230px), 679px);
-    flex-shrink: 0;
-    margin-right: calc((100vw - 1160px) / -2);
-}
-
-.banner-image img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Se muestra desde la izquierda */
-    object-position: left bottom;
-}
-
 @media (max-width: 1199.98px) {
-    .banner-content {
-        gap: 40px;
-    }
-
-    .banner-subtitle {
-        font-size: 30px;
-    }
-
     .banner-title {
-        font-size: 44px;
-    }
-
-    .banner-image {
-        width: calc(50% + 20px);
-        height: clamp(380px, calc(100vh - 230px), 560px);
-        margin-right: -20px;
+        font-size: 64px;
     }
 }
 
@@ -790,26 +780,17 @@ h3 {
     }
 
     .banner-title {
-        font-size: 40px;
+        font-size: 52px;
     }
 }
 
 @media (max-width: 767.98px) {
-    .banner-content {
-        flex-direction: column-reverse;
-        align-items: stretch;
-        gap: 32px;
-        padding-top: 0;
-    }
-
-    .banner-image {
-        width: calc(100% + 40px);
-        height: 320px;
-        margin: 0 -20px;
+    .banner {
+        height: clamp(420px, calc(100svh - 80px), 640px);
     }
 
     .banner-text {
-        padding-bottom: 32px;
+        padding-bottom: calc(4.5vw + 40px);
     }
 
     .banner-subtitle {
@@ -817,8 +798,7 @@ h3 {
     }
 
     .banner-title {
-        font-size: 32px;
-        margin-bottom: 24px;
+        font-size: 40px;
     }
 }
 
@@ -835,18 +815,15 @@ h3 {
     color: #FFFFFF;
 }
 
-/* La silueta del cerro sube 4,5vw para tapar el borde inferior de la foto del banner */
-@media (min-width: 768px) {
-    .banner {
-        position: relative;
-        z-index: 0;
-    }
+/* La silueta del cerro sube 4,5vw para tapar el borde inferior del video del banner (en todos los tamaños) */
+.banner {
+    z-index: 0;
+}
 
-    .numeros {
-        position: relative;
-        z-index: 1;
-        margin-top: -4.5vw;
-    }
+.numeros {
+    position: relative;
+    z-index: 1;
+    margin-top: -4.5vw;
 }
 
 .numeros-grid {
@@ -1315,6 +1292,11 @@ h3 {
     display: flex;
     justify-content: flex-end;
     padding-top: 16px;
+}
+
+/* Botón a Instagram (ícono + texto) */
+.btn-instagram {
+    gap: 12px;
 }
 
 @media (max-width: 991.98px) {
@@ -5606,12 +5588,80 @@ a.publicacion-item:hover .publicacion-item-icono {
 /*-----------------------TÉRMINOS Y CONDICIONES-----------------------*/
 
 /* Mensaje cuando no hay próximos eventos (eventos.js) */
+/* Sin eventos: texto y botón blanco a Instagram, centrados en la franja rosada */
 .eventos-vacio {
-    margin: 0;
-    padding: 40px 0;
-    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 24px;
+    padding-top: 32px;
     text-align: center;
     color: #FFFFFF;
+}
+
+/* Sin eventos la franja rosada solo envuelve el aviso, sin el espacio para las tarjetas */
+.eventos--vacio {
+    padding-bottom: 0;
+}
+
+.eventos--vacio .eventos-band {
+    height: auto;
+    padding-bottom: clamp(48px, 9vh, 96px);
+}
+
+.eventos--vacio .eventos-list {
+    display: none;
+}
+
+.eventos-vacio-texto {
+    margin: 0;
+    font-size: 18px;
+}
+
+/* Botón con contorno blanco, para fondos de color (mismo formato que btn-outline-medium) */
+.btn-blanco {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 56px;
+    min-width: 160px;
+    padding: 0 24px;
+    border: 2px solid #FFFFFF;
+    background-color: transparent;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-blanco:hover,
+.btn-blanco:focus-visible {
+    background-color: #FFFFFF;
+    color: #926483;
+}
+
+.btn-blanco:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 3px;
+}
+
+@media (max-width: 767.98px) {
+    /* Para que el texto quepa en una línea y quede centrado */
+    .btn-blanco {
+        gap: 8px;
+        padding: 0 16px;
+        font-size: 14px;
+    }
+}
+
+.btn-blanco:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 3px;
 }
 
 /* Campo trampa contra spam (formularios de contacto): fuera de la pantalla */

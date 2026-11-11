@@ -136,9 +136,27 @@ function cerrarInscripciones(ev) {
                 lista.insertBefore(articulo, antesDe);
             });
 
+            // Sin eventos: aviso y botón blanco a Instagram dentro de la franja rosada
             if (!proximos.length) {
-                lista.insertBefore(crear('p', 'eventos-vacio',
-                    'Pronto anunciaremos nuevos eventos. ¡Síguenos en Instagram para enterarte!'), antesDe);
+                const vacio = crear('div', 'eventos-vacio');
+                const instagram = crear('a', 'btn-blanco btn-instagram');
+                instagram.href = 'https://www.instagram.com/fundacionlepe/';
+                instagram.target = '_blank';
+                instagram.rel = 'noopener';
+                const icono = crear('span', 'red-icono red-icono--instagram');
+                icono.setAttribute('aria-hidden', 'true');
+                instagram.append(icono, '¡Síguenos en Instagram para enterarte!',
+                    crear('span', 'visually-hidden', ' (se abre en una pestaña nueva)'));
+                vacio.append(crear('p', 'eventos-vacio-texto', 'Pronto anunciaremos nuevos eventos.'), instagram);
+                // Va dentro de la franja rosada (si existe) y la sección se achica
+                const seccion = lista.closest('.eventos');
+                const franja = seccion && seccion.querySelector('.eventos-band');
+                if (franja) {
+                    franja.append(vacio);
+                    seccion.classList.add('eventos--vacio');
+                } else {
+                    lista.insertBefore(vacio, antesDe);
+                }
             }
         });
     }
